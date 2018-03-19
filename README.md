@@ -1,3 +1,3 @@
-# CS30x-A-web-platform-for-data-labelling
+# CS304-A-web-platform-for-data-labelling
 
 ## Do not read me
