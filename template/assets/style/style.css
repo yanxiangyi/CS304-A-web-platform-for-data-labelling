@@ -100,7 +100,7 @@ body {
 
 .section--header {
     position: relative;
-    padding-bottom: 150px;
+    padding-bottom: 500px;
     background: url("../img//bg.jpg") center top no-repeat;
     background-attachment: fixed
 }
