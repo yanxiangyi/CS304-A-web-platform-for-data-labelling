@@ -179,7 +179,13 @@ var WizardDemo = function () {
                             "type": "success",
                             "confirmButtonClass": "btn btn-secondary m-btn m-btn--wide"
                         });
+
+                        setTimeout(function () {
+                            window.location.href = "index.html";
+                        }, 2000);
+
                     }
+
                 });
             }
         });
