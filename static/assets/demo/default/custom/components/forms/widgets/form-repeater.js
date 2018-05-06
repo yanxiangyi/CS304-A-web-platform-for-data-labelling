@@ -5,7 +5,7 @@ var FormRepeater = function() {
     var demo1 = function() {
         $('#m_repeater_1').repeater({            
             initEmpty: false,
-           
+
             defaultValues: {
                 'text-input': 'foo'
             },
@@ -18,6 +18,7 @@ var FormRepeater = function() {
                 $(this).slideUp(deleteElement);                 
             }   
         });
+
     }
 
     var demo2 = function() {

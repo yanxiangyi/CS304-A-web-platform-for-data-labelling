@@ -93,7 +93,7 @@ var SnippetLogin = function () {
 
             form.ajaxSubmit({
                 type: "GET",
-                url: 'http://localhost:5000/login/username/jiangtk/password/jiangtk',
+                url: 'more.json',
                 dataType: "json",
                 // success: function(response, status, xhr, $form) {
                 success: function (json) {
