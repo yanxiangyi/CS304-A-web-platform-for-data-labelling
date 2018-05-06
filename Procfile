@@ -1,1 +1,1 @@
-web: gunicorn deploy-copy:app -b 0.0.0.0:5000
+web: gunicorn deploy-copy:app -b 127.0.0.1:5000
