@@ -5,7 +5,7 @@ var WizardDemo = function () {
     var formEl = $('#m_form');
     var validator;
     var wizard;
-    
+
     //== Private functions
     var initWizard = function () {
         //== Initialize form wizard
@@ -14,19 +14,19 @@ var WizardDemo = function () {
         });
 
         //== Validation before going to next page
-        wizard.on('beforeNext', function(wizard) {
+        wizard.on('beforeNext', function (wizard) {
             if (validator.form() !== true) {
                 return false;  // don't go to the next step
             }
         })
 
         //== Change event
-        wizard.on('change', function(wizard) {
+        wizard.on('change', function (wizard) {
             mApp.scrollTop();
         });
     }
 
-    var initValidation = function() {
+    var initValidation = function () {
         validator = formEl.validate({
             //== Validate only visible fields
             ignore: ":hidden",
@@ -36,32 +36,25 @@ var WizardDemo = function () {
                 //=== Client Information(step 1)
                 //== Client details
                 name: {
-                    required: true 
+                    required: true
                 },
-                email: {
-                    required: true,
-                    email: true 
-                },       
-                phone: {
-                    required: true,
-                    phoneUS: true 
-                },     
+                description: {},
 
                 //== Mailing address
                 address1: {
-                    required: true 
+                    required: true
                 },
                 city: {
-                    required: true 
+                    required: true
                 },
                 state: {
-                    required: true 
+                    required: true
                 },
                 city: {
-                    required: true 
+                    required: true
                 },
                 country: {
-                    required: true 
+                    required: true
                 },
 
                 //=== Client Information(step 2)
@@ -77,12 +70,12 @@ var WizardDemo = function () {
                 account_password: {
                     required: true,
                     minlength: 6
-                },                
+                },
 
                 //== Client Settings
                 account_group: {
-                     required: true
-                },                
+                    required: true
+                },
                 'account_communication[]': {
                     required: true
                 },
@@ -112,9 +105,7 @@ var WizardDemo = function () {
                 billing_address_1: {
                     required: true
                 },
-                billing_address_2: {
-                    
-                },
+                billing_address_2: {},
                 billing_city: {
                     required: true
                 },
@@ -142,16 +133,16 @@ var WizardDemo = function () {
                 },
                 accept: {
                     required: "You must accept the Terms and Conditions agreement!"
-                } 
+                }
             },
-            
+
             //== Display error  
-            invalidHandler: function(event, validator) {     
+            invalidHandler: function (event, validator) {
                 mApp.scrollTop();
 
                 swal({
-                    "title": "", 
-                    "text": "There are some errors in your submission. Please correct them.", 
+                    "title": "",
+                    "text": "There are some errors in your submission. Please correct them.",
                     "type": "error",
                     "confirmButtonClass": "btn btn-secondary m-btn m-btn--wide"
                 });
@@ -159,15 +150,15 @@ var WizardDemo = function () {
 
             //== Submit valid form
             submitHandler: function (form) {
-                
+
             }
-        });   
+        });
     }
 
-    var initSubmit = function() {
+    var initSubmit = function () {
         var btn = formEl.find('[data-wizard-action="submit"]');
 
-        btn.on('click', function(e) {
+        btn.on('click', function (e) {
             e.preventDefault();
 
             if (validator.form()) {
@@ -177,13 +168,14 @@ var WizardDemo = function () {
 
                 //== See: http://malsup.com/jquery/form/#ajaxSubmit
                 formEl.ajaxSubmit({
-                    success: function() {
+
+                    success: function () {
                         mApp.unprogress(btn);
                         //mApp.unblock(formEl);
 
                         swal({
-                            "title": "", 
-                            "text": "The application has been successfully submitted!", 
+                            "title": "",
+                            "text": "The application has been successfully submitted!",
                             "type": "success",
                             "confirmButtonClass": "btn btn-secondary m-btn m-btn--wide"
                         });
@@ -195,17 +187,17 @@ var WizardDemo = function () {
 
     return {
         // public functions
-        init: function() {
+        init: function () {
             wizardEl = $('#m_wizard');
             formEl = $('#m_form');
 
-            initWizard(); 
+            initWizard();
             initValidation();
             initSubmit();
         }
     };
 }();
 
-jQuery(document).ready(function() {    
+jQuery(document).ready(function () {
     WizardDemo.init();
 });
