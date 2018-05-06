@@ -1,9 +1,25 @@
 from flask import Flask
 from flask import jsonify
 from flask import render_template
-import MySQLdb
+from sshtunnel import SSHTunnelForwarder
+from sqlalchemy import create_engine
+from time import gmtime, strftime
+from sql_query import *
+
+
+server =  SSHTunnelForwarder(
+     ('47.106.34.103', 22),
+     ssh_password="se2018",
+     ssh_username="se2018",
+     remote_bind_address=('127.0.0.1', 3306))
+server.start()
+engine = create_engine('mysql+mysqldb://root:se2018@127.0.0.1:%s/se_proj' % server.local_bind_port)
+connection = engine.connect()
+
+c = sql_conn(connection)
 
 app = Flask(__name__)
+
 
 @app.route("/")
 def index_void():
@@ -37,20 +53,10 @@ def textlabel():
 def textlabel2():
     return render_template('textlabel2.html')
 
-@app.route('/test1')
-def summary():
-    return jsonify("a")
-
 @app.route('/login/username/<user_name>/password/<pass_word>')
 def verification(user_name, pass_word):
-    conn = MySQLdb.connect(host='127.0.0.1',user="root",passwd="se2018",db="se_proj")
-    cur = conn.cursor()
-    cur.execute('select * from users;')
-    print("aaa")
-    for row in cur:
-        if row[1] == user_name:
-            if row[2] == pass_word:
-                verification = {'code':0}
-            elif row[2] != pass_word:
-                verification = {'code':1}
+    if str(c.get_user_passwd(user_name)) == pass_word:
+        verification = {'code': 0}
+    elif str(c.get_user_passwd(user_name)) != pass_word:
+        verification = {'code': 1}
     return jsonify(verification)
