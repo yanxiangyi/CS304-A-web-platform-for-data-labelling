@@ -29476,7 +29476,8 @@ select.m-select2 {
     padding: 35% 2rem 2rem 2rem; }
     .m-login.m-login--1 .m-login__wrapper .m-login__logo {
       text-align: center;
-      margin: 0 auto 4rem auto; }
+      margin: 0 auto 4rem auto; 
+      height: 100px}
     .m-login.m-login--1 .m-login__wrapper .m-login__head {
       margin-top: 1rem; }
       .m-login.m-login--1 .m-login__wrapper .m-login__head .m-login__title {
