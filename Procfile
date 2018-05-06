@@ -1,2 +1,2 @@
-web: gunicorn deploy-copy:app
+web: gunicorn deploy-copy:app --timeout 30
 
