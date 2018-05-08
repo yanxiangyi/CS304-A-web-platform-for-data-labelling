@@ -22,10 +22,10 @@
     <!--end::Web font -->
     <!--begin::Base Styles -->
     <!--begin::Page Vendors -->
-    <link href="../static/../static/assets/vendors/custom/fullcalendar/fullcalendar.bundle.css" rel="stylesheet" type="text/css"/>
+    <link href="../static/assets/vendors/custom/fullcalendar/fullcalendar.bundle.css" rel="stylesheet" type="text/css"/>
     <!--end::Page Vendors -->
-    <link href="../static/../static/assets/vendors/base/vendors.bundle.css" rel="stylesheet" type="text/css"/>
-    <link href="../static/../static/assets/demo/demo2/base/style.bundle.css" rel="stylesheet" type="text/css"/>
+    <link href="../static/assets/vendors/base/vendors.bundle.css" rel="stylesheet" type="text/css"/>
+    <link href="../static/assets/demo/demo2/base/style.bundle.css" rel="stylesheet" type="text/css"/>
     <!--end::Base Styles -->
     <link rel="shortcut icon" href="../static/assets/demo/demo2/media/img/logo/logo.png"/>
 </head>
@@ -45,10 +45,24 @@
                         <div class="m-stack m-stack--ver m-stack--general m-stack--inline">
                             <div class="m-stack__item m-stack__item--middle m-brand__logo">
                                 <a href="index.html" class="m-brand__logo-wrapper">
-                                    <img alt="" src="../static/../static/assets/demo/demo2/media/img/logo/logo.png" style=" max-width: 66px; "/>
+                                    <img alt="" src="../static/assets/demo/demo2/media/img/logo/logo.png" style=" max-width: 66px; "/>
                                 </a>
+
+                            </div>
+                            <div class="m-stack__item m-stack__item--middle m-brand__tools">
+                                <!-- begin::Responsive Header Menu Toggler-->
+                                <a id="m_aside_header_menu_mobile_toggle" href="javascript:;" class="m-brand__icon m-brand__toggler m--visible-tablet-and-mobile-inline-block">
+                                    <span></span>
+                                </a>
+                                <!-- end::Responsive Header Menu Toggler-->
+                                <!-- begin::Topbar Toggler-->
+                                <a id="m_aside_header_topbar_mobile_toggle" href="javascript:;" class="m-brand__icon m--visible-tablet-and-mobile-inline-block">
+                                    <i class="flaticon-more"></i>
+                                </a>
+                                <!--end::Topbar Toggler-->
                             </div>
                         </div>
+
                     </div>
                     <!-- end::Brand -->
 
@@ -265,7 +279,6 @@
                 </div>
             </div>
         </div>
-
         <div class="m-header__bottom">
             <div class="m-container m-container--responsive m-container--xxl m-container--full-height m-page__container">
 
