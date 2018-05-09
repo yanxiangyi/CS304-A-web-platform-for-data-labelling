@@ -99,7 +99,7 @@ var SnippetLogin = function () {
                 success: function (json) {
                     // similate 2s delay
                     if (json.code == 0) {
-                        alert("Welcome, someone");
+                        // alert("Welcome, someone");
                         window.location.href = "index.html";
                     } else {
                         alert("wrong");
