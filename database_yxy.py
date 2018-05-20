@@ -18,12 +18,12 @@ class sql_conn:
         return result  # None if it doesn't exist
 
     def __search_admin_by_name(self, adminname):
-        result = self.cursor.execute("select * from admin where adminname='{}';".format(adminname))
+        self.cursor.execute("select * from admin where adminname='{}';".format(adminname))
         result = self.cursor.fetchone()
         return result.fetchone()  # None if it doesn't exist
 
     def __search_source_by_name(self, sourcename):
-        result = self.cursor.execute("select * from source where sourcename='{}';".format(sourcename))
+        self.cursor.execute("select * from source where sourcename='{}';".format(sourcename))
         result = self.cursor.fetchone()
         return result.fetchone()  # None if it doesn't exist
 
