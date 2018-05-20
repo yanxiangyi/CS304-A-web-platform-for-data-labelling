@@ -4,7 +4,7 @@ from flask import render_template
 import MySQLdb
 import mysql.connector
 from mysql.connector import connection
-from database_yxy import *
+from database import *
 
 
 app = Flask(__name__)
