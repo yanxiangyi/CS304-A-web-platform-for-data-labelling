@@ -42,7 +42,7 @@ class sql_conn:
             return None
         return result[0]
 
-    def get_user_passwd(self, userid=None, username=None):
+    def get_user_passwd(self, userid=None, username=None, useremail=None):
         if userid != None:
             self.cursor.execute("select password from users where userid={};".format(userid))
             result = self.cursor.fetchone()
@@ -55,9 +55,15 @@ class sql_conn:
             if result is None:
                 return None
             return result[0]
+        elif useremail != None:
+            self.cursor.execute("select password from users where email_address='{}';".format(useremail))
+            result = self.cursor.fetchone()
+            if result is None:
+                return None
+            return result[0]
         return None
 
-    def get_user_credit(self, userid=None, username=None):
+    def get_user_credit(self, userid=None, username=None, useremail=None):
         if userid != None:
             self.cursor.execute("select credits from users where userid={};".format(userid))
             result = self.cursor.fetchone()
@@ -66,6 +72,12 @@ class sql_conn:
             return result[0]
         elif username != None:
             self.cursor.execute("select credits from users where username='{}';".format(username))
+            result = self.cursor.fetchone()
+            if result is None:
+                return None
+            return result[0]
+        elif useremail != None:
+            self.cursor.execute("select credits from users where email_address='{}';".format(useremail))
             result = self.cursor.fetchone()
             if result is None:
                 return None
@@ -89,7 +101,7 @@ class sql_conn:
             return None
         return result[0]
 
-    def get_admin_passwd(self, adminid=None, adminname=None):
+    def get_admin_passwd(self, adminid=None, adminname=None, adminemail=None):
         if adminid != None:
             self.cursor.execute("select password from admin where adminid={};".format(adminid))
             result = self.cursor.fetchone()
@@ -102,9 +114,15 @@ class sql_conn:
             if result is None:
                 return None
             return result[0]
+        elif adminemail != None:
+            self.cursor.execute("select password from admin where email_address='{}';".format(adminemail))
+            result = self.cursor.fetchone()
+            if result is None:
+                return None
+            return result[0]
         return None
 
-    def get_admin_access_level(self, adminid=None, adminname=None):
+    def get_admin_access_level(self, adminid=None, adminname=None, adminemail=None):
         # normal or super
         if adminid != None:
             self.cursor.execute("select access_level from admin where adminid={};".format(adminid))
@@ -114,6 +132,12 @@ class sql_conn:
             return result[0]
         elif adminname != None:
             self.cursor.execute("select access_level from admin where adminname='{}';".format(adminname))
+            result = self.cursor.fetchone()
+            if result is None:
+                return None
+            return result[0]
+        elif adminemail != None:
+            self.cursor.execute("select access_level from admin where email_address='{}';".format(adminemail))
             result = self.cursor.fetchone()
             if result is None:
                 return None

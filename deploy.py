@@ -56,8 +56,20 @@ def textlabel2():
 
 
 @app.route('/login/username/<user_name>/password/<pass_word>')
-def verification(user_name, pass_word):
+def username_login(user_name, pass_word):
     password = c.get_user_passwd(username=user_name)
+    if password is not None:
+        if password == pass_word:
+            result = {'code': 0}
+        elif password != pass_word:
+            result = {'code': 1, 'message': 'Wrong password!'}
+    else:
+        result = {'code': 1, 'message': 'User doesn\'t exists!'}
+    return jsonify(result)
+
+@app.route('/login/email/<useremail>/password/<pass_word>')
+def email_login(useremail, pass_word):
+    password = c.get_user_passwd(useremail=useremail)
     if password is not None:
         if password == pass_word:
             result = {'code': 0}

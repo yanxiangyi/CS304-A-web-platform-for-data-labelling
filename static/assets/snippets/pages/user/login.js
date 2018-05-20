@@ -87,14 +87,14 @@ var SnippetLogin = function () {
 
             btn.addClass('m-loader m-loader--right m-loader--light').attr('disabled', true);
 
-            var userName = document.getElementById("s_email").value;
+            var email = document.getElementById("s_email").value;
 
             var passWord = document.getElementById("s_password").value;
 
-            userName = userName.split('@')[0];
+            // userName = userName.split('@')[0];
             form.ajaxSubmit({
                 type: "GET",
-                url: "http://47.106.34.103:5000/login/username/" + userName + "/password/" + passWord,
+                url: "http://47.106.34.103:5000/login/email/" + email + "/password/" + passWord,
                 // data:{username:"11510693",password:"wangzehuai1234"},
                 // success: function(response, status, xhr, $form) {
                 success: function (json) {
