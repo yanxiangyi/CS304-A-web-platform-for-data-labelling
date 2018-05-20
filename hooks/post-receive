@@ -1,2 +1,0 @@
-#!/bin/sh
-GIT_WORK_TREE=/home/se2018/CS304-A-web-platform-for-data-labelling git checkout -f
