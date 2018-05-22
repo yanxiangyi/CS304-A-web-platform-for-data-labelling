@@ -19,8 +19,45 @@
 We currently have three web pages:
 
 [Index](http://47.106.34.103:5000/) 
-
-[MainPage](http://47.106.34.103:5000/mainpage)
-
+[Main Page](http://47.106.34.103:5000/mainpage)
 [Log in](http://47.106.34.103:5000/login)
+
+[Image Label](http://47.106.34.103:5000/imagelabel.html)
+[Publish](http://47.106.34.103:5000/publish.html)
+[Text Label](http://47.106.34.103:5000/textlabel.html)
+
+
+## 🌈 Current API 🌈
+
+### Login API
+
+[/login/username/<user_name>/password/<pass_word>](http://47.106.34.103:5000/login/username/<user_name>/password/<pass_word>)
+
+[/login/email/<user_email>/password/<pass_word>](http://47.106.34.103:5000/login/email/<useremail>/password/<pass_word>)
+
+Success Return:
+
+```json
+{
+  code: 0
+}
+```
+
+Failure Return:
+
+```json
+{
+  code: 1,
+  'message': 'Wrong password!'
+}
+```
+
+or
+
+```json
+{
+  code: 1,
+  'message': 'User doesn\'t exists!'
+}
+```
 
