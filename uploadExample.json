@@ -1,0 +1,22 @@
+{
+  "projectName": "test",
+  "index": 723154,
+  "data": "物流速度快，性价比高",
+  "task": [
+    {
+      "mode": "single",
+      "aim": "语言",
+      "label": "中文"
+    },
+    {
+      "mode": "multiple",
+      "aim": "这句话的情感",
+      "label": ["开心", "满意"]
+    },
+    {
+      "mode": "blank",
+      "aim": "其中的形容词",
+      "label": "快和高"
+    }
+  ]
+}
