@@ -74,21 +74,21 @@ def username_login(user_name, pass_word):
         elif password != pass_word:
             result = {'code': 1, 'message': 'Wrong password!'}
     else:
-        result = {'code': 1, 'message': 'User doesn\'t exists!'}
+        result = {'code': 1, 'message': 'User doesn\'t exist!'}
     return jsonify(result)
 
-@app.route('/login/email/<useremail>/password/<pass_word>')
+@app.route('/login/email/<user_email>/password/<pass_word>')
 @cross_origin()
-def email_login(useremail, pass_word):
-    password = c.get_user_passwd(useremail=useremail)
+def email_login(user_email, pass_word):
+    password = c.get_user_passwd(useremail=user_email)
     if password is not None:
         if password == pass_word:
             result = {'code': 0}
         elif password != pass_word:
             result = {'code': 1, 'message': 'Wrong password!'}
     else:
-        result = {'code': 1, 'message': 'User doesn\'t exists!'}
+        result = {'code': 1, 'message': 'User doesn\'t exist!'}
     return jsonify(result)
 
 if __name__ == '__main__':
-   app.run(host="0.0.0.0", port="5000")
+   app.run(host="0.0.0.0", port="5000", debug=True)

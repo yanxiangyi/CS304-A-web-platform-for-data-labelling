@@ -39,7 +39,7 @@ Success Return:
 
 ```json
 {
-  code: 0
+  "code": 0
 }
 ```
 
@@ -47,8 +47,8 @@ Failure Return:
 
 ```json
 {
-  code: 1,
-  'message': 'Wrong password!'
+  "code": 1,
+  "message": "Wrong password!"
 }
 ```
 
@@ -56,8 +56,8 @@ or
 
 ```json
 {
-  code: 1,
-  'message': 'User doesn\'t exists!'
+  "code": 1,
+  "message": "User doesn't exist"
 }
 ```
 
