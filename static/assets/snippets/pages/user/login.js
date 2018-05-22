@@ -89,27 +89,22 @@ var SnippetLogin = function () {
 
             var userName = document.getElementById("s_email").value;
 
-            var passWord = document.getElementById("s_email").value;
+            var passWord = document.getElementById("s_password").value;
+
+            userName = userName.split('@')[0];
 
             form.ajaxSubmit({
                 type: "GET",
-                url: 'more.json',
-                dataType: "json",
+                url: "http://47.106.34.103:5000/login/username/" + userName + "/password/" + passWord,
+                // data:{username:"11510693",password:"wangzehuai1234"},
                 // success: function(response, status, xhr, $form) {
                 success: function (json) {
-                    // similate 2s delay
+                    // similate 2s dela
+                    alert(json.code);
                     if (json.code == 0) {
                         // alert("Welcome, someone");
-                        window.location.href = "index.html";
-                    } else {
-                        alert("wrong");
+                        window.location.href = "http://www.baidu.com";
                     }
-
-                    setTimeout(function () {
-
-                        btn.removeClass('m-loader m-loader--right m-loader--light').attr('disabled', false);
-                        showErrorMsg(form, 'danger', 'Incorrect username or password. Please try again.');
-                    }, 2000);
                 }
             });
         });
