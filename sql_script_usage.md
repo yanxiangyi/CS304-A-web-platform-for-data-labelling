@@ -14,7 +14,7 @@
 
 ### 2. Method
 
-![ER Diagram of database](/Users/danning/Desktop/sustc/SE/proj/CS304-A-web-platform-for-data-labelling/db_er.png)
+https://github.com/yanxiangyi/CS304-A-web-platform-for-data-labelling/blob/master/db_er.png
 
 ER Diagram of database
 
