@@ -1,10 +1,10 @@
-
-from time import gmtime, strftime
-
+import time
 
 
-def get_time():
-    return strftime("%Y-%m-%d %H:%M:%S", gmtime())
+
+def get_timestamp():
+    return float("{0:.2f}".format(time.time()))
+    #return strftime("%Y-%m-%d %H:%M:%S", gmtime())
 
 
 class sql_conn:
@@ -14,141 +14,92 @@ class sql_conn:
 
     def __search_user_by_name(self, username):
         self.cursor.execute("select * from users where username='{}';".format(username))
-        result = self.cursor.fetchone()
-        return result  # None if it doesn't exist
+        return self.cursor.fetchone()  # None if it doesn't exist
+    
+    def __search_user_by_id(self, userid):
+        self.cursor.execute("select * from users where userid={};".format(userid))
+        return self.cursor.fetchone()  # None if it doesn't exist
 
     def __search_admin_by_name(self, adminname):
-        self.cursor.execute("select * from admin where adminname='{}';".format(adminname))
-        result = self.cursor.fetchone()
-        return result.fetchone()  # None if it doesn't exist
+        result = self.cursor.execute("select * from admin where adminname='{}';".format(adminname))
+        return self.cursor.fetchone()  # None if it doesn't exist
 
     def __search_source_by_name(self, sourcename):
-        self.cursor.execute("select * from source where sourcename='{}';".format(sourcename))
-        result = self.cursor.fetchone()
-        return result.fetchone()  # None if it doesn't exist
+        result = self.cursor.execute("select * from source where sourcename='{}';".format(sourcename))
+        return self.cursor.fetchone()  # None if it doesn't exist
 
     def __insertion(self, sql):
         try:
             self.cursor.execute(sql)
+            self.conn.commit()
             return 1
         except:
             return -1
 
-    # user*******************************************************************************
-    def get_user_id(self, username):
-        self.cursor.execute("select userid from users where username='{}';".format(username))
-        result = self.cursor.fetchone()
-        if result is None:
+    def __get_by_option(self, tablename, target_col, col_val_dict):
+        # search by either id or name 
+        try:
+            for col in col_val_dict.keys():
+                if col_val_dict[col]!=None:   
+                    pkcol = col
+            self.cursor.execute("select {} from {} where {}='{}';".format(target_col, tablename, pkcol, col_val_dict[pkcol]))
+            return self.cursor.fetchone()[0]
+        except:
             return None
-        return result[0]
+        
+    
+    
+    # user*******************************************************************************
+    def get_user_id(self, username=None, user_email=None):
+        return self.__get_by_option('users', 'userid', {'username': username, 'email_address': user_email})
 
-    def get_user_passwd(self, userid=None, username=None, useremail=None):
-        if userid != None:
-            self.cursor.execute("select password from users where userid={};".format(userid))
-            result = self.cursor.fetchone()
-            if result is None:
-                return None
-            return result[0]
-        elif username != None:
-            self.cursor.execute("select password from users where username='{}';".format(username))
-            result = self.cursor.fetchone()
-            if result is None:
-                return None
-            return result[0]
-        elif useremail != None:
-            self.cursor.execute("select password from users where email_address='{}';".format(useremail))
-            result = self.cursor.fetchone()
-            if result is None:
-                return None
-            return result[0]
-        return None
+    def get_user_passwd(self, userid=None, username=None, user_email=None):
+        return  self.__get_by_option('users', 'password', {'userid': userid, 'username': username, 'email_address':user_email})
+        
+    def get_user_email(self, userid=None, username=None):
+        return self.__get_by_option('users', 'email_address', {'userid': userid, 'username': username})
+    
+    def get_user_name(self, userid=None, user_email=None):
+        return self.__get_by_option('users', 'username', {'userid': userid, 'email_address': user_email})
 
-    def get_user_credit(self, userid=None, username=None, useremail=None):
-        if userid != None:
-            self.cursor.execute("select credits from users where userid={};".format(userid))
-            result = self.cursor.fetchone()
-            if result is None:
-                return None
-            return result[0]
-        elif username != None:
-            self.cursor.execute("select credits from users where username='{}';".format(username))
-            result = self.cursor.fetchone()
-            if result is None:
-                return None
-            return result[0]
-        elif useremail != None:
-            self.cursor.execute("select credits from users where email_address='{}';".format(useremail))
-            result = self.cursor.fetchone()
-            if result is None:
-                return None
-            return result[0]
-        return None
+    def get_user_credit(self, userid=None, username=None, user_email=None):
+        return self.__get_by_option('users', 'credits', {'userid': userid, 'username': username, 'email_address':user_email})
 
-    def insert_user(self, username, passwd, credits=0):
+    def insert_user(self, username, user_email, passwd, signin_time=get_timestamp(), credits=0):
         # insertion: 1 success, 0: already exist, -1: fail
         if self.__search_user_by_name(username) == None:
-            sql = "INSERT INTO `se_proj`.`users` (`username`,`password`,`signin_date`,`credits`) VALUES ('{}','{}','{}','{}');" \
-                .format(username, passwd, get_time(), credits)
+#             if signin_time == 0:  # signin_time default: current time
+#                 signin_time = get_timestamp()
+            sql = "INSERT INTO `se_proj`.`users` (`username`,`email_address`,`password`,`signin_date`,`credits`) VALUES ('{}','{}','{}','{}','{}');" \
+                .format(username, user_email, passwd, signin_time, credits)
             return self.__insertion(sql)
         else:
             return 0
 
+    def user_exist(self, userid=None, username=None, user_email=None):
+        result = self.__get_by_option('users','*', {'userid': userid, 'username': username, 'email_address':user_email})
+        return True if result!=None else False
+
+        
     # admin******************************************************************************
-    def get_admin_id(self, adminname):
-        self.cursor.execute("select adminid from admin where adminname='{}';".format(adminname))
-        result = self.cursor.fetchone()
-        if result is None:
-            return None
-        return result[0]
+    def get_admin_id(self, adminname=None, admin_email=None):
+        return self.__get_by_option('admin', 'adminid', {'email_address': admin_email, 'adminname': adminname})
 
-    def get_admin_passwd(self, adminid=None, adminname=None, adminemail=None):
-        if adminid != None:
-            self.cursor.execute("select password from admin where adminid={};".format(adminid))
-            result = self.cursor.fetchone()
-            if result is None:
-                return None
-            return result[0]
-        elif adminname != None:
-            self.cursor.execute("select password from admin where adminname='{}';".format(adminname))
-            result = self.cursor.fetchone()
-            if result is None:
-                return None
-            return result[0]
-        elif adminemail != None:
-            self.cursor.execute("select password from admin where email_address='{}';".format(adminemail))
-            result = self.cursor.fetchone()
-            if result is None:
-                return None
-            return result[0]
-        return None
-
-    def get_admin_access_level(self, adminid=None, adminname=None, adminemail=None):
+    def get_admin_name(self, adminid=None, admin_email=None):
+        return self.__get_by_option('admin', 'adminname', {'email_address': admin_email, 'adminid': adminid})
+    
+    def get_admin_passwd(self, adminid=None, adminname=None, admin_email=None):
+        return self.__get_by_option('admin', 'password', {'adminid': adminid, 'adminname': adminname, 'email_address': admin_email})
+        
+    def get_admin_access_level(self, adminid=None, adminname=None, admin_email=None):
         # normal or super
-        if adminid != None:
-            self.cursor.execute("select access_level from admin where adminid={};".format(adminid))
-            result = self.cursor.fetchone()
-            if result is None:
-                return None
-            return result[0]
-        elif adminname != None:
-            self.cursor.execute("select access_level from admin where adminname='{}';".format(adminname))
-            result = self.cursor.fetchone()
-            if result is None:
-                return None
-            return result[0]
-        elif adminemail != None:
-            self.cursor.execute("select access_level from admin where email_address='{}';".format(adminemail))
-            result = self.cursor.fetchone()
-            if result is None:
-                return None
-            return result[0]
-        return None
-
-    def insert_admin(self, adminname, passwd, access_level=1):
+        return self.__get_by_option('admin', 'access_level', {'adminid': adminid, 'adminname': adminname, 'email_address': admin_email})
+        
+    def insert_admin(self, email_addr, adminname, passwd, access_level=1):
         # insertion: 1 success, 0: already exist, -1: fail
         if self.__search_admin_by_name(adminname) == None:
-            sql = "INSERT INTO `se_proj`.`admin` (`adminname`,`password`,`access_level`) VALUES ('{}','{}','{}');" \
-                .format(adminname, passwd, access_level)
+            sql = "INSERT INTO `se_proj`.`admin` (`email_address`,`adminname`,`password`,`access_level`) VALUES ('{}','{}','{}','{}');" \
+                .format(email_addr, adminname, passwd, access_level)
             return self.__insertion(sql)
         else:
             return 0
@@ -156,55 +107,34 @@ class sql_conn:
     # source*****************************************************************************
     def get_source_id(self, sourcename):
         self.cursor.execute("select sourceid from source where sourcename='{}';".format(sourcename))
-        result = self.cursor.fetchone()
-        if result is None:
-            return None
-        return result[0]
+        return self.cursor.fetchone()[0]  # None if it doesn't exist
 
-    def get_source_label(self, sourceid=None, sourcename=None):
-        # return string list
-        if sourceid != None or sourcename != None:
-            if sourceid != None:
-                self.cursor.execute("select label from source where sourceid={};".format(sourceid))
-            elif sourcename != None:
-                self.cursor.execute(
-                    "select label from source where sourcename='{}';".format(sourcename))
-            return self.cursor.fetchone()[0].split(',') if self.cursor.fetchone()[0] != None else None
-        else:
-            return
-
-    def insert_source(self, sourcename, label):
-        # label should be a string list
+    def get_source_finished(self, sourcename=None, sourceid=None):
+        result = self.__get_by_option('source', 'finished', {'sourceid': sourceid, 'sourcename': sourcename})
+        return True if result==1 else False
+    
+    def get_source_publisherid(self, sourcename=None, sourceid=None):
+        #return admin id
+        return self.__get_by_option('source', 'publisher', {'sourceid': sourceid, 'sourcename': sourcename})
+    
+    def get_source_desc(self, sourcename=None, sourceid=None):
+        return self.__get_by_option('source', 'description',{'sourceid': sourceid, 'sourcename': sourcename})
+    
+    def get_source_priority(self, sourcename=None, sourceid=None):
+        return self.__get_by_option('source', 'priority', {'sourceid': sourceid, 'sourcename': sourcename})
+    
+    def insert_source(self, sourcename,finished=0, publisher='NULL', description='', publish_time=get_timestamp(), priority=1):
         # insertion: 1 success, 0: already exist, -1: fail
         if self.__search_source_by_name(sourcename) == None:
-            s = ''
-            for l in label:
-                s += str(l) + ','
-            s = s[:-1]
-            sql = "INSERT INTO `se_proj`.`source` (`sourcename`,`label`) VALUES ('{}','{}');" \
-                .format(sourcename, s)
+            
+            sql = "INSERT INTO `se_proj`.`source` (`sourcename`,`finished`,`publisher`,`description`,`publish_date`, `priority`)\
+            VALUES ('{}',{}, {},'{}',{},{});" .format(sourcename, finished, publisher, description, publish_time, priority)
+            #print(sql)
             return self.__insertion(sql)
         else:
-
             return 0
 
-    # data********************************************************************************
-    def get_all_image_data(self):
-        # 0:dataid, 1:datatype, 2:priority, 3:datapath, 4:datasource, 5:publish_by(admin), 6:publish_date, 7:final_labelid
-        self.cursor.execute("select * from image_data;")
-        return self.cursor.fetchall()
-
-    def get_all_text_data(self):
-        # 0:dataid, 1:datatype, 2:priority, 3:datacontent, 4:datasource, 5:publish_by(admin), 6:publish_date, 7:final_labelid
-        self.cursor.execute("select * from text_data;")
-        return self.cursor.fetchall()
-
-    def get_image_label_by_dataid(self, image_dataid):
-        # 0:labelid, 1:dataid, 2:userid, 3:labeldate, 4:labelinfo, 5:labelpath
-        self.cursor.execute("select * from image_label where dataid={};".format(image_dataid))
-        return self.cursor.fetchall()
-
-    def get_text_label_by_dataid(self, text_dataid):
-        # 0:labelid, 1:dataid, 2:userid, 3:labeldate, 4:labelinfo
-        self.cursor.execute("select * from text_label where dataid={};".format(text_dataid))
-        return self.cursor.fetchall()
+    
+    def close(self):
+        self.cursor.close()
+        self.conn.close()
