@@ -14,11 +14,9 @@
 
 ### 2. Method
 
+**ER Diagram of database**
+
 https://github.com/yanxiangyi/CS304-A-web-platform-for-data-labelling/blob/master/db_er.png
-
-ER Diagram of database
-
-
 
 **All methods return `None` unless otherwise stated**
 
