@@ -57,7 +57,57 @@ or
 ```json
 {
   "code": 1,
-  "message": "User doesn't exist"
+  "message": "User doesn't exist!"
+}
+```
+
+### Register API
+
+[/register/email/<user_email>/username/<user_name>/password/<pass_word>](http://47.106.34.103:5000/register/email/<user_email>/username/<user_name>/password/<pass_word>)
+
+Success Return:
+
+```json
+{
+  "code": 0
+}
+```
+
+Failure Return:
+
+```json
+{
+  "code": 1, 
+  "message": "User already exists!"}
+```
+
+or
+
+```json
+{
+  "code": 1,
+  "message": "Register failed! Please try later!"
+}
+```
+
+### Forget API
+
+[/forget/email/<user_email>](http://47.106.34.103:5000/forget/email/<user_email>)
+
+Success Return:
+
+```json
+{
+  "code": 0
+}
+```
+
+Failure Return:
+
+```json
+{
+  "code": 1, 
+  "message": "User doesn't exist!"
 }
 ```
 
