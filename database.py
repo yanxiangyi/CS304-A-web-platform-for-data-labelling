@@ -1,5 +1,5 @@
 import time
-
+import os
 
 
 def get_timestamp():
@@ -26,6 +26,10 @@ class sql_conn:
 
     def __search_source_by_name(self, sourcename):
         result = self.cursor.execute("select * from source where sourcename='{}';".format(sourcename))
+        return self.cursor.fetchone()  # None if it doesn't exist
+    
+    def __search_source_by_id(self, sourceid):
+        result = self.cursor.execute("select * from source where sourceid='{}';".format(sourceid))
         return self.cursor.fetchone()  # None if it doesn't exist
 
     def __insertion(self, sql):
@@ -64,6 +68,9 @@ class sql_conn:
 
     def get_user_credit(self, userid=None, username=None, user_email=None):
         return self.__get_by_option('users', 'credits', {'userid': userid, 'username': username, 'email_address':user_email})
+
+    def get_user_signin_time(self, userid=None, username=None, user_email=None):
+        return self.__get_by_option('users', 'signin_date', {'userid': userid, 'username': username, 'email_address':user_email})
 
     def insert_user(self, username, user_email, passwd, signin_time=get_timestamp(), credits=0):
         # insertion: 1 success, 0: already exist, -1: fail
@@ -134,7 +141,30 @@ class sql_conn:
         else:
             return 0
 
-    
+    # data *****************************************************************************
+    def __insert_textdata(self, sourceid, data_path, final_labelid='NULL'):
+        if self.__search_source_by_id(sourceid)!=None:
+            sql = "INSERT INTO `se_proj`.`text_data` (`datasource`,`data_path`,`final_labelid`) VALUES ({},'{}',{});"\
+            .format(sourceid, data_path, final_labelid)
+            return self.__insertion(sql)
+        else:
+            return 0
+        
+    def load_data(self, root_path, sourceid=None, sourcename=None):
+        # load data(json file) from root folder into database
+        if sourceid == None and sourcename ==None:
+            return 0   #fail
+        if sourceid == None and sourcename != None:
+            sourceid = self.get_source_id(sourcename)
+        try:
+            _, _, files = next(os.walk(root_path))
+            for f in files:
+                self.__insert_textdata(sourceid, root_path+f)
+            return 1
+        except:
+            return 0
+        
+            
     def close(self):
         self.cursor.close()
         self.conn.close()
