@@ -39,6 +39,11 @@ def index():
 def login():
     return render_template('login.html')
 
+@app.route("/register.html")
+@cross_origin()
+def register():
+    return render_template('register.html')
+
 
 @app.route("/mainpage.html")
 @cross_origin()
@@ -52,10 +57,10 @@ def imagelabel():
     return render_template('imagelabel.html')
 
 
-@app.route("/publish.html")
-@cross_origin()
-def publish():
-    return render_template('publish.html')
+# @app.route("/publish.html")
+# @cross_origin()
+# def publish():
+#     return render_template('publish.html')
 
 
 @app.route("/textlabel.html")
@@ -126,7 +131,8 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
 
-@app.route('/uploads', methods=['GET', 'POST'])
+@app.route('/publish.html', methods=['GET', 'POST'])
+@cross_origin()
 def upload_file():
     if request.method == 'POST':
         # check if the post request has the file part
@@ -142,12 +148,12 @@ def upload_file():
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            return redirect(url_for('uploaded_file',
-                                    filename=filename))
-    return render_template('upload.html')
+            return jsonify({"code": 0})
+    return render_template('publish.html')
 
 
 @app.route('/uploads/<filename>')
+@cross_origin()
 def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'],
                                filename)
