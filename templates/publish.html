@@ -19,6 +19,14 @@
             }
         });
     </script>
+    <script language="JavaScript">
+        function showInput() {
+            document.getElementById('Show_Project_Name').innerHTML =
+                document.getElementById("Project_Name").value;
+            document.getElementById('Show_Project_Description').innerHTML =
+                document.getElementById("Project_Description").value;
+        }
+    </script>
     <!--end::Web font -->
     <!--begin::Base Styles -->
     <!--begin::Page Vendors -->
@@ -559,9 +567,10 @@
                                                                 * Project Name:
                                                             </label>
                                                             <div class="col-xl-9 col-lg-9">
-                                                                <input type="text" name="name"
+                                                                <input id = "Project_Name" type="text" name="name"
                                                                        class="form-control m-input" placeholder=""
                                                                        value="Amazing Cars">
+
                                                                 <span class="m-form__help">
 																			Please enter the name of project
 																		</span>
@@ -572,7 +581,7 @@
                                                                 Project Description:
                                                             </label>
                                                             <div class="col-xl-9 col-lg-9">
-                                                                <input type="text" name="description"
+                                                                <input id = "Project_Description" type="text" name="description"
                                                                        class="form-control m-input" placeholder=""
                                                                        value="A fantastic journey">
                                                                 <span class="m-form__help">
@@ -592,9 +601,6 @@
                                                             </h3>
                                                         </div>
                                                         <div class="form-group m-form__group">
-                                                            <label for="exampleInputEmail1">
-                                                                File Browser
-                                                            </label>
                                                             <div></div>
                                                             <div class="custom-file">
                                                                 <input type="file" class="custom-file-input" id="customFile">
@@ -644,9 +650,7 @@
                                                                             Project Name:
                                                                         </label>
                                                                         <div class="col-xl-8 col-lg-8">
-																						<span class="m-form__control-static">
-																							Amazing Cars
-																						</span>
+                                                                            <span id = "Show_Project_Name" class="m-form__control-static"></span>
                                                                         </div>
                                                                     </div>
                                                                     <div class="form-group m-form__group m-form__group--sm row">
@@ -654,9 +658,7 @@
                                                                             Project Description:
                                                                         </label>
                                                                         <div class="col-xl-8 col-lg-8">
-																						<span class="m-form__control-static">
-																							A fantastic journey
-																						</span>
+                                                                            <span id = "Show_Project_Description" class="m-form__control-static"></span>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -675,7 +677,7 @@
 																			<i class="fa  flaticon-placeholder"></i>
 																		</span>
                                                             <span class="m-accordion__item-title">
-																			2. Attach a dataset
+																			2. Dataset
 																		</span>
                                                             <span class="m-accordion__item-mode"></span>
                                                         </div>
@@ -771,7 +773,7 @@
                                                             <a href="#"
                                                                class="btn btn-info m-btn m-btn--custom m-btn--icon"
                                                                data-wizard-action="next">
-																		<span>
+																		<span onclick="showInput();">
 																			<span>
 																				Save &amp; Continue
 																			</span>
