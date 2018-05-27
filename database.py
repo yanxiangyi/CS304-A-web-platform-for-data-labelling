@@ -1,6 +1,6 @@
 import time
 import os
-
+import json
 
 def get_timestamp():
     return float("{0:.2f}".format(time.time()))
@@ -50,8 +50,21 @@ class sql_conn:
             return self.cursor.fetchone()[0]
         except:
             return None
-        
     
+    def __get_by_mul_cond(self, tablename, target_col, col_val_dict):
+        try:
+            sql = "select {} from {} where ".format(target_col, tablename) 
+            for i, col in enumerate(col_val_dict.keys()):
+                if i != 0 :
+                    sql += " and "
+                sql += "{} = '{}'".format(col, col_val_dict[col])
+
+            sql += ";"
+            #print(sql)
+            self.cursor.execute(sql)
+            return self.cursor.fetchone()[0]
+        except:
+            return None
     
     # user*******************************************************************************
     def get_user_id(self, username=None, user_email=None):
@@ -68,17 +81,19 @@ class sql_conn:
 
     def get_user_credit(self, userid=None, username=None, user_email=None):
         return self.__get_by_option('users', 'credits', {'userid': userid, 'username': username, 'email_address':user_email})
+    
+    def get_user_nb_accept(self, userid=None, username=None, user_email=None):
+        return self.__get_by_option('users', 'nb_accept', {'userid': userid, 'username': username, 'email_address':user_email})
 
     def get_user_signin_time(self, userid=None, username=None, user_email=None):
         return self.__get_by_option('users', 'signin_date', {'userid': userid, 'username': username, 'email_address':user_email})
 
-    def insert_user(self, username, user_email, passwd, signin_time=get_timestamp(), credits=0):
+    
+    def insert_user(self, username, user_email, passwd, signin_time=get_timestamp(), credits=0, nb_accept=0):
         # insertion: 1 success, 0: already exist, -1: fail
         if self.__search_user_by_name(username) == None:
-#             if signin_time == 0:  # signin_time default: current time
-#                 signin_time = get_timestamp()
-            sql = "INSERT INTO `se_proj`.`users` (`username`,`email_address`,`password`,`signin_date`,`credits`) VALUES ('{}','{}','{}','{}','{}');" \
-                .format(username, user_email, passwd, signin_time, credits)
+            sql = "INSERT INTO `se_proj`.`users` (`username`,`email_address`,`password`,`signin_date`,`credits`,`nb_accept`) VALUES ('{}','{}','{}','{}','{}',{});" \
+                .format(username, user_email, passwd, signin_time, credits, nb_accept)
             return self.__insertion(sql)
         else:
             return 0
@@ -113,9 +128,8 @@ class sql_conn:
 
     # source*****************************************************************************
     def get_source_id(self, sourcename):
-        self.cursor.execute("select sourceid from source where sourcename='{}';".format(sourcename))
-        return self.cursor.fetchone()[0]  # None if it doesn't exist
-
+        return self.__get_by_option('source','sourceid', {'sourcename':sourcename})
+    
     def get_source_finished(self, sourcename=None, sourceid=None):
         result = self.__get_by_option('source', 'finished', {'sourceid': sourceid, 'sourcename': sourcename})
         return True if result==1 else False
@@ -142,29 +156,52 @@ class sql_conn:
             return 0
 
     # data *****************************************************************************
-    def __insert_textdata(self, sourceid, data_path, final_labelid='NULL'):
+    def __insert_textdata(self, sourceid, data_index, data_path, final_labelid='NULL'):
         if self.__search_source_by_id(sourceid)!=None:
-            sql = "INSERT INTO `se_proj`.`text_data` (`datasource`,`data_path`,`final_labelid`) VALUES ({},'{}',{});"\
-            .format(sourceid, data_path, final_labelid)
+            sql = "INSERT INTO `se_proj`.`text_data` (`datasource`,`data_index`,`data_path`,`final_labelid`) VALUES ({},{},'{}',{});"\
+            .format(sourceid, data_index,data_path, final_labelid)
             return self.__insertion(sql)
         else:
             return 0
         
     def load_data(self, root_path, sourceid=None, sourcename=None):
         # load data(json file) from root folder into database
-        if sourceid == None and sourcename ==None:
-            return 0   #fail
-        if sourceid == None and sourcename != None:
-            sourceid = self.get_source_id(sourcename)
+        sourceid = self.__get_by_option('source', 'sourceid', {'sourceid':sourceid, 'sourcename':sourcename})
         try:
             _, _, files = next(os.walk(root_path))
             for f in files:
-                self.__insert_textdata(sourceid, root_path+f)
+                with open(root_path+f) as js:
+                    data_index = json.load(js)['index']
+                if None==self.__get_by_mul_cond('text_data','dataid', {'datasouce':sourceid, 'data_index':data_index}):
+                    continue
+                self.__insert_textdata(sourceid, data_index, root_path+f)
             return 1
         except:
             return 0
-        
-            
+    
+    def get_textdataid(self, data_index, sourceid=None, sourcename=None):
+        sourceid = self.__get_by_option('source', 'sourceid', {'sourceid':sourceid, 'sourcename':sourcename})
+        return self.__get_by_mul_cond('text_data', 'dataid', {'datasource':sourceid, 'data_index':data_index})
+    
+    def get_textdata_datapath(self, data_index, sourceid=None, sourcename=None):
+        sourceid = self.__get_by_option('source', 'sourceid', {'sourceid':sourceid, 'sourcename':sourcename})
+        return self.__get_by_mul_cond('text_data', 'data_path', {'datasource':sourceid, 'data_index':data_index})
+    
+    def get_textdata_finallabelid(self, data_index, sourceid=None, sourcename=None):
+        sourceid = self.__get_by_option('source', 'sourceid', {'sourceid':sourceid, 'sourcename':sourcename})
+        return self.__get_by_mul_cond('text_data', 'final_labelid', {'datasource':sourceid, 'data_index':data_index})
+    
+    def update_final_labelid(self, data_index, labelid, sourceid=None, sourcename=None):
+        # 1:sucess -1:fail  0:souce or data not exist
+        sourceid = self.__get_by_option('source', 'sourceid', {'sourceid':sourceid, 'sourcename':sourcename})
+        dataid = self.get_textdataid(data_index, sourceid=sourceid)
+        if sourceid!=None and dataid!=None:
+            sql = "UPDATE `se_proj`.`text_data` SET `final_labelid`={} WHERE `dataid`={};".format(labelid, dataid)
+            return self.__insertion(sql)
+        else:
+            return 0
+    
+    
     def close(self):
         self.cursor.close()
         self.conn.close()
