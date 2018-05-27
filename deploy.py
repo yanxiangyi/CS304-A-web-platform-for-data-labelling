@@ -90,5 +90,26 @@ def email_login(user_email, pass_word):
         result = {'code': 1, 'message': 'User doesn\'t exist!'}
     return jsonify(result)
 
+@app.route('/register/email/<user_email>/username/<user_name>/password/<pass_word>')
+@cross_origin()
+def email_register(user_name, user_email, pass_word):
+    result = c.insert_user(username=user_name, user_email=user_email, passwd=pass_word, signin_time=get_timestamp(), credits=0)
+    if result == 1:
+        return jsonify({'code': 0})
+    elif result == 0:
+        result = {'code': 1, 'message': 'User already exists!'}
+    else:
+        result = {'code': 1, 'message': 'Register failed! Please try later!'}
+    return jsonify(result)
+
+@app.route('/forget/email/<user_email>')
+@cross_origin()
+def email_forget(user_email):
+    result = c.user_exist(user_email=user_email)
+    if result:
+        return jsonify({'code': 0})
+    else:
+        return jsonify({'code': 1, 'message': 'User doesn\'t exist!'})
+
 if __name__ == '__main__':
    app.run(host="0.0.0.0", port="5000", debug=True)
