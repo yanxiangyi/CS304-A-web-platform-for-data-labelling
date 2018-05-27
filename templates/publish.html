@@ -550,68 +550,72 @@
                     1) Use m-form--label-align-left class to alight the form input lables to the right
                     2) Use m-form--state class to highlight input control borders on form validation
                 -->
-                                        <form class="m-form m-form--label-align-left- m-form--state-" id="m_form">
+                                        <form name = 'myform' class="m-form m-form--label-align-left- m-form--state-" id="m_form"
+                                              action="" method=post enctype=multipart/form-data>
                                             <!--begin: Form Body -->
-                                            <div class="m-portlet__body m-portlet__body--no-padding">
-                                                <!--begin: Form Wizard Step 1-->
-                                                <div class="m-wizard__form-step m-wizard__form-step--current"
-                                                     id="m_wizard_form_step_1">
-                                                    <div class="m-form__section m-form__section--first">
-                                                        <div class="m-form__heading">
-                                                            <h3 class="m-form__heading-title">
-                                                                Project Details
-                                                            </h3>
-                                                        </div>
-                                                        <div class="form-group m-form__group row">
-                                                            <label class="col-xl-3 col-lg-3 col-form-label">
-                                                                * Project Name:
-                                                            </label>
-                                                            <div class="col-xl-9 col-lg-9">
-                                                                <input id = "Project_Name" type="text" name="name"
-                                                                       class="form-control m-input" placeholder=""
-                                                                       value="Amazing Cars">
+                                            <!--<div class="m-portlet__body m-portlet__body&#45;&#45;no-padding">-->
+                                            <!--begin: Form Wizard Step 1-->
+                                            <div class="m-wizard__form-step m-wizard__form-step--current"
+                                                 id="m_wizard_form_step_1">
+                                                <div class="m-form__section m-form__section--first">
+                                                    <div class="m-form__heading">
+                                                        <h3 class="m-form__heading-title">
+                                                            Project Details
+                                                        </h3>
+                                                    </div>
+                                                    <div class="form-group m-form__group row">
+                                                        <label class="col-xl-3 col-lg-3 col-form-label">
+                                                            * Project Name:
+                                                        </label>
+                                                        <div class="col-xl-9 col-lg-9">
+                                                            <input id="Project_Name" type="text" name="name"
+                                                                   class="form-control m-input" placeholder=""
+                                                                   value="Amazing Cars">
 
-                                                                <span class="m-form__help">
+                                                            <span class="m-form__help">
 																			Please enter the name of project
 																		</span>
-                                                            </div>
-                                                        </div>
-                                                        <div class="form-group m-form__group row">
-                                                            <label class="col-xl-3 col-lg-3 col-form-label">
-                                                                Project Description:
-                                                            </label>
-                                                            <div class="col-xl-9 col-lg-9">
-                                                                <input id = "Project_Description" type="text" name="description"
-                                                                       class="form-control m-input" placeholder=""
-                                                                       value="A fantastic journey">
-                                                                <span class="m-form__help">
-																			Please description your project(optional)
-																		</span>
-                                                            </div>
                                                         </div>
                                                     </div>
-                                                </div>
-                                                <!--end: Form Wizard Step 1-->
-                                                <!--begin: Form Wizard Step 2-->
-                                                <div class="m-wizard__form-step" id="m_wizard_form_step_2">
-                                                    <div class="m-form__section m-form__section--first">
-                                                        <div class="m-form__heading">
-                                                            <h3 class="m-form__heading-title">
-                                                                Attach a dataset
-                                                            </h3>
-                                                        </div>
-                                                        <div class="form-group m-form__group">
-                                                            <div></div>
-                                                            <div class="custom-file">
-                                                                <input type="file" class="custom-file-input" id="customFile">
-                                                                <label class="custom-file-label" for="customFile">
-                                                                    Choose file
-                                                                </label>
-                                                            </div>
+                                                    <div class="form-group m-form__group row">
+                                                        <label class="col-xl-3 col-lg-3 col-form-label">
+                                                            Project Description:
+                                                        </label>
+                                                        <div class="col-xl-9 col-lg-9">
+                                                            <input id="Project_Description" type="text"
+                                                                   name="description"
+                                                                   class="form-control m-input" placeholder=""
+                                                                   value="A fantastic journey">
+                                                            <span class="m-form__help">
+																			Please description your project(optional)
+																		</span>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
+                                            <!--end: Form Wizard Step 1-->
+                                            <!--begin: Form Wizard Step 2-->
+                                            <div class="m-wizard__form-step" id="m_wizard_form_step_2">
+                                                <div class="m-form__section m-form__section--first">
+                                                    <div class="m-form__heading">
+                                                        <h3 class="m-form__heading-title">
+                                                            Attach a dataset
+                                                        </h3>
+                                                    </div>
+                                                    <div class="form-group m-form__group">
+                                                        <div></div>
+                                                        <div class="custom-file">
+                                                            <input type="file" name=file class="custom-file-input"
+                                                                   id="customFile">
+                                                            <label class="custom-file-label" for="customFile">
+                                                                Choose file
+                                                            </label>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!--</div>-->
                                             <!--end: Form Wizard Step 2-->
                                             <!--begin: Form Wizard Step 4-->
                                             <div class="m-wizard__form-step" id="m_wizard_form_step_4">
@@ -650,7 +654,8 @@
                                                                             Project Name:
                                                                         </label>
                                                                         <div class="col-xl-8 col-lg-8">
-                                                                            <span id = "Show_Project_Name" class="m-form__control-static"></span>
+                                                                            <span id="Show_Project_Name"
+                                                                                  class="m-form__control-static"></span>
                                                                         </div>
                                                                     </div>
                                                                     <div class="form-group m-form__group m-form__group--sm row">
@@ -658,7 +663,8 @@
                                                                             Project Description:
                                                                         </label>
                                                                         <div class="col-xl-8 col-lg-8">
-                                                                            <span id = "Show_Project_Description" class="m-form__control-static"></span>
+                                                                            <span id="Show_Project_Description"
+                                                                                  class="m-form__control-static"></span>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -668,7 +674,7 @@
                                                     </div>
                                                     <!--end::Item-->
                                                     <!--begin::Item-->
-                                                    <div class="m-accordion__item">
+                                                    <div class="m-accordion__item active">
                                                         <div class="m-accordion__item-head collapsed" role="tab"
                                                              id="m_accordion_1_item_2_head" data-toggle="collapse"
                                                              href="#m_accordion_1_item_2_body"
@@ -759,13 +765,15 @@
                                                             </a>
                                                         </div>
                                                         <div class="col-lg-6 m--align-right">
+                                                            <!--<input type=submit value=Submit>-->
                                                             <a href="#"
                                                                class="btn btn-info m-btn m-btn--custom m-btn--icon"
                                                                data-wizard-action="submit">
 																		<span>
 																			<i class="la la-check"></i>
 																			&nbsp;&nbsp;
-																			<span>
+																			<span onclick="myform.submit()">
+                                                                                <!--<input type=submit value=Submit>-->
 																				Submit
 																			</span>
 																		</span>

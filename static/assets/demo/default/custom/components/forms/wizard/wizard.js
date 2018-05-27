@@ -160,7 +160,7 @@ var WizardDemo = function () {
 
         btn.on('click', function (e) {
             e.preventDefault();
-
+            alert(20);
             if (validator.form()) {
                 //== See: src\js\framework\base\app.js
                 mApp.progress(btn);
