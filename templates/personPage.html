@@ -4,13 +4,13 @@
 <head>
     <meta charset="utf-8"/>
     <title>
-        SkyCat | User Statistics
+        SkyCat | Person Page
     </title>
     <meta name="description" content="Latest updates and statistic charts">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!--begin::Web font -->
-    <script src="../static/assets/plugins/webfont.js"></script>
+    <script src="../static/js/webfont.js"></script>
     <script>
         WebFont.load({
             google: {"families": ["Poppins:300,400,500,600,700", "Roboto:300,400,500,600,700"]},
@@ -21,13 +21,10 @@
     </script>
     <!--end::Web font -->
     <!--begin::Base Styles -->
-    <!--begin::Page Vendors -->
-    <link href="../static/assets/vendors/custom/fullcalendar/fullcalendar.bundle.css" rel="stylesheet" type="text/css"/>
-    <!--end::Page Vendors -->
-    <link href="../static/assets/vendors/base/vendors.bundle.css" rel="stylesheet" type="text/css"/>
-    <link href="../static/assets/demo/demo2/base/style.bundle.css" rel="stylesheet" type="text/css"/>
+    <link href="../static/css/vendors.bundle.css" rel="stylesheet" type="text/css"/>
+    <link href="../static/css/style.bundle.css" rel="stylesheet" type="text/css"/>
     <!--end::Base Styles -->
-    <link rel="shortcut icon" href="../static/assets/demo/demo2/media/img/logo/logo.png"/>
+    <link rel="shortcut icon" href="../static/img/logo.png"/>
 </head>
 <!-- end::Head -->
 <!-- end::Body -->
@@ -45,19 +42,19 @@
                         <div class="m-stack m-stack--ver m-stack--general m-stack--inline">
                             <div class="m-stack__item m-stack__item--middle m-brand__logo">
                                 <a href="index.html" class="m-brand__logo-wrapper">
-                                    <img alt="" src="../static/assets/demo/demo2/media/img/logo/logo.png"
+                                    <img alt="" src="../static/img/logo.png"
                                          style=" max-width: 66px; "/>
                                 </a>
                             </div>
                             <div class="m-stack__item m-stack__item--middle m-brand__tools">
                                 <!-- begin::Responsive Header Menu Toggler-->
-                                <a id="m_aside_header_menu_mobile_toggle" href="javascript:;"
+                                <a id="m_aside_header_menu_mobile_toggle" href="javascript:"
                                    class="m-brand__icon m-brand__toggler m--visible-tablet-and-mobile-inline-block">
                                     <span></span>
                                 </a>
                                 <!-- end::Responsive Header Menu Toggler-->
                                 <!-- begin::Topbar Toggler-->
-                                <a id="m_aside_header_topbar_mobile_toggle" href="javascript:;"
+                                <a id="m_aside_header_topbar_mobile_toggle" href="javascript:"
                                    class="m-brand__icon m--visible-tablet-and-mobile-inline-block">
                                     <i class="flaticon-more"></i>
                                 </a>
@@ -79,7 +76,7 @@
                                         <!--user-->
                                         <a href="#" class="m-nav__link m-dropdown__toggle">
 													<span class="m-topbar__userpic m--hide">
-														<img src="../static/assets/app/media/img/users/user4.jpg"
+														<img src="../static/img/user4.jpg"
                                                              class="m--img-rounded m--marginless m--img-centered"
                                                              alt=""/>
 													</span>
@@ -96,10 +93,10 @@
                                             <span class="m-dropdown__arrow m-dropdown__arrow--right m-dropdown__arrow--adjust"></span>
                                             <div class="m-dropdown__inner">
                                                 <div class="m-dropdown__header m--align-center"
-                                                     style="background: url(../static/assets/app/media/img/misc/user_profile_bg.jpg); background-size: cover;">
+                                                     style="background: url(../static/img/user_profile_bg.jpg); background-size: cover;">
                                                     <div class="m-card-user m-card-user--skin-dark">
                                                         <div class="m-card-user__pic">
-                                                            <img src="../static/assets/app/media/img/users/user4.jpg"
+                                                            <img src="../static/img/user4.jpg"
                                                                  class="m--img-rounded m--marginless" alt=""/>
                                                         </div>
                                                         <div class="m-card-user__details">
@@ -133,7 +130,7 @@
                                                             <li class="m-nav__separator m-nav__separator--fit"></li>
                                                             <!--logout-->
                                                             <li class="m-nav__item">
-                                                                <a href="snippets/pages/user/login-1.html"
+                                                                <a href="login.html"
                                                                    class="btn m-btn--pill btn-secondary m-btn m-btn--custom m-btn--label-brand m-btn--bolder">
                                                                     Logout
                                                                 </a>
@@ -163,7 +160,7 @@
                                             <div class="m-dropdown__inner">
 
                                                 <div class="m-dropdown__header m--align-center"
-                                                     style="background: url(../static/assets/app/media/img/misc/notification_bg.jpg); background-size: cover;">
+                                                     style="background: url(../static/img/notification_bg.jpg); background-size: cover;">
 															<span class="m-dropdown__header-title">
 																9 New Information
 															</span>
@@ -322,7 +319,7 @@
 
                                             <!--label1-->
                                             <li class="m-menu__item " aria-haspopup="true">
-                                                <a href="Choose.html" class="m-menu__link ">
+                                                <a href="choose.html" class="m-menu__link ">
                                                     <i class="m-menu__link-icon flaticon-diagram"></i>
                                                     <span class="m-menu__link-title">
 																<span class="m-menu__link-wrap">
@@ -336,7 +333,7 @@
 
                                             <!--label2-->
                                             <li class="m-menu__item" aria-haspopup="true">
-                                                <a href="Choose.html" class="m-menu__link">
+                                                <a href="choose.html" class="m-menu__link">
                                                     <i class="m-menu__link-icon flaticon-business"></i>
                                                     <span class="m-menu__link-title">
 																<span class="m-menu__link-wrap">
@@ -432,53 +429,53 @@
 
                                 <!--data-->
                                 <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"
-                                data-menu-submenu-toggle="click" aria-haspopup="true">
-                                <a href="#" class="m-menu__link m-menu__toggle">
-                                    <span class="m-menu__item-here"></span>
-                                    <span class="m-menu__link-text">
+                                    data-menu-submenu-toggle="click" aria-haspopup="true">
+                                    <a href="#" class="m-menu__link m-menu__toggle">
+                                        <span class="m-menu__item-here"></span>
+                                        <span class="m-menu__link-text">
                                                 Statistics
                                             </span>
-                                    <i class="m-menu__hor-arrow la la-angle-down"></i>
-                                    <i class="m-menu__ver-arrow la la-angle-right"></i>
-                                </a>
+                                        <i class="m-menu__hor-arrow la la-angle-down"></i>
+                                        <i class="m-menu__ver-arrow la la-angle-right"></i>
+                                    </a>
 
-                                <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left">
+                                    <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left">
 
-                                    <span class="m-menu__arrow m-menu__arrow--adjust"></span>
+                                        <span class="m-menu__arrow m-menu__arrow--adjust"></span>
 
-                                    <ul class="m-menu__subnav">
+                                        <ul class="m-menu__subnav">
 
-                                        <!--label1-->
-                                        <li class="m-menu__item " aria-haspopup="true">
-                                            <a href="datastatistic.html" class="m-menu__link ">
-                                                <i class="m-menu__link-icon flaticon-diagram"></i>
-                                                <span class="m-menu__link-title">
+                                            <!--label1-->
+                                            <li class="m-menu__item " aria-haspopup="true">
+                                                <a href="datastatistic.html" class="m-menu__link ">
+                                                    <i class="m-menu__link-icon flaticon-diagram"></i>
+                                                    <span class="m-menu__link-title">
                                                             <span class="m-menu__link-wrap">
                                                                 <span class="m-menu__link-text">
                                                                     Data
                                                                 </span>
                                                             </span>
                                                         </span>
-                                            </a>
-                                        </li>
+                                                </a>
+                                            </li>
 
-                                        <!--label2-->
-                                        <li class="m-menu__item" aria-haspopup="true">
-                                            <a href="userstatistic.html" class="m-menu__link">
-                                                <i class="m-menu__link-icon flaticon-business"></i>
-                                                <span class="m-menu__link-title">
+                                            <!--label2-->
+                                            <li class="m-menu__item" aria-haspopup="true">
+                                                <a href="userstatistic.html" class="m-menu__link">
+                                                    <i class="m-menu__link-icon flaticon-business"></i>
+                                                    <span class="m-menu__link-title">
                                                             <span class="m-menu__link-wrap">
                                                                 <span class="m-menu__link-text">
                                                                     User
                                                                 </span>
                                                             </span>
                                                         </span>
-                                            </a>
+                                                </a>
 
-                                        </li>
-                                    </ul>
-                                </div>
-                            </li>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
                             </ul>
                         </div>
                     </div>
@@ -515,7 +512,7 @@
                                     </div>
                                     <div class="m-card-profile__pic">
                                         <div class="m-card-profile__pic-wrapper">
-                                            <img src="../assets/app/media/img/users/user4.jpg" alt="">
+                                            <img src="../static/img/user4.jpg" alt="">
                                         </div>
                                     </div>
                                     <div class="m-card-profile__details">
@@ -653,20 +650,24 @@
                         <div class="m-portlet m-portlet--full-height m-portlet--tabs  ">
                             <div class="m-portlet__head">
                                 <div class="m-portlet__head-tools">
-                                    <ul class="nav nav-tabs m-tabs m-tabs-line   m-tabs-line--left m-tabs-line--primary" role="tablist">
+                                    <ul class="nav nav-tabs m-tabs m-tabs-line   m-tabs-line--left m-tabs-line--primary"
+                                        role="tablist">
                                         <li class="nav-item m-tabs__item">
-                                            <a class="nav-link m-tabs__link active" data-toggle="tab" href="#m_user_profile_tab_1" role="tab">
+                                            <a class="nav-link m-tabs__link active" data-toggle="tab"
+                                               href="#m_user_profile_tab_1" role="tab">
                                                 <i class="flaticon-share m--hide"></i>
                                                 Update Profile
                                             </a>
                                         </li>
                                         <li class="nav-item m-tabs__item">
-                                            <a class="nav-link m-tabs__link" data-toggle="tab" href="#m_user_profile_tab_2" role="tab">
+                                            <a class="nav-link m-tabs__link" data-toggle="tab"
+                                               href="#m_user_profile_tab_2" role="tab">
                                                 Messages
                                             </a>
                                         </li>
                                         <li class="nav-item m-tabs__item">
-                                            <a class="nav-link m-tabs__link" data-toggle="tab" href="#m_user_profile_tab_3" role="tab">
+                                            <a class="nav-link m-tabs__link" data-toggle="tab"
+                                               href="#m_user_profile_tab_3" role="tab">
                                                 Settings
                                             </a>
                                         </li>
@@ -675,8 +676,10 @@
                                 <div class="m-portlet__head-tools">
                                     <ul class="m-portlet__nav">
                                         <li class="m-portlet__nav-item m-portlet__nav-item--last">
-                                            <div class="m-dropdown m-dropdown--inline m-dropdown--arrow m-dropdown--align-right m-dropdown--align-push" data-dropdown-toggle="hover" aria-expanded="true">
-                                                <a href="#" class="m-portlet__nav-link btn btn-lg btn-secondary  m-btn m-btn--icon m-btn--icon-only m-btn--pill  m-dropdown__toggle">
+                                            <div class="m-dropdown m-dropdown--inline m-dropdown--arrow m-dropdown--align-right m-dropdown--align-push"
+                                                 data-dropdown-toggle="hover" aria-expanded="true">
+                                                <a href="#"
+                                                   class="m-portlet__nav-link btn btn-lg btn-secondary  m-btn m-btn--icon m-btn--icon-only m-btn--pill  m-dropdown__toggle">
                                                     <i class="la la-gear"></i>
                                                 </a>
                                                 <div class="m-dropdown__wrapper">
@@ -737,7 +740,8 @@
                                                                     </li>
                                                                     <li class="m-nav__separator m-nav__separator--fit m--hide"></li>
                                                                     <li class="m-nav__item m--hide">
-                                                                        <a href="#" class="btn btn-outline-danger m-btn m-btn--pill m-btn--wide btn-sm">
+                                                                        <a href="#"
+                                                                           class="btn btn-outline-danger m-btn m-btn--pill m-btn--wide btn-sm">
                                                                             Submit
                                                                         </a>
                                                                     </li>
@@ -757,7 +761,8 @@
                                         <div class="m-portlet__body">
                                             <div class="form-group m-form__group m--margin-top-10 m--hide">
                                                 <div class="alert m-alert m-alert--default" role="alert">
-                                                    The example form below demonstrates common HTML form elements that receive updated styles from Bootstrap with additional classes.
+                                                    The example form below demonstrates common HTML form elements that
+                                                    receive updated styles from Bootstrap with additional classes.
                                                 </div>
                                             </div>
                                             <div class="form-group m-form__group row">
@@ -799,7 +804,8 @@
                                                     Phone No.
                                                 </label>
                                                 <div class="col-7">
-                                                    <input class="form-control m-input" type="text" value="+456669067890">
+                                                    <input class="form-control m-input" type="text"
+                                                           value="+456669067890">
                                                 </div>
                                             </div>
                                             <div class="m-form__seperator m-form__seperator--dashed m-form__seperator--space-2x"></div>
@@ -815,7 +821,8 @@
                                                     Address
                                                 </label>
                                                 <div class="col-7">
-                                                    <input class="form-control m-input" type="text" value="L-12-20 Vertex, Cybersquare">
+                                                    <input class="form-control m-input" type="text"
+                                                           value="L-12-20 Vertex, Cybersquare">
                                                 </div>
                                             </div>
                                             <div class="form-group m-form__group row">
@@ -823,7 +830,8 @@
                                                     City
                                                 </label>
                                                 <div class="col-7">
-                                                    <input class="form-control m-input" type="text" value="San Francisco">
+                                                    <input class="form-control m-input" type="text"
+                                                           value="San Francisco">
                                                 </div>
                                             </div>
                                             <div class="form-group m-form__group row">
@@ -855,7 +863,8 @@
                                                     Linkedin
                                                 </label>
                                                 <div class="col-7">
-                                                    <input class="form-control m-input" type="text" value="www.linkedin.com/Mark.Andre">
+                                                    <input class="form-control m-input" type="text"
+                                                           value="www.linkedin.com/Mark.Andre">
                                                 </div>
                                             </div>
                                             <div class="form-group m-form__group row">
@@ -863,7 +872,8 @@
                                                     Facebook
                                                 </label>
                                                 <div class="col-7">
-                                                    <input class="form-control m-input" type="text" value="www.facebook.com/Mark.Andre">
+                                                    <input class="form-control m-input" type="text"
+                                                           value="www.facebook.com/Mark.Andre">
                                                 </div>
                                             </div>
                                             <div class="form-group m-form__group row">
@@ -871,7 +881,8 @@
                                                     Twitter
                                                 </label>
                                                 <div class="col-7">
-                                                    <input class="form-control m-input" type="text" value="www.twitter.com/Mark.Andre">
+                                                    <input class="form-control m-input" type="text"
+                                                           value="www.twitter.com/Mark.Andre">
                                                 </div>
                                             </div>
                                             <div class="form-group m-form__group row">
@@ -879,7 +890,8 @@
                                                     Instagram
                                                 </label>
                                                 <div class="col-7">
-                                                    <input class="form-control m-input" type="text" value="www.instagram.com/Mark.Andre">
+                                                    <input class="form-control m-input" type="text"
+                                                           value="www.instagram.com/Mark.Andre">
                                                 </div>
                                             </div>
                                         </div>
@@ -888,11 +900,13 @@
                                                 <div class="row">
                                                     <div class="col-2"></div>
                                                     <div class="col-7">
-                                                        <button type="reset" class="btn btn-accent m-btn m-btn--air m-btn--custom">
+                                                        <button type="reset"
+                                                                class="btn btn-accent m-btn m-btn--air m-btn--custom">
                                                             Save changes
                                                         </button>
                                                         &nbsp;&nbsp;
-                                                        <button type="reset" class="btn btn-secondary m-btn m-btn--air m-btn--custom">
+                                                        <button type="reset"
+                                                                class="btn btn-secondary m-btn m-btn--air m-btn--custom">
                                                             Cancel
                                                         </button>
                                                     </div>
@@ -908,64 +922,61 @@
                     </div>
                 </div>
             </div>
-        <!-- end::Body -->
-        <!-- begin::Footer -->
+            <!-- end::Body -->
+            <!-- begin::Footer -->
 
-        <!-- end::Footer -->
+            <!-- end::Footer -->
+        </div>
     </div>
-</div>
-<footer class="m-grid__item m-footer ">
-    <div class="m-container m-container--responsive m-container--xxl m-container--full-height m-page__container">
-        <div class="m-footer__wrapper">
-            <div class="m-stack m-stack--flex-tablet-and-mobile m-stack--ver m-stack--desktop">
-                <div class="m-stack__item m-stack__item--left m-stack__item--middle m-stack__item--last">
+    <footer class="m-grid__item m-footer ">
+        <div class="m-container m-container--responsive m-container--xxl m-container--full-height m-page__container">
+            <div class="m-footer__wrapper">
+                <div class="m-stack m-stack--flex-tablet-and-mobile m-stack--ver m-stack--desktop">
+                    <div class="m-stack__item m-stack__item--left m-stack__item--middle m-stack__item--last">
                         <span class="m-footer__copyright">
                             2018 &copy; Copyright | Made by
                             <a href="https://github.com/DNXie/CS304-A-web-platform-for-data-labelling" class="m-link">
                                 SkyCat
                             </a>
                         </span>
-                </div>
-                <div class="m-stack__item m-stack__item--right m-stack__item--middle m-stack__item--first">
-                    <ul class="m-footer__nav m-nav m-nav--inline m--pull-right">
-                        <li class="m-nav__item">
-                            <a href="#" class="m-nav__link">
+                    </div>
+                    <div class="m-stack__item m-stack__item--right m-stack__item--middle m-stack__item--first">
+                        <ul class="m-footer__nav m-nav m-nav--inline m--pull-right">
+                            <li class="m-nav__item">
+                                <a href="#" class="m-nav__link">
                                     <span class="m-nav__link-text">
                                         About Us
                                     </span>
-                            </a>
-                        </li>
-                        <li class="m-nav__item">
-                            <a href="#" class="m-nav__link">
+                                </a>
+                            </li>
+                            <li class="m-nav__item">
+                                <a href="#" class="m-nav__link">
                                     <span class="m-nav__link-text">
                                         Privacy
                                     </span>
-                            </a>
-                        </li>
-                        <li class="m-nav__item">
-                            <a href="#" class="m-nav__link">
+                                </a>
+                            </li>
+                            <li class="m-nav__item">
+                                <a href="#" class="m-nav__link">
                                     <span class="m-nav__link-text">
                                         Upgrade
                                     </span>
-                            </a>
-                        </li>
-                    </ul>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</footer>
-
+    </footer>
+</div>
 <!-- end:: Page -->
 <!--begin::Base Scripts -->
-<script src="../static/assets/vendors/base/vendors.bundle.js" type="text/javascript"></script>
-<script src="../static/assets/demo/demo2/base/scripts.bundle.js" type="text/javascript"></script>
+<script src="../static/js/vendors.bundle.js" type="text/javascript"></script>
+<script src="../static/js/scripts.bundle.js" type="text/javascript"></script>
 <!--end::Base Scripts -->
-<!--begin::Page Vendors -->
-<script src="../static/assets/vendors/custom/fullcalendar/fullcalendar.bundle.js" type="text/javascript"></script>
-<!--end::Page Vendors -->
 <!--begin::Page Snippets -->
-<script src="../static/assets/app/js/dashboard.js" type="text/javascript"></script>
+<script src="../static/js/dashboard.js" type="text/javascript"></script>
 <!--end::Page Snippets -->
 </body>
 <!-- end::Body -->
