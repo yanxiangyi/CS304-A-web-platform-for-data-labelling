@@ -18,7 +18,7 @@
 
 https://github.com/yanxiangyi/CS304-A-web-platform-for-data-labelling/blob/master/db_er.png
 
-**All methods return `None` unless otherwise stated**
+**All methods return `None` if fails unless otherwise stated**
 
 #### 2.1 User Utility
 
