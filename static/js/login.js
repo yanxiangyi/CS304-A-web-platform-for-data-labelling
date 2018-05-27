@@ -87,23 +87,33 @@ var SnippetLogin = function () {
 
             btn.addClass('m-loader m-loader--right m-loader--light').attr('disabled', true);
 
-            var userName = document.getElementById("s_email").value;
+            var eMail = document.getElementById("s_email").value;
 
             var passWord = document.getElementById("s_password").value;
 
-            userName = userName.split('@')[0];
+            // userName = userName.split('@')[0];
 
             form.ajaxSubmit({
                 type: "GET",
-                url: "http://47.106.34.103:5000/login/username/" + userName + "/password/" + passWord,
+                url: "http://47.106.34.103:5000/login/email/" + eMail + "/password/" + passWord,
                 // data:{username:"11510693",password:"wangzehuai1234"},
                 // success: function(response, status, xhr, $form) {
                 success: function (json) {
                     // similate 2s dela
-                    alert(json.code);
+                    // alert(json.code);
                     if (json.code == 0) {
                         // alert("Welcome, someone");
                         window.location.href = "http://www.baidu.com";
+                    } else {
+                        setTimeout(function () {
+                            btn.removeClass('m-loader m-loader--right m-loader--light').attr('disabled', false);
+                            form.clearForm();
+                            form.validate().resetForm();
+                            var signInForm = login.find('.m-login__signin form');
+                            signInForm.clearForm();
+                            signInForm.validate().resetForm();
+                            showErrorMsg(signInForm, 'danger', json.message);
+                        }, 1000);
                     }
                 }
             });
@@ -119,7 +129,7 @@ var SnippetLogin = function () {
 
             form.validate({
                 rules: {
-                    fullname: {
+                    username: {
                         required: true
                     },
                     email: {
@@ -144,23 +154,58 @@ var SnippetLogin = function () {
 
             btn.addClass('m-loader m-loader--right m-loader--light').attr('disabled', true);
 
+            var uMail = document.getElementById("u_email").value;
+
+            var uName = document.getElementById("u_name").value;
+
+            var uPd = document.getElementById("u_password").value;
+
+            var uPd2 = document.getElementById("u_password2").value;
+
+            if (uPd!=uPd2){
+                btn.removeClass('m-loader m-loader--right m-loader--light').attr('disabled', false);
+                // form.clearForm();
+                // form.validate().resetForm();
+                // displaySignUpForm();
+                var signUpForm = login.find('.m-login__signin form');
+                // signUpForm.clearForm();
+                // signUpForm.validate().resetForm();
+                showErrorMsg(signUpForm, 'danger', "Different input passwords.");
+                return;
+            }
+
             form.ajaxSubmit({
-                url: '',
-                success: function (response, status, xhr, $form) {
+                type: "GET",
+                url: "http://47.106.34.103:5000/register/email/" + uMail + "/username/" + uName + "/password/" + uPd,
+                success: function (json) {
                     // similate 2s delay
-                    setTimeout(function () {
-                        btn.removeClass('m-loader m-loader--right m-loader--light').attr('disabled', false);
-                        form.clearForm();
-                        form.validate().resetForm();
+                    if (json.code == 0) {
+                        setTimeout(function () {
+                            btn.removeClass('m-loader m-loader--right m-loader--light').attr('disabled', false);
+                            form.clearForm();
+                            form.validate().resetForm();
 
-                        // display signup form
-                        displaySignInForm();
-                        var signInForm = login.find('.m-login__signin form');
-                        signInForm.clearForm();
-                        signInForm.validate().resetForm();
+                            // display signup form
+                            displaySignInForm();
+                            var signInForm = login.find('.m-login__signin form');
+                            signInForm.clearForm();
+                            signInForm.validate().resetForm();
 
-                        showErrorMsg(signInForm, 'success', 'Thank you. To complete your registration please check your email.');
-                    }, 2000);
+                            showErrorMsg(signInForm, 'info', 'Thank you. Now please sign in your account.');
+                        }, 1000);
+                        // window.location.href = "http://www.baidu.com";
+                    } else {
+                        setTimeout(function () {
+                            btn.removeClass('m-loader m-loader--right m-loader--light').attr('disabled', false);
+                            form.clearForm();
+                            form.validate().resetForm();
+                            // displaySignUpForm();
+                            var signUpForm = login.find('.m-login__signup form');
+                            signUpForm.clearForm();
+                            signUpForm.validate().resetForm();
+                            showErrorMsg(signUpForm, 'danger', json.message);
+                        }, 1000);
+                    }
                 }
             });
         });
@@ -186,25 +231,37 @@ var SnippetLogin = function () {
                 return;
             }
 
+            var mMail = document.getElementById("m_email").value;
+
             btn.addClass('m-loader m-loader--right m-loader--light').attr('disabled', true);
 
             form.ajaxSubmit({
-                url: '',
-                success: function (response, status, xhr, $form) {
-                    // similate 2s delay
-                    setTimeout(function () {
-                        btn.removeClass('m-loader m-loader--right m-loader--light').attr('disabled', false); // remove
-                        form.clearForm(); // clear form
-                        form.validate().resetForm(); // reset validation states
-
-                        // display signup form
-                        displaySignInForm();
-                        var signInForm = login.find('.m-login__signin form');
-                        signInForm.clearForm();
-                        signInForm.validate().resetForm();
-
-                        showErrorMsg(signInForm, 'success', 'Cool! Password recovery instruction has been sent to your email.');
-                    }, 2000);
+                url: 'http://47.106.34.103:5000/forget/email/' + mMail,
+                success: function (json) {
+                    if (json.code == 0) {
+                        setTimeout(function () {
+                            btn.removeClass('m-loader m-loader--right m-loader--light').attr('disabled', false); // remove
+                            form.clearForm(); // clear form
+                            form.validate().resetForm(); // reset validation states
+                            // display signup form
+                            displaySignInForm();
+                            var signInForm = login.find('.m-login__signin form');
+                            signInForm.clearForm();
+                            signInForm.validate().resetForm();
+                            showErrorMsg(signInForm, 'info', 'Cool! Password recovery instruction has been sent to your email.');
+                        }, 1000);
+                    }else{
+                        setTimeout(function () {
+                            btn.removeClass('m-loader m-loader--right m-loader--light').attr('disabled', false);
+                            form.clearForm();
+                            form.validate().resetForm();
+                            // displaySignUpForm();
+                            var signUpForm = login.find('.m-login__forget-password form');
+                            signUpForm.clearForm();
+                            signUpForm.validate().resetForm();
+                            showErrorMsg(signUpForm, 'danger', json.message);
+                        }, 1000);
+                    }
                 }
             });
         });
@@ -225,4 +282,5 @@ var SnippetLogin = function () {
 //== Class Initialization
 jQuery(document).ready(function () {
     SnippetLogin.init();
+    // document.getElementById("m_login_signup").click();
 });
