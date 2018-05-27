@@ -80,7 +80,7 @@ def username_login(user_name, pass_word):
 @app.route('/login/email/<user_email>/password/<pass_word>')
 @cross_origin()
 def email_login(user_email, pass_word):
-    password = c.get_user_passwd(useremail=user_email)
+    password = c.get_user_passwd(user_email=user_email)
     if password is not None:
         if password == pass_word:
             result = {'code': 0}
