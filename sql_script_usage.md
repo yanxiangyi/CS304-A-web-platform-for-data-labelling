@@ -32,6 +32,8 @@ https://github.com/yanxiangyi/CS304-A-web-platform-for-data-labelling/blob/maste
 
 - `get_user_credit(self, userid=None, username=None, user_email=None)`
 
+- `get_user_signin_time(self, userid=None, username=None, user_email=None)`
+
 - `insert_user(self, username, user_email, passwd, signin_time=get_timestamp(), credits=0)`
 
   - default `signin_time` is current time
@@ -84,8 +86,15 @@ https://github.com/yanxiangyi/CS304-A-web-platform-for-data-labelling/blob/maste
   - default `publish_time` : current time
   - default `priority` : 1
   - insertion operations return : **1** success; **0** already exist; **-1** fail
+  - Note that `sourcename` shoule be unique
 
 
+#### 2.4 Data Utility
+
+- `load_data(self, root_path, sourceid=None, sourcename=None)`
+  
+  load all the raw data file (in `.json` format) from folder path into database 
+  
 
 
 
