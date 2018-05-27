@@ -35,12 +35,18 @@ https://github.com/yanxiangyi/CS304-A-web-platform-for-data-labelling/blob/maste
 - `get_user_nb_accept(self, userid=None, username=None, user_email=None)`
    
    return number of accepted answer of the user
+   
+- `get_user_nb_answer(self, userid=None, username=None, user_email=None)`
+
+   return the user's total number of answers 
 
 - `get_user_signin_time(self, userid=None, username=None, user_email=None)`
 
-- `insert_user(self, username, user_email, passwd, signin_time=get_timestamp(), credits=0)`
+- `insert_user(self, username, user_email, passwd, signin_time=get_timestamp(), credits=0, nb_accept=0)`
 
   - default `signin_time` is current time
+  - default `credits` is 0
+  - default `nb_accept` is 0, i.e. the default number of accepted answer is 0.
   - insertion operations return : **1** success; **0** already exist; **-1** fail
 
 - `user_exist(self, userid=None, username=None, user_email=None)`

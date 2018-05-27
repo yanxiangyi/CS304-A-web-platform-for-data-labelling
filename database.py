@@ -82,6 +82,9 @@ class sql_conn:
     def get_user_credit(self, userid=None, username=None, user_email=None):
         return self.__get_by_option('users', 'credits', {'userid': userid, 'username': username, 'email_address':user_email})
     
+    def get_user_nb_answer(self, userid=None, username=None, user_email=None):
+        return self.__get_by_option('users', 'nb_answer', {'userid': userid, 'username': username, 'email_address':user_email})
+    
     def get_user_nb_accept(self, userid=None, username=None, user_email=None):
         return self.__get_by_option('users', 'nb_accept', {'userid': userid, 'username': username, 'email_address':user_email})
 
