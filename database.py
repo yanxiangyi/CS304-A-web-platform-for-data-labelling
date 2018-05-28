@@ -194,7 +194,7 @@ class sql_conn:
         except:
             return 0
         
-    def __get_textdata_sth(self, target_col, data_index, sourceid=None, sourcename=None)
+    def __get_textdata_sth(self, target_col, data_index, sourceid=None, sourcename=None):
         sourceid = self.__get_by_option('source', 'sourceid', {'sourceid':sourceid, 'sourcename':sourcename})
         return self.__get_by_mul_cond('text_data', target_col, {'datasource':sourceid, 'data_index':data_index})
     
