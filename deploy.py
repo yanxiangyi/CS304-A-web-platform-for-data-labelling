@@ -25,7 +25,6 @@ c = sql_conn(cnx)
 @cross_origin()
 def index_void():
     if 'user_email' in session:
-        user_email = session['user_email']
         return render_template('index.html')
     return redirect(url_for('mainpage'))
 
@@ -45,7 +44,6 @@ def logout_page():
 @cross_origin()
 def index():
     if 'user_email' in session:
-        user_email = session['user_email']
         return render_template('index.html')
     return redirect(url_for('mainpage'))
 
@@ -182,19 +180,16 @@ def uploaded_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'],
                                filename)
 
+
 @app.route('/profile/<user_email>')
 @cross_origin()
 def profile(user_email):
     if c.user_exist(user_email=user_email):
-        user_id = c.get_user_id(user_email=user_email)
-        user_name = c.get_user_name(user_email=user_email)
-        user_credit = c.get_user_credit(user_email=user_email)
-        num_acc = c.get_user_nb_accept(user_email=user_email)
-        num_total = c.get_user_nb_answer(user_email=user_email)
-        signup_time = c.get_user_signin_time(user_email=user_email)
-        result = {"user_id": user_id, "user_name": user_name,
-                  "user_credit": user_credit, "num_acc": num_acc,
-                  "num_total": num_total, "signup_time": signup_time}
+        [user_id, user_email, user_name, passward, signup_time, user_credit, num_total, num_acc, num_examined] = c.get_user(user_email=user_email)
+        result = {"user_id": user_id, "useremail": user_email,
+                  "user_name": user_name, "user_credit": user_credit,
+                  "num_acc": num_acc, "num_total": num_total,
+                  "signup_time": signup_time, "num_examined": num_examined}
         result = {"code": 0, "message": result}
     else:
         result = {"code": 1, "message": "User doesn\'t exist!"}
