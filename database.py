@@ -40,14 +40,17 @@ class sql_conn:
         except:
             return -1
 
-    def __get_by_option(self, tablename, target_col, col_val_dict):
+    def __get_by_option(self, tablename, target_col, col_val_dict, head=True):
         # search by one of the condition
         try:
             for col in col_val_dict.keys():
                 if col_val_dict[col]!=None:   
                     pkcol = col
             self.cursor.execute("select {} from {} where {}='{}';".format(target_col, tablename, pkcol, col_val_dict[pkcol]))
-            return self.cursor.fetchone()[0]
+            if head:
+                return self.cursor.fetchone()[0]
+            else:
+                return self.cursor.fetchone()
         except:
             return None
     
@@ -69,7 +72,7 @@ class sql_conn:
     
     # user*******************************************************************************
     def get_user(self, userid=None, username=None, user_email=None):
-        return self.__get_by_option('users', '*', {'userid': userid, 'username': username, 'email_address':user_email})
+        return self.__get_by_option('users', '*', {'userid': userid, 'username': username, 'email_address':user_email}, head=False)
     
     def get_user_id(self, username=None, user_email=None):
         return self.__get_by_option('users', 'userid', {'username': username, 'email_address': user_email})
@@ -114,7 +117,7 @@ class sql_conn:
         
     # admin******************************************************************************
     def get_admin(self, adminid=None, adminname=None, admin_email=None):
-        return self.__get_by_option('admin', '*', {'adminid': adminid, 'adminname': adminname, 'email_address': admin_email})
+        return self.__get_by_option('admin', '*', {'adminid': adminid, 'adminname': adminname, 'email_address': admin_email}, head=False)
     
     def get_admin_id(self, adminname=None, admin_email=None):
         return self.__get_by_option('admin', 'adminid', {'email_address': admin_email, 'adminname': adminname})
@@ -140,7 +143,7 @@ class sql_conn:
 
     # source*****************************************************************************
     def get_source(self, sourcename=None, sourceid=None):
-        return self.__get_by_option('source', '*',{'sourceid': sourceid, 'sourcename': sourcename})
+        return self.__get_by_option('source', '*',{'sourceid': sourceid, 'sourcename': sourcename}, head=False)
     
     def get_source_id(self, sourcename):
         return self.__get_by_option('source','sourceid', {'sourcename':sourcename})
