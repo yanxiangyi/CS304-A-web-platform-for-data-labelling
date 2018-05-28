@@ -25,21 +25,24 @@ c = sql_conn(cnx)
 @cross_origin()
 def index_void():
     if 'user_email' in session:
-        # user_email = session['user_email']
+        user_email = session['user_email']
         return render_template('index.html')
     return redirect(url_for('mainpage'))
 
 @app.route('/logout')
 def logout():
-   # remove the username from the session if it is there
-   session.pop('user_email', None)
-   return redirect(url_for('login'))
+    # remove the username from the session if it is there
+    session.pop('user_email', None)
+    return redirect(url_for('login'))
 
 
 @app.route("/index.html")
 @cross_origin()
 def index():
-    return render_template('index.html')
+    if 'user_email' in session:
+        user_email = session['user_email']
+        return render_template('index.html')
+    return redirect(url_for('mainpage'))
 
 
 @app.route("/login.html", methods=['GET', 'POST'])
@@ -76,6 +79,17 @@ def textlabel():
 @cross_origin()
 def textlabel2():
     return render_template('textlabel2.html')
+
+@app.route('/email_current')
+@cross_origin()
+def email_current():
+    try:
+        user_email = session['user_email']
+        result = {'code': 0, 'message': user_email}
+        return jsonify(result)
+    except:
+        result = {'code': 1, 'message': "Please log in first!"}
+        return jsonify(result)
 
 
 @app.route('/login/email/<user_email>/password/<pass_word>')
