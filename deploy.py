@@ -33,7 +33,12 @@ def index_void():
 def logout():
     # remove the username from the session if it is there
     session.pop('user_email', None)
-    return redirect(url_for('login'))
+    return redirect(url_for('logout_page'))
+
+@app.route("/logout.html")
+@cross_origin()
+def logout_page():
+    return render_template("logout.html")
 
 
 @app.route("/index.html")
@@ -43,6 +48,7 @@ def index():
         user_email = session['user_email']
         return render_template('index.html')
     return redirect(url_for('mainpage'))
+
 
 
 @app.route("/login.html", methods=['GET', 'POST'])
