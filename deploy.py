@@ -3,10 +3,14 @@ from flask_cors import CORS, cross_origin
 from mysql.connector import connection
 from database import *
 import os
+import zipfile
+import datetime
+import shutil
 from werkzeug.utils import secure_filename
 
 
 UPLOAD_FOLDER = '/home/se2018/CS304-A-web-platform-for-data-labelling/upload'
+EXTRACT_FOLDER = '/home/se2018/data'
 ALLOWED_EXTENSIONS = set(['pdf', 'zip'])
 
 app = Flask(__name__)
@@ -168,17 +172,34 @@ def upload_file():
             print('no filename')
             return redirect(request.url)
         if file and allowed_file(file.filename):
+            # Save file
             filename = secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            save_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            file.save(save_path)
+            # Unzip file to the 'EXTRACT_FOLDER/projectName_timeStamp'
+            zip_ref = zipfile.ZipFile(save_path, 'r')
+            final_path = os.path.join(EXTRACT_FOLDER, filename.split(".zip")[0] + "_" + datetime.datetime.today().strftime('%Y-%m-%d'))
+            if not os.path.exists(final_path):
+                os.makedirs(final_path)
+            zip_ref.extractall(final_path)
+            zip_ref.close()
+            # Only keep Json files
+            for (dirpath, dirnames, filenames) in os.walk(final_path):
+                for uncheck in filenames:
+                    if not uncheck.endswith(".json"):
+                        if os.path.isdir(uncheck):
+                            shutil.rmtree(os.path.join(dirpath, uncheck))
+                        else:
+                            os.remove(os.path.join(dirpath, uncheck))
             return jsonify({"code": 0})
     return render_template('publish.html')
 
 
-@app.route('/uploads/<filename>')
-@cross_origin()
-def uploaded_file(filename):
-    return send_from_directory(app.config['UPLOAD_FOLDER'],
-                               filename)
+# @app.route('/uploads/<filename>')
+# @cross_origin()
+# def uploaded_file(filename):
+#     return send_from_directory(app.config['UPLOAD_FOLDER'],
+#                                filename)
 
 
 @app.route('/profile/<user_email>')
