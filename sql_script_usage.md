@@ -22,6 +22,10 @@ https://github.com/yanxiangyi/CS304-A-web-platform-for-data-labelling/blob/maste
 
 #### 2.1 User Utility
 
+- `get_user(self, userid=None, username=None, user_email=None)`
+
+  return all the information of the corresponding user
+
 - `get_user_id(self, username=None, user_email=None)` 
 
 - `get_user_email(self, userid=None, username=None)`
@@ -55,6 +59,10 @@ https://github.com/yanxiangyi/CS304-A-web-platform-for-data-labelling/blob/maste
 
 #### 2.2 Admin Utility
 
+- `get_admin(self, adminid=None, adminname=None, admin_email=None)`
+
+  return all the information of the corresponding admin
+
 - `get_admin_id(self, adminname=None, admin_email=None)`
 
 - `get_admin_name(self, adminid=None, admin_email=None)`
@@ -72,6 +80,10 @@ https://github.com/yanxiangyi/CS304-A-web-platform-for-data-labelling/blob/maste
 
 #### 2.3 Source Utility
 
+- `def get_source(self, sourcename=None, sourceid=None)`
+
+  return all the information of the corresponding source
+  
 - `get_source_id(self, sourcename)`
 
 - `get_source_finished(self, sourcename=None, sourceid=None)`
@@ -120,6 +132,24 @@ https://github.com/yanxiangyi/CS304-A-web-platform-for-data-labelling/blob/maste
 
   - need either `sourceid` or `sourcename`
   - return **1** success; **0** source of label not found; **-1** fail
+  
+  
+#### 2.5 Label Utility
+
+**Combination of `dataid` and `userid` should be UNIQUE**
+
+- `get_labeldate(self, dataid, userid=None, username=None, user_email=None)`
+
+  need at least one of the value of `userid`, `username` and `user_email` to get the result.
+
+- `get_labelpath(self, dataid, userid=None, username=None, user_email=None)`
+
+- `get_label_content(self, dataid, userid=None, username=None, user_email=None)`
+
+- `get_label_correct(self, dataid, userid=None, username=None, user_email=None)`
+    
+  - return **0** not determined; **1** correct; **-1** incorrect.
+
 
 
 

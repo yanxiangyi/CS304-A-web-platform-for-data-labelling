@@ -41,7 +41,7 @@ class sql_conn:
             return -1
 
     def __get_by_option(self, tablename, target_col, col_val_dict):
-        # search by either id or name 
+        # search by one of the condition
         try:
             for col in col_val_dict.keys():
                 if col_val_dict[col]!=None:   
@@ -52,6 +52,7 @@ class sql_conn:
             return None
     
     def __get_by_mul_cond(self, tablename, target_col, col_val_dict):
+        # search by multiple conditions
         try:
             sql = "select {} from {} where ".format(target_col, tablename) 
             for i, col in enumerate(col_val_dict.keys()):
@@ -67,6 +68,9 @@ class sql_conn:
             return None
     
     # user*******************************************************************************
+    def get_user(self, userid=None, username=None, user_email=None):
+        return self.__get_by_option('users', '*', {'userid': userid, 'username': username, 'email_address':user_email})
+    
     def get_user_id(self, username=None, user_email=None):
         return self.__get_by_option('users', 'userid', {'username': username, 'email_address': user_email})
 
@@ -82,16 +86,15 @@ class sql_conn:
     def get_user_credit(self, userid=None, username=None, user_email=None):
         return self.__get_by_option('users', 'credits', {'userid': userid, 'username': username, 'email_address':user_email})
     
+    def get_user_nb_accept(self, userid=None, username=None, user_email=None):
+        return self.__get_by_option('users', 'nb_accept', {'userid': userid, 'username': username, 'email_address':user_email})
+    
     def get_user_nb_answer(self, userid=None, username=None, user_email=None):
         return self.__get_by_option('users', 'nb_answer', {'userid': userid, 'username': username, 'email_address':user_email})
     
-    def get_user_nb_accept(self, userid=None, username=None, user_email=None):
-        return self.__get_by_option('users', 'nb_accept', {'userid': userid, 'username': username, 'email_address':user_email})
-
     def get_user_signin_time(self, userid=None, username=None, user_email=None):
         return self.__get_by_option('users', 'signin_date', {'userid': userid, 'username': username, 'email_address':user_email})
 
-    
     def insert_user(self, username, user_email, passwd, signin_time=get_timestamp(), credits=0, nb_accept=0):
         # insertion: 1 success, 0: already exist, -1: fail
         if self.__search_user_by_name(username) == None:
@@ -107,6 +110,9 @@ class sql_conn:
 
         
     # admin******************************************************************************
+    def get_admin(self, adminid=None, adminname=None, admin_email=None):
+        return self.__get_by_option('admin', '*', {'adminid': adminid, 'adminname': adminname, 'email_address': admin_email})
+    
     def get_admin_id(self, adminname=None, admin_email=None):
         return self.__get_by_option('admin', 'adminid', {'email_address': admin_email, 'adminname': adminname})
 
@@ -130,6 +136,9 @@ class sql_conn:
             return 0
 
     # source*****************************************************************************
+    def get_source(self, sourcename=None, sourceid=None):
+        return self.__get_by_option('source', '*',{'sourceid': sourceid, 'sourcename': sourcename})
+    
     def get_source_id(self, sourcename):
         return self.__get_by_option('source','sourceid', {'sourcename':sourcename})
     
@@ -181,18 +190,19 @@ class sql_conn:
             return 1
         except:
             return 0
+        
+    def __get_textdata_sth(self, target_col, data_index, sourceid=None, sourcename=None)
+        sourceid = self.__get_by_option('source', 'sourceid', {'sourceid':sourceid, 'sourcename':sourcename})
+        return self.__get_by_mul_cond('text_data', target_col, {'datasource':sourceid, 'data_index':data_index})
     
     def get_textdataid(self, data_index, sourceid=None, sourcename=None):
-        sourceid = self.__get_by_option('source', 'sourceid', {'sourceid':sourceid, 'sourcename':sourcename})
-        return self.__get_by_mul_cond('text_data', 'dataid', {'datasource':sourceid, 'data_index':data_index})
+        return self.__get_textdata_sth('dataid', data_index, sourceid, sourcename)
     
     def get_textdata_datapath(self, data_index, sourceid=None, sourcename=None):
-        sourceid = self.__get_by_option('source', 'sourceid', {'sourceid':sourceid, 'sourcename':sourcename})
-        return self.__get_by_mul_cond('text_data', 'data_path', {'datasource':sourceid, 'data_index':data_index})
+        return self.__get_textdata_sth('data_path', data_index, sourceid, sourcename)
     
     def get_textdata_finallabelid(self, data_index, sourceid=None, sourcename=None):
-        sourceid = self.__get_by_option('source', 'sourceid', {'sourceid':sourceid, 'sourcename':sourcename})
-        return self.__get_by_mul_cond('text_data', 'final_labelid', {'datasource':sourceid, 'data_index':data_index})
+        return self.__get_textdata_sth('final_labelid', data_index, sourceid, sourcename)
     
     def update_final_labelid(self, data_index, labelid, sourceid=None, sourcename=None):
         # 1:sucess -1:fail  0:souce or data not exist
@@ -203,7 +213,28 @@ class sql_conn:
             return self.__insertion(sql)
         else:
             return 0
+    # label *****************************************************************************
     
+    # index: dataid, userid
+    def __get_label_sth(self, target_col, dataid, userid=None, username=None, user_email=None):
+        if userid==None:
+            userid = self.__get_by_option('users', 'userid', {'username': username, 'email_address': user_email})
+        return self.__get_by_mul_cond('text_label', target_col, {'dataid':dataid, 'userid': userid})
+    
+    def get_labeldate(self, dataid, userid=None, username=None, user_email=None):
+        return self.__get_label_sth('labeldate', userid, username, user_email)
+    
+    def get_labelpath(self, dataid, userid=None, username=None, user_email=None):
+        return self.__get_label_sth('label_path', userid, username, user_email)
+    
+    def get_label_content(self, dataid, userid=None, username=None, user_email=None):
+        return self.__get_label_sth('content', userid, username, user_email)
+    
+    def get_label_correct(self, dataid, userid=None, username=None, user_email=None):
+        # return 0 not determined, 1 correct, -1 not correct
+        return self.__get_label_sth('correct', userid, username, user_email)
+    
+    #def insert_label(self, userid, label_path, label_date=get_timestamp(), correct=0)
     
     def close(self):
         self.cursor.close()
