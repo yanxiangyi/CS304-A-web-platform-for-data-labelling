@@ -103,7 +103,7 @@ var SnippetLogin = function () {
                     // alert(json.code);
                     if (json.code == 0) {
                         // alert("Welcome, someone");
-                        window.location.href = "http://www.baidu.com";
+                        window.location.href = "index.html";
                     } else {
                         setTimeout(function () {
                             btn.removeClass('m-loader m-loader--right m-loader--light').attr('disabled', false);

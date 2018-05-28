@@ -92,14 +92,17 @@ class sql_conn:
     def get_user_nb_answer(self, userid=None, username=None, user_email=None):
         return self.__get_by_option('users', 'nb_answer', {'userid': userid, 'username': username, 'email_address':user_email})
     
+    def get_user_nb_examined(self, userid=None, username=None, user_email=None):
+        return self.__get_by_option('users', 'nb_examined', {'userid': userid, 'username': username, 'email_address':user_email})
+    
     def get_user_signin_time(self, userid=None, username=None, user_email=None):
         return self.__get_by_option('users', 'signin_date', {'userid': userid, 'username': username, 'email_address':user_email})
 
-    def insert_user(self, username, user_email, passwd, signin_time=get_timestamp(), credits=0, nb_accept=0):
+    def insert_user(self, username, user_email, passwd, signin_time=get_timestamp(), credits=0, nb_accept=0,nb_answer=0, nb_examined=0):
         # insertion: 1 success, 0: already exist, -1: fail
         if self.__search_user_by_name(username) == None:
-            sql = "INSERT INTO `se_proj`.`users` (`username`,`email_address`,`password`,`signin_date`,`credits`,`nb_accept`) VALUES ('{}','{}','{}','{}','{}',{});" \
-                .format(username, user_email, passwd, signin_time, credits, nb_accept)
+            sql = "INSERT INTO `se_proj`.`users` (`username`,`email_address`,`password`,`signin_date`,`credits`,`nb_accept`,`nb_answer`,`nb_examined`) VALUES ('{}','{}','{}','{}','{}',{},{},{});" \
+                .format(username, user_email, passwd, signin_time, credits, nb_accept, nb_answer, nb_examined)
             return self.__insertion(sql)
         else:
             return 0

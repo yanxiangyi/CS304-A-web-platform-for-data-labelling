@@ -16,7 +16,7 @@
 
 **ER Diagram of database**
 
-https://github.com/yanxiangyi/CS304-A-web-platform-for-data-labelling/blob/master/db_er.png
+![](./db_er.png)
 
 **All methods return `None` if fails unless otherwise stated**
 
@@ -37,20 +37,22 @@ https://github.com/yanxiangyi/CS304-A-web-platform-for-data-labelling/blob/maste
 - `get_user_credit(self, userid=None, username=None, user_email=None)`
 
 - `get_user_nb_accept(self, userid=None, username=None, user_email=None)`
-   
+  
    return number of accepted answer of the user
    
 - `get_user_nb_answer(self, userid=None, username=None, user_email=None)`
 
    return the user's total number of answers 
 
+- `get_user_nb_examined(self, userid=None, username=None, user_email=None)`
+
 - `get_user_signin_time(self, userid=None, username=None, user_email=None)`
 
-- `insert_user(self, username, user_email, passwd, signin_time=get_timestamp(), credits=0, nb_accept=0)`
+- `insert_user(self, username, user_email, passwd, signin_time=get_timestamp(), credits=0, nb_accept=0, nb_answer=0, nb_examined=0)`
 
   - default `signin_time` is current time
   - default `credits` is 0
-  - default `nb_accept` is 0, i.e. the default number of accepted answer is 0.
+  - default `nb_accept`, `nb_answer` and `nb_examined` are 0, i.e. the default number of accepted answer is 0.
   - insertion operations return : **1** success; **0** already exist; **-1** fail
 
 - `user_exist(self, userid=None, username=None, user_email=None)`
@@ -147,7 +149,7 @@ https://github.com/yanxiangyi/CS304-A-web-platform-for-data-labelling/blob/maste
 - `get_label_content(self, dataid, userid=None, username=None, user_email=None)`
 
 - `get_label_correct(self, dataid, userid=None, username=None, user_email=None)`
-    
+  
   - return **0** not determined; **1** correct; **-1** incorrect.
 
 
