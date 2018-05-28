@@ -1,19 +1,18 @@
-from flask import Flask
-from flask import jsonify
-from flask import render_template
+from flask import Flask, jsonify, render_template, session, redirect, url_for, escape, request, send_from_directory
 from flask_cors import CORS, cross_origin
 from mysql.connector import connection
 from database import *
 import os
-from flask import Flask, request, redirect, url_for, send_from_directory
 from werkzeug.utils import secure_filename
 
 
 UPLOAD_FOLDER = '/home/se2018/CS304-A-web-platform-for-data-labelling/upload'
-ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif', 'zip'])
+ALLOWED_EXTENSIONS = set(['pdf', 'zip'])
 
 app = Flask(__name__)
+app.secret_key = 'any random string'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.secret_key = 'any random string'
 CORS(app)
 cnx = connection.MySQLConnection(user='root',
                                  password='se2018',
@@ -25,7 +24,16 @@ c = sql_conn(cnx)
 @app.route("/")
 @cross_origin()
 def index_void():
-    return render_template('index.html')
+    if 'user_email' in session:
+        # user_email = session['user_email']
+        return render_template('index.html')
+    return redirect(url_for('mainpage'))
+
+@app.route('/logout')
+def logout():
+   # remove the username from the session if it is there
+   session.pop('user_email', None)
+   return redirect(url_for('login'))
 
 
 @app.route("/index.html")
@@ -34,10 +42,11 @@ def index():
     return render_template('index.html')
 
 
-@app.route("/login.html")
+@app.route("/login.html", methods=['GET', 'POST'])
 @cross_origin()
 def login():
     return render_template('login.html')
+
 
 @app.route("/register.html")
 @cross_origin()
@@ -57,12 +66,6 @@ def imagelabel():
     return render_template('imagelabel.html')
 
 
-# @app.route("/publish.html")
-# @cross_origin()
-# def publish():
-#     return render_template('publish.html')
-
-
 @app.route("/textlabel.html")
 @cross_origin()
 def textlabel():
@@ -75,13 +78,14 @@ def textlabel2():
     return render_template('textlabel2.html')
 
 
-@app.route('/login/username/<user_name>/password/<pass_word>')
+@app.route('/login/email/<user_email>/password/<pass_word>')
 @cross_origin()
-def username_login(user_name, pass_word):
-    password = c.get_user_passwd(username=user_name)
+def email_login(user_email, pass_word):
+    password = c.get_user_passwd(user_email=user_email)
     if password is not None:
         if password == pass_word:
             result = {'code': 0}
+            session['user_email'] = user_email
         elif password != pass_word:
             result = {'code': 1, 'message': 'Wrong password!'}
     else:
@@ -89,10 +93,10 @@ def username_login(user_name, pass_word):
     return jsonify(result)
 
 
-@app.route('/login/email/<user_email>/password/<pass_word>')
+@app.route('/login/username/<user_name>/password/<pass_word>')
 @cross_origin()
-def email_login(user_email, pass_word):
-    password = c.get_user_passwd(user_email=user_email)
+def username_login(user_name, pass_word):
+    password = c.get_user_passwd(username=user_name)
     if password is not None:
         if password == pass_word:
             result = {'code': 0}
