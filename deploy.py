@@ -18,11 +18,20 @@ app.secret_key = 'any random string'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.secret_key = 'any random string'
 CORS(app)
-cnx = connection.MySQLConnection(user='root',
-                                 password='se2018',
-                                 host='127.0.0.1',
-                                 database='se_proj')
-c = sql_conn(cnx)
+# cnx = connection.MySQLConnection(user='root',
+#                                  password='se2018',
+#                                  host='127.0.0.1',
+#                                  database='se_proj')
+# c = sql_conn(cnx)
+
+
+def init_cnx():
+    cnx = connection.MySQLConnection(user='root',
+                                     password='se2018',
+                                     host='127.0.0.1',
+                                     database='se_proj')
+    c = sql_conn(cnx)
+    return c
 
 
 @app.route("/")
@@ -115,12 +124,17 @@ def textlabel():
 @app.route('/login_admin/email/<admin_email>/password/<pass_word>')
 @cross_origin()
 def email_login_admin(admin_email, pass_word):
+    c = init_cnx()
     password = c.get_admin_passwd(admin_email=admin_email)
+    c.close()
     if password is not None:
         if password == pass_word:
             result = {'code': 0}
             session['email'] = admin_email
-            if c.get_admin_access_level(admin_email=admin_email) == 1:
+            c = init_cnx()
+            level = c.get_admin_access_level(admin_email=admin_email)
+            c.close()
+            if level == 1:
                 session['level'] = 1
             else:
                 session['level'] = 2
@@ -134,7 +148,9 @@ def email_login_admin(admin_email, pass_word):
 @app.route('/login/email/<user_email>/password/<pass_word>')
 @cross_origin()
 def email_login(user_email, pass_word):
+    c = init_cnx()
     password = c.get_user_passwd(user_email=user_email)
+    c.close()
     if password is not None:
         if password == pass_word:
             result = {'code': 0}
@@ -164,7 +180,9 @@ def email_login(user_email, pass_word):
 @app.route('/register/email/<user_email>/username/<user_name>/password/<pass_word>')
 @cross_origin()
 def email_register(user_name, user_email, pass_word):
+    c = init_cnx()
     result = c.insert_user(username=user_name, user_email=user_email, passwd=pass_word, signin_time=get_timestamp(), credits=0)
+    c.close()
     if result == 1:
         return jsonify({'code': 0})
     elif result == 0:
@@ -177,7 +195,9 @@ def email_register(user_name, user_email, pass_word):
 @app.route('/forget/email/<user_email>')
 @cross_origin()
 def email_forget(user_email):
+    c = init_cnx()
     result = c.user_exist(user_email=user_email)
+    c.close()
     if result:
         return jsonify({'code': 0})
     else:
@@ -233,13 +253,19 @@ def upload_file():
             # os.renames(final_path, root_path)
             root_path = final_path
             admin_email = session['email']
+            c = init_cnx()
             admin_id = c.get_admin_id(admin_email=admin_email)
+            c.close()
             result = {"code": 0}
+            c = init_cnx()
             insert = c.insert_source(sourcename=sourcename, finished=0, publisher=admin_id, description=description, publish_time=get_timestamp(), priority=1)
+            c.close()
             if insert == -1:
                 result = {"code": 1, "message": "Task insertion failed!"}
             else:
+                c = init_cnx()
                 load = c.load_data(root_path=root_path, sourcename=sourcename)
+                c.close()
                 if load == 0:
                     result = {"code": 1, "message": "Data insertion failed!"}
             return jsonify(result)
@@ -269,9 +295,14 @@ def profile():
             result = {"code": 1, "message": "Please login first!"}
             return jsonify(result)
         if session['level'] == 0:
+            c = init_cnx()
             if c.user_exist(user_email=email):
                 [user_id, user_email, user_name, password, signup_time, user_credit, num_answer, num_acc, num_val, num_val_tp] = c.get_user(user_email=email)
-                user_num = c.get_user_number()
+                # try:
+                #     user_num = c.get_user_number()
+                # except:
+                #     user_num = 100
+                user_num = 100
                 result = {"user_id": user_id, "user_email": user_email,
                           "user_name": user_name, "user_credit": user_credit,
                           "num_acc": num_acc, "num_answer": num_answer,
@@ -280,8 +311,11 @@ def profile():
                 result = {"code": 0, "message": result}
             else:
                 result = {"code": 1, "message": "User doesn\'t exist!"}
+            c.close()
         else:
+            c = init_cnx()
             [admin_id, admin_email, admin_name, password, level] = c.get_admin(admin_email=email)
+            c.close()
             result = {
                 "user_id": admin_id, "user_email": admin_email,
                 "user_name": admin_name, "user_level": level
@@ -296,8 +330,12 @@ def profile():
 @cross_origin()
 def recent_task():
     # if "email" in session:
+    c = init_cnx()
     source_number = c.get_source_number()
+    c.close()
+    c = init_cnx()
     all_source = c.get_all_source()
+    c.close()
     tasks = []
     for source in all_source:
         [source_id, source_name, finished, publisher, publish_date, description, priority, num_json] = source
@@ -330,8 +368,12 @@ def recent_task():
 def task():
     if "email" in session:
         if session['level'] == 2:
+            c = init_cnx()
             source_number = c.get_source_number()
+            c.close()
+            c = init_cnx()
             all_source = c.get_all_source()
+            c.close()
             tasks = []
             for source in all_source:
                 [source_id, source_name, finished, publisher, publish_date, description, priority, num_json] = source
@@ -353,12 +395,16 @@ def task():
                       }
 
         elif session['level'] == 1:
+            c = init_cnx()
             all_source = c.get_all_source()
+            c.close()
             tasks = []
             admin_email = session['email']
             for source in all_source:
                 [source_id, source_name, finished, publisher, publish_date, description, priority, num_json] = source
+                c = init_cnx()
                 if publisher == c.get_admin_id(admin_email=admin_email):
+                    c.close()
                     task = {"publisher": publisher,
                             "publish_date": publish_date,
                             "source_name": source_name,
@@ -378,8 +424,10 @@ def task():
                       }
 
         else:
+            c = init_cnx()
             source_number = c.get_source_number()
             all_source = c.get_all_source()
+            c.close()
             tasks = []
             for source in all_source:
                 [source_id, source_name, finished, publisher, publish_date, description, priority, num_json] = source
@@ -417,8 +465,10 @@ def task():
 @app.route('/task1')
 @cross_origin()
 def task1():
+    c = init_cnx()
     source_number = c.get_source_number()
     all_source = c.get_all_source()
+    c.close()
     tasks = []
     for source in all_source:
         [source_id, source_name, finished, publisher, publish_date, description, priority, num_json] = source
@@ -441,3 +491,4 @@ def task1():
     return jsonify(result)
 if __name__ == '__main__':
    app.run(host="0.0.0.0", port="5000", debug=True, threaded=True)
+   session.clear()
