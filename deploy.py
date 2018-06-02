@@ -217,14 +217,42 @@ def upload_file():
             zip_ref.extractall(final_path)
             zip_ref.close()
             # Only keep Json files
-            for (dirpath, dirnames, filenames) in os.walk(final_path):
-                for uncheck in filenames:
-                    if not uncheck.endswith(".json"):
-                        if os.path.isdir(uncheck):
-                            shutil.rmtree(os.path.join(dirpath, uncheck))
-                        else:
-                            os.remove(os.path.join(dirpath, uncheck))
-            return jsonify({"code": 0})
+            # for (dirpath, dirnames, filenames) in os.walk(final_path):
+            #     print(final_path)
+            #     for uncheck in filenames:
+            #         print(filenames)
+            #         if not uncheck.endswith(".json"):
+            #             if os.path.isdir(uncheck):
+            #                 shutil.rmtree(os.path.join(dirpath, uncheck))
+            #             else:
+            #                 os.remove(os.path.join(dirpath, uncheck))
+            for filename in os.listdir(final_path):
+                if not os.path.join(final_path, filename).endswith(".json"):
+                    if os.path.isdir(os.path.join(final_path, filename)):
+                        shutil.rmtree(os.path.join(final_path, filename))
+                    else:
+                        os.remove(os.path.join(final_path, filename))
+                elif filename == "meta.json":
+                    with open(os.path.join(final_path, filename)) as f:
+                        meta = json.load(f)
+                        sourcename = meta['projectName']
+                        description = meta['description']
+                    f.close()
+                    os.remove(os.path.join(final_path, filename))
+            # root_path = os.path.join(EXTRACT_FOLDER, sourcename + "_" + datetime.datetime.today().strftime('%Y-%m-%d'))
+            # os.renames(final_path, root_path)
+            root_path = final_path
+            admin_email = session['email']
+            admin_id = c.get_admin_id(admin_email=admin_email)
+            result = {"code": 0}
+            insert = c.insert_source(sourcename=sourcename, finished=0, publisher=admin_id, description=description, publish_time=get_timestamp(), priority=1)
+            if insert == -1:
+                result = {"code": 1, "message": "Task insertion failed!"}
+            else:
+                load = c.load_data(root_path=root_path, sourcename=sourcename)
+                if load == 0:
+                    result = {"code": 1, "message": "Data insertion failed!"}
+            return jsonify(result)
     return render_template('publish.html')
 
 
