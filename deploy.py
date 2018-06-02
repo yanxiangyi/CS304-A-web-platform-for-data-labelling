@@ -64,7 +64,6 @@ def index():
     return redirect(url_for('mainpage'))
 
 
-
 @app.route("/login.html", methods=['GET', 'POST'])
 @cross_origin()
 def login():
@@ -101,16 +100,16 @@ def textlabel():
 #     return render_template('textlabel2.html')
 
 
-@app.route('/email_current')
-@cross_origin()
-def email_current():
-    try:
-        email = session['email']
-        result = {'code': 0, 'message': email}
-        return jsonify(result)
-    except:
-        result = {'code': 1, 'message': "Please log in first!"}
-        return jsonify(result)
+# @app.route('/email_current')
+# @cross_origin()
+# def email_current():
+#     try:
+#         email = session['email']
+#         result = {'code': 0, 'message': email}
+#         return jsonify(result)
+#     except:
+#         result = {'code': 1, 'message': "Please log in first!"}
+#         return jsonify(result)
 
 
 @app.route('/login_admin/email/<admin_email>/password/<pass_word>')
@@ -217,15 +216,6 @@ def upload_file():
             zip_ref.extractall(final_path)
             zip_ref.close()
             # Only keep Json files
-            # for (dirpath, dirnames, filenames) in os.walk(final_path):
-            #     print(final_path)
-            #     for uncheck in filenames:
-            #         print(filenames)
-            #         if not uncheck.endswith(".json"):
-            #             if os.path.isdir(uncheck):
-            #                 shutil.rmtree(os.path.join(dirpath, uncheck))
-            #             else:
-            #                 os.remove(os.path.join(dirpath, uncheck))
             for filename in os.listdir(final_path):
                 if not os.path.join(final_path, filename).endswith(".json"):
                     if os.path.isdir(os.path.join(final_path, filename)):
@@ -450,4 +440,4 @@ def task1():
               }
     return jsonify(result)
 if __name__ == '__main__':
-   app.run(host="0.0.0.0", port="5000", debug=True)
+   app.run(host="0.0.0.0", port="5000", debug=True, threaded=True)
