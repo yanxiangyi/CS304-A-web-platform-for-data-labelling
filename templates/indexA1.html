@@ -32,7 +32,7 @@
 <!-- begin:: Page -->
 <div class="m-grid m-grid--hor m-grid--root m-page">
     <!-- begin::Header -->
-    <header class="m-grid__item		m-header " data-minimize="minimize" data-minimize-offset="200"
+    <header class="m-grid__item m-header " data-minimize="minimize" data-minimize-offset="200"
             data-minimize-mobile-offset="200">
         <div class="m-header__top">
             <div class="m-container m-container--responsive m-container--xxl m-container--full-height m-page__container">
@@ -84,7 +84,7 @@
                                             <span class="m-topbar__welcome">
 														Hello,&nbsp;
 													</span>
-                                            <span class="m-topbar__username">
+                                            <span class="m-topbar__username" id = "usrname">
 													</span>
                                         </a>
 
@@ -100,10 +100,10 @@
                                                                  class="m--img-rounded m--marginless" alt=""/>
                                                         </div>
                                                         <div class="m-card-user__details">
-																	<span class="m-card-user__name m--font-weight-500">
+																	<span class="m-card-user__name m--font-weight-500" id="inner_usrname">
 																	</span>
                                                             <a href=""
-                                                               class="m-card-user__email m--font-weight-300 m-link">
+                                                               class="m-card-user__email m--font-weight-300 m-link" id="inner_email">
                                                             </a>
                                                         </div>
                                                     </div>
@@ -116,7 +116,7 @@
                                                             <li class="m-nav__separator m-nav__separator--fit"></li>
                                                             <!--logout-->
                                                             <li class="m-nav__item">
-                                                                <a href="snippets/pages/user/login-1.html"
+                                                                <a href="/logout"
                                                                    class="btn m-btn--pill btn-secondary m-btn m-btn--custom m-btn--label-brand m-btn--bolder">
                                                                     Logout
                                                                 </a>
@@ -140,7 +140,6 @@
         </div>
         <div class="m-header__bottom">
             <div class="m-container m-container--responsive m-container--xxl m-container--full-height m-page__container">
-
                 <div class="m-stack m-stack--ver m-stack--desktop">
 
                     <!-- begin::Horizontal Menu -->
@@ -154,19 +153,10 @@
 
                                 <!--overviewing-->
                                 <li class="m-menu__item m-menu__item--active " aria-haspopup="true">
-                                    <a href="index.html" class="m-menu__link ">
+                                    <a href="indexA1.html" class="m-menu__link ">
                                         <span class="m-menu__item-here"></span>
                                         <span class="m-menu__link-text">
-													Overview
-												</span>
-                                    </a>
-                                </li>
-
-                                <li class="m-menu__item" aria-haspopup="true">
-                                    <a href="choose.html" class="m-menu__link ">
-                                        <span class="m-menu__item-here"></span>
-                                        <span class="m-menu__link-text">
-													Labeling
+													Publish
 												</span>
                                     </a>
                                 </li>
@@ -212,90 +202,9 @@
                     <div class="m-portlet__head-caption">
                         <div class="m-portlet__head-title">
                             <h3 class="m-portlet__head-text">
-                                AJAX Datatable
-                                <small>
-                                    data loaded from remote data source
-                                </small>
+                                Dashboard
                             </h3>
                         </div>
-                    </div>
-                    <div class="m-portlet__head-tools">
-                        <ul class="m-portlet__nav">
-                            <li class="m-portlet__nav-item">
-                                <div class="m-dropdown m-dropdown--inline m-dropdown--arrow m-dropdown--align-right m-dropdown--align-push" data-dropdown-toggle="hover" aria-expanded="true">
-                                    <a href="#" class="m-portlet__nav-link btn btn-lg btn-secondary  m-btn m-btn--icon m-btn--icon-only m-btn--pill  m-dropdown__toggle">
-                                        <i class="la la-ellipsis-h m--font-brand"></i>
-                                    </a>
-                                    <div class="m-dropdown__wrapper">
-                                        <span class="m-dropdown__arrow m-dropdown__arrow--right m-dropdown__arrow--adjust"></span>
-                                        <div class="m-dropdown__inner">
-                                            <div class="m-dropdown__body">
-                                                <div class="m-dropdown__content">
-                                                    <ul class="m-nav">
-                                                        <li class="m-nav__section m-nav__section--first">
-																		<span class="m-nav__section-text">
-																			Quick Actions
-																		</span>
-                                                        </li>
-                                                        <li class="m-nav__item">
-                                                            <a href="" class="m-nav__link">
-                                                                <i class="m-nav__link-icon flaticon-share"></i>
-                                                                <span class="m-nav__link-text">
-																				Create Post
-																			</span>
-                                                            </a>
-                                                        </li>
-                                                        <li class="m-nav__item">
-                                                            <a href="" class="m-nav__link">
-                                                                <i class="m-nav__link-icon flaticon-chat-1"></i>
-                                                                <span class="m-nav__link-text">
-																				Send Messages
-																			</span>
-                                                            </a>
-                                                        </li>
-                                                        <li class="m-nav__item">
-                                                            <a href="" class="m-nav__link">
-                                                                <i class="m-nav__link-icon flaticon-multimedia-2"></i>
-                                                                <span class="m-nav__link-text">
-																				Upload File
-																			</span>
-                                                            </a>
-                                                        </li>
-                                                        <li class="m-nav__section">
-																		<span class="m-nav__section-text">
-																			Useful Links
-																		</span>
-                                                        </li>
-                                                        <li class="m-nav__item">
-                                                            <a href="" class="m-nav__link">
-                                                                <i class="m-nav__link-icon flaticon-info"></i>
-                                                                <span class="m-nav__link-text">
-																				FAQ
-																			</span>
-                                                            </a>
-                                                        </li>
-                                                        <li class="m-nav__item">
-                                                            <a href="" class="m-nav__link">
-                                                                <i class="m-nav__link-icon flaticon-lifebuoy"></i>
-                                                                <span class="m-nav__link-text">
-																				Support
-																			</span>
-                                                            </a>
-                                                        </li>
-                                                        <li class="m-nav__separator m-nav__separator--fit m--hide"></li>
-                                                        <li class="m-nav__item m--hide">
-                                                            <a href="#" class="btn btn-outline-danger m-btn m-btn--pill m-btn--wide btn-sm">
-                                                                Submit
-                                                            </a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
                     </div>
                 </div>
                 <div class="m-portlet__body">
