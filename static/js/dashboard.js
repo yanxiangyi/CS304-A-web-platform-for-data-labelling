@@ -1699,6 +1699,9 @@ jQuery(document).ready(function() {
         url: 'http://47.106.34.103:5000/profile/' + user_email,
         success: function (json) {
             var parsedData = JSON.parse(JSON.parse(json).message);
+            document.getElementById('usrname').innerHTML = parsedData.user_name;
+            document.getElementById('inner_usrname').innerHTML = parsedData.user_name;
+            document.getElementById('inner_email').innerHTML = parsedData.user_email;
             document.getElementById('figure1').innerHTML = parsedData.num_total;
             document.getElementById('figure2').innerHTML = parsedData.num_examined;
             document.getElementById('figure3').innerHTML = parsedData.num_acc;
