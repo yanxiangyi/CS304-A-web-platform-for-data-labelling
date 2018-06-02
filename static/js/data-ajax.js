@@ -17,7 +17,7 @@ var DatatableRemoteAjaxDemo = function() {
             url: 'http://47.106.34.103:5000/task1',
             map: function(raw) {
               // sample data mapping
-                var temp = eval(raw);
+                //var temp = eval(raw);
               var dataSet = raw.message.tasks;
               // if (typeof raw.message !== 'undefined') {
               //   dataSet = raw.message[tasks];
@@ -29,7 +29,7 @@ var DatatableRemoteAjaxDemo = function() {
           },
         },
         pageSize: 10,
-        serverPaging: true,
+        serverPaging: false,
         serverFiltering: false,
         serverSorting: false,
       },
