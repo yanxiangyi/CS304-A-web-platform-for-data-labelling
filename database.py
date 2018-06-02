@@ -188,11 +188,11 @@ class sql_conn:
         try:
             _, _, files = next(os.walk(root_path))
             for f in files:
-                with open(root_path+f) as js:
+                with open(os.path.join(root_path, f)) as js:
                     data_index = json.load(js)['index']
-                if None==self.__get_by_mul_cond('text_data','dataid', {'datasouce':sourceid, 'data_index':data_index}):
+                if None is self.__get_by_mul_cond('text_data', 'dataid', {'datasouce': sourceid, 'data_index': data_index}):
                     continue
-                self.__insert_textdata(sourceid, data_index, root_path+f)
+                self.__insert_textdata(sourceid, data_index, os.path.join(root_path, f))
             return 1
         except:
             return 0
