@@ -91,7 +91,6 @@ var Dashboard = function () {
 
 //== Class initialization on page load
 jQuery(document).ready(function () {
-    var user_email = "";
     $.ajax({
         type: 'GET',
         url: 'http://47.106.34.103:5000/profile',
