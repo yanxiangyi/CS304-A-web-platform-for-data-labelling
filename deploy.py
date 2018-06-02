@@ -28,15 +28,22 @@ c = sql_conn(cnx)
 @app.route("/")
 @cross_origin()
 def index_void():
-    if 'user_email' in session:
-        return render_template('index.html')
+    if 'email' in session:
+        if session['level'] == 0:
+            return render_template('index.html')
+        elif session['level'] == 1:
+            return render_template('index.html')
+        else:
+            return render_template('index.html')
     return redirect(url_for('mainpage'))
+
 
 @app.route('/logout')
 def logout():
     # remove the username from the session if it is there
-    session.pop('user_email', None)
+    session.pop('email', None)
     return redirect(url_for('logout_page'))
+
 
 @app.route("/logout.html")
 @cross_origin()
@@ -47,8 +54,13 @@ def logout_page():
 @app.route("/index.html")
 @cross_origin()
 def index():
-    if 'user_email' in session:
-        return render_template('index.html')
+    if 'email' in session:
+        if session['level'] == 0:
+            return render_template('index.html')
+        elif session['level'] == 1:
+            return render_template('index.html')
+        else:
+            return render_template('index.html')
     return redirect(url_for('mainpage'))
 
 
@@ -83,21 +95,41 @@ def textlabel():
     return render_template('textlabel.html')
 
 
-@app.route("/textlabel2.html")
-@cross_origin()
-def textlabel2():
-    return render_template('textlabel2.html')
+# @app.route("/textlabel2.html")
+# @cross_origin()
+# def textlabel2():
+#     return render_template('textlabel2.html')
+
 
 @app.route('/email_current')
 @cross_origin()
 def email_current():
     try:
-        user_email = session['user_email']
-        result = {'code': 0, 'message': user_email}
+        email = session['email']
+        result = {'code': 0, 'message': email}
         return jsonify(result)
     except:
         result = {'code': 1, 'message': "Please log in first!"}
         return jsonify(result)
+
+
+@app.route('/login_admin/email/<admin_email>/password/<pass_word>')
+@cross_origin()
+def email_login_admin(admin_email, pass_word):
+    password = c.get_admin_passwd(admin_email=admin_email)
+    if password is not None:
+        if password == pass_word:
+            result = {'code': 0}
+            session['email'] = admin_email
+            if c.get_admin_access_level(admin_email=admin_email) == 1:
+                session['level'] = 1
+            else:
+                session['level'] = 2
+        elif password != pass_word:
+            result = {'code': 1, 'message': 'Wrong password!'}
+    else:
+        result = {'code': 1, 'message': 'Admin doesn\'t exist!'}
+    return jsonify(result)
 
 
 @app.route('/login/email/<user_email>/password/<pass_word>')
@@ -107,7 +139,8 @@ def email_login(user_email, pass_word):
     if password is not None:
         if password == pass_word:
             result = {'code': 0}
-            session['user_email'] = user_email
+            session['level'] = 0
+            session['email'] = user_email
         elif password != pass_word:
             result = {'code': 1, 'message': 'Wrong password!'}
     else:
@@ -115,18 +148,18 @@ def email_login(user_email, pass_word):
     return jsonify(result)
 
 
-@app.route('/login/username/<user_name>/password/<pass_word>')
-@cross_origin()
-def username_login(user_name, pass_word):
-    password = c.get_user_passwd(username=user_name)
-    if password is not None:
-        if password == pass_word:
-            result = {'code': 0}
-        elif password != pass_word:
-            result = {'code': 1, 'message': 'Wrong password!'}
-    else:
-        result = {'code': 1, 'message': 'User doesn\'t exist!'}
-    return jsonify(result)
+# @app.route('/login/username/<user_name>/password/<pass_word>')
+# @cross_origin()
+# def username_login(user_name, pass_word):
+#     password = c.get_user_passwd(username=user_name)
+#     if password is not None:
+#         if password == pass_word:
+#             result = {'code': 0}
+#         elif password != pass_word:
+#             result = {'code': 1, 'message': 'Wrong password!'}
+#     else:
+#         result = {'code': 1, 'message': 'User doesn\'t exist!'}
+#     return jsonify(result)
 
 
 @app.route('/register/email/<user_email>/username/<user_name>/password/<pass_word>')
@@ -195,27 +228,198 @@ def upload_file():
     return render_template('publish.html')
 
 
-# @app.route('/uploads/<filename>')
+# @app.route('/test/<email>')
 # @cross_origin()
-# def uploaded_file(filename):
-#     return send_from_directory(app.config['UPLOAD_FOLDER'],
-#                                filename)
+# def test(email):
+#     if session
+#         return jsonify(result)
 
-
-@app.route('/profile/<user_email>')
+@app.route('/test')
 @cross_origin()
-def profile(user_email):
-    if c.user_exist(user_email=user_email):
-        [user_id, user_email, user_name, passward, signup_time, user_credit, num_total, num_acc, num_examined] = c.get_user(user_email=user_email)
-        result = {"user_id": user_id, "useremail": user_email,
-                  "user_name": user_name, "user_credit": user_credit,
-                  "num_acc": num_acc, "num_total": num_total,
-                  "signup_time": signup_time, "num_examined": num_examined}
-        result = {"code": 0, "message": result}
+def test():
+    if 'email' in session:
+        return jsonify(session.keys())
     else:
-        result = {"code": 1, "message": "User doesn\'t exist!"}
+        return jsonify([])
+
+@app.route('/profile')
+@cross_origin()
+def profile():
+    if 'email' in session:
+        email = session['email']
+        if session['email'] != email:
+            result = {"code": 1, "message": "Please login first!"}
+            return jsonify(result)
+        if session['level'] == 0:
+            if c.user_exist(user_email=email):
+                [user_id, user_email, user_name, password, signup_time, user_credit, num_answer, num_acc, num_val, num_val_tp] = c.get_user(user_email=email)
+                user_num = c.get_user_number()
+                result = {"user_id": user_id, "user_email": user_email,
+                          "user_name": user_name, "user_credit": user_credit,
+                          "num_acc": num_acc, "num_answer": num_answer,
+                          "signup_time": signup_time, "num_val": num_val,
+                          "num_val_tp": num_val_tp, "rank": 1-float(user_id)/float(user_num)}
+                result = {"code": 0, "message": result}
+            else:
+                result = {"code": 1, "message": "User doesn\'t exist!"}
+        else:
+            [admin_id, admin_email, admin_name, password, level] = c.get_admin(admin_email=email)
+            result = {
+                "user_id": admin_id, "user_email": admin_email,
+                "user_name": admin_name, "user_level": level
+            }
+            result = {"code": 0, "message": result}
+    else:
+        result = {"code": 1, "message": "Please login first!"}
     return jsonify(result)
 
 
+@app.route('/recent_task')
+@cross_origin()
+def recent_task():
+    # if "email" in session:
+    source_number = c.get_source_number()
+    all_source = c.get_all_source()
+    tasks = []
+    for source in all_source:
+        [source_id, source_name, finished, publisher, publish_date, description, priority, num_json] = source
+        date = datetime.datetime.fromtimestamp(publish_date)
+        task = {"publisher": publisher,
+                "publish_date": str(date.month) + "." + str(date.day),
+                "source_name": source_name,
+                "if_finished": finished,
+                "source_id": source_id,
+                "description": description,
+                "priority": priority,
+                "number": num_json
+        }
+        tasks.append(task)
+    result = {"code": 0,
+              "message": {
+                  "task_num": source_number,
+                  "tasks": tasks[:5]
+              }
+              }
+    # else:
+    #     result = {"code": 1,
+    #               "message": "Please login first!"
+    #               }
+
+    return jsonify(result)
+
+@app.route('/task')
+@cross_origin()
+def task():
+    if "email" in session:
+        if session['level'] == 2:
+            source_number = c.get_source_number()
+            all_source = c.get_all_source()
+            tasks = []
+            for source in all_source:
+                [source_id, source_name, finished, publisher, publish_date, description, priority, num_json] = source
+                task = {"publisher": publisher,
+                        "publish_date": publish_date,
+                        "source_name": source_name,
+                        "if_finished": finished,
+                        "source_id": source_id,
+                        "description": description,
+                        "priority": priority,
+                        "number": num_json
+                }
+                tasks.append(task)
+            result = {"code": 0,
+                      "message": {
+                          "task_num": source_number,
+                          "tasks": tasks
+                      }
+                      }
+
+        elif session['level'] == 1:
+            all_source = c.get_all_source()
+            tasks = []
+            admin_email = session['email']
+            for source in all_source:
+                [source_id, source_name, finished, publisher, publish_date, description, priority, num_json] = source
+                if publisher == c.get_admin_id(admin_email=admin_email):
+                    task = {"publisher": publisher,
+                            "publish_date": publish_date,
+                            "source_name": source_name,
+                            "if_finished": finished,
+                            "source_id": source_id,
+                            "description": description,
+                            "priority": priority,
+                            "number": num_json
+                            }
+                    tasks.append(task)
+            source_number = len(tasks)
+            result = {"code": 0,
+                      "message": {
+                          "task_num": source_number,
+                          "tasks": tasks
+                      }
+                      }
+
+        else:
+            source_number = c.get_source_number()
+            all_source = c.get_all_source()
+            tasks = []
+            for source in all_source:
+                [source_id, source_name, finished, publisher, publish_date, description, priority, num_json] = source
+                task = {"publisher": publisher,
+                        "publish_date": publish_date,
+                        "source_name": source_name,
+                        "if_finished": finished,
+                        "source_id": source_id,
+                        "description": description,
+                        "priority": priority,
+                        "number": num_json
+                }
+                tasks.append(task)
+            result = {"code": 0,
+                      "message": {
+                          "task_num": source_number,
+                          "tasks": tasks
+                      }
+                      }
+    else:
+        result = {"code": 1,
+                  "message": "Please login first!"
+                  }
+
+    #     [user_id, user_email, user_name, password, signup_time, user_credit, num_total, num_acc, num_examined] = c.get_source_number()
+    #     result = {"user_id": user_id, "user_email": user_email,
+    #               "user_name": user_name, "user_credit": user_credit,
+    #               "num_acc": num_acc, "num_total": num_total,
+    #               "signup_time": signup_time, "num_examined": num_examined}
+    #     result = {"code": 0, "message": result}
+    # else:
+    #     result = {"code": 1, "message": "User doesn\'t exist!"}
+    return jsonify(result)
+
+@app.route('/task1')
+@cross_origin()
+def task1():
+    source_number = c.get_source_number()
+    all_source = c.get_all_source()
+    tasks = []
+    for source in all_source:
+        [source_id, source_name, finished, publisher, publish_date, description, priority, num_json] = source
+        task = {"publisher": publisher,
+                "publish_date": publish_date,
+                "source_name": source_name,
+                "if_finished": finished,
+                "source_id": source_id,
+                "description": description,
+                "priority": priority,
+                "number": num_json
+                }
+        tasks.append(task)
+    result = {"code": 0,
+              "message": {
+                  "task_num": source_number,
+                  "tasks": tasks
+              }
+              }
+    return jsonify(result)
 if __name__ == '__main__':
    app.run(host="0.0.0.0", port="5000", debug=True)

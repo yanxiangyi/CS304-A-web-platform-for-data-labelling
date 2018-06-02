@@ -83,7 +83,7 @@ class sql_conn:
     def get_user(self, userid=None, username=None, user_email=None):
         return self.__get_by_option('users', '*', {'userid': userid, 'username': username, 'email_address':user_email}, head=False)
     
-    def ger_user_number(self):
+    def get_user_number(self):
         return len(self.get_all_user())
     
     def get_user_id(self, username=None, user_email=None):
