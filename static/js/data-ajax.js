@@ -92,11 +92,16 @@ var DatatableRemoteAjaxDemo = function () {
                     // callback function support for column rendering
                     template: function (row) {
                         var status = {
-                            0: {'title': 'Done', 'class': 'm-badge--brand'},
-                            1: {'title': 'Labeling', 'class': ' m-badge--metal'},
-                            else: {'title': 'New', 'class': ' m-badge--primary'},
+                            1: {'title': 'Done', 'class': 'm-badge--brand'},
+                            2: {'title': 'Labeling', 'class': ' m-badge--metal'},
+                            0: {'title': 'New', 'class': ' m-badge--primary'},
                         };
-                        return '<span class="m-badge ' + status[row.if_finished].class + ' m-badge--wide">' + status[row.if_finished].title + '</span>';
+                        if (row.if_finished < 1 && row.if_finished > 0) {
+                            return '<span class="m-badge ' + status[2].class +
+                                ' m-badge--wide">' + status[2].title + '</span>';
+                        }
+                        return '<span class="m-badge ' + status[row.if_finished].class +
+                            ' m-badge--wide">' + status[row.if_finished].title + '</span>';
                     },
                 }, {
                     field: 'priority',
