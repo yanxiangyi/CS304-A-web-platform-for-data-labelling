@@ -1684,6 +1684,7 @@ jQuery(document).ready(function() {
     //     return json.code.value;
     // });
     // $("#figure1").load("http://47.106.34.103:5000/forget/email/uu@uu.com");
+
     $.ajax({
         type: 'GET',
         url: 'http://47.106.34.103:5000/forget/email/uu@uu.com',
