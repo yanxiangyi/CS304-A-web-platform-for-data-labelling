@@ -116,6 +116,10 @@
   
 - `get_source_id(self, sourcename)`
 
+- `get_source_nb_json`
+
+  return json file count of the source
+
 - `get_source_finished(self, sourcename=None, sourceid=None)`
 
   return `True` is the source task is finished, otherwise `False`
