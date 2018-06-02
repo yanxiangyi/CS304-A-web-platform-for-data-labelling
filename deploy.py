@@ -228,9 +228,19 @@ def upload_file():
     return render_template('publish.html')
 
 
+# @app.route('/test/<email>')
+# @cross_origin()
+# def test(email):
+#     if session
+#         return jsonify(result)
+
 @app.route('/profile/<email>')
 @cross_origin()
 def profile(email):
+
+    if session['email'] != email:
+        result = {"code": 1, "message": "Please login first!"}
+        return jsonify(result)
     if session['level'] == 0:
         if c.user_exist(user_email=email):
             [user_id, user_email, user_name, password, signup_time, user_credit, num_answer, num_acc, num_val, num_val_tp] = c.get_user(user_email=email)
@@ -255,19 +265,21 @@ def profile(email):
 @app.route('/task')
 @cross_origin()
 def task():
+
     if session['level'] == 2:
         source_number = c.get_source_number()
         all_source = c.get_all_source()
         tasks = []
         for source in all_source:
-            [source_id, source_name, finished, publisher, publish_date, description, priority] = source
+            [source_id, source_name, finished, publisher, publish_date, description, priority, num_json] = source
             task = {"publisher": publisher,
                     "publish_date": publish_date,
                     "source_name": source_name,
                     "if_finished": finished,
                     "source_id": source_id,
                     "description": description,
-                    "priority": priority
+                    "priority": priority,
+                    "number": num_json
             }
             tasks.append(task)
         result = {"code": 0,
@@ -282,7 +294,7 @@ def task():
         tasks = []
         admin_email = session['email']
         for source in all_source:
-            [source_id, source_name, finished, publisher, publish_date, description, priority] = source
+            [source_id, source_name, finished, publisher, publish_date, description, priority, num_json] = source
             if publisher == c.get_admin_id(admin_email=admin_email):
                 task = {"publisher": publisher,
                         "publish_date": publish_date,
@@ -290,7 +302,8 @@ def task():
                         "if_finished": finished,
                         "source_id": source_id,
                         "description": description,
-                        "priority": priority
+                        "priority": priority,
+                        "number": num_json
                         }
                 tasks.append(task)
         source_number = len(tasks)
@@ -302,8 +315,26 @@ def task():
                   }
 
     else:
-        result = {"code": 1,
-                  "message": "Sorry, users can\'t access."
+        source_number = c.get_source_number()
+        all_source = c.get_all_source()
+        tasks = []
+        for source in all_source:
+            [source_id, source_name, finished, publisher, publish_date, description, priority, num_json] = source
+            task = {"publisher": publisher,
+                    "publish_date": publish_date,
+                    "source_name": source_name,
+                    "if_finished": finished,
+                    "source_id": source_id,
+                    "description": description,
+                    "priority": priority,
+                    "number": num_json
+            }
+            tasks.append(task)
+        result = {"code": 0,
+                  "message": {
+                      "task_num": source_number,
+                      "tasks": tasks
+                  }
                   }
 
     #     [user_id, user_email, user_name, password, signup_time, user_credit, num_total, num_acc, num_examined] = c.get_source_number()
