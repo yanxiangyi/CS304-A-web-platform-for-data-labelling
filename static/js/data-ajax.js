@@ -92,9 +92,9 @@ var DatatableRemoteAjaxDemo = function() {
           // callback function support for column rendering
           template: function(row) {
             var status = {
-              0: {'title': 'Done', 'class': 'm-badge--brand'},
-              1: {'title': 'Labeling', 'class': ' m-badge--metal'},
-              else: {'title': 'New', 'class': ' m-badge--primary'},
+              1: {'title': 'Done', 'class': 'm-badge--brand'},
+              0: {'title': 'Labeling', 'class': ' m-badge--metal'},
+              //else: {'title': 'New', 'class': ' m-badge--primary'},
             };
             return '<span class="m-badge ' + status[row.if_finished].class + ' m-badge--wide">' + status[row.if_finished].title + '</span>';
           },

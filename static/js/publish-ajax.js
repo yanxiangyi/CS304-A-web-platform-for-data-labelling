@@ -103,7 +103,7 @@ var DatatableRemoteAjaxDemo = function() {
                     template: function(row) {
                         var status = {
                             1: {'title': 'Done', 'class': 'm-badge--brand'},
-                            else: {'title': 'Labeling', 'class': ' m-badge--metal'},
+                            //else: {'title': 'Labeling', 'class': ' m-badge--metal'},
                             0: {'title': 'New', 'class': ' m-badge--primary'},
                         };
                         return '<span class="m-badge ' + status[row.if_finished].class + ' m-badge--wide">' + status[row.if_finished].title + '</span>';
