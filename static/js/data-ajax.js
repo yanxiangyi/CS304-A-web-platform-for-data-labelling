@@ -14,21 +14,24 @@ var DatatableRemoteAjaxDemo = function() {
           read: {
             // sample GET method
             method: 'GET',
-            url: 'https://keenthemes.com/metronic/preview/inc/api/datatables/demos/default.php',
+            url: 'http://47.106.34.103:5000/task1',
             map: function(raw) {
               // sample data mapping
-              var dataSet = raw;
-              if (typeof raw.data !== 'undefined') {
-                dataSet = raw.data;
-              }
+                var temp = eval(raw);
+              var dataSet = raw.message.tasks;
+              // if (typeof raw.message !== 'undefined') {
+              //   dataSet = raw.message[tasks];
+              // }
+              console.log(dataSet);
               return dataSet;
+              //return '{[{"description": "this is a test project","if_finished": 0,"number": 0,"priority": 1,"publish_date": 1527402240.0,"publisher": 1,"source_id": 11,"source_name": "test_proj"},{"description": "test_desc","if_finished": 0,"number": 1,"priority": 1,"publish_date": 1527409408.0,"publisher": 2,"source_id": 12,"source_name": "test"},{"description": "xiedn single option project","if_finished": 0,"number": 11,"priority": 2,"publish_date": 1527928320.0,"publisher": 1,"source_id": 13,"source_name": "xiednproj"}]}';
             },
           },
         },
         pageSize: 10,
         serverPaging: true,
-        serverFiltering: true,
-        serverSorting: true,
+        serverFiltering: false,
+        serverSorting: false,
       },
 
       // layout definition
@@ -60,80 +63,65 @@ var DatatableRemoteAjaxDemo = function() {
       // columns definition
       columns: [
         {
-          field: 'RecordID',
-          title: '#',
-          sortable: false, // disable sort for this column
-          width: 40,
-          selector: false,
-          textAlign: 'center',
-        }, {
-          field: 'OrderID',
+          field: 'source_id',
           title: 'Data ID',
           // sortable: 'asc', // default sort
           filterable: false, // disable or enable filtering
           width: 150,
           // basic templating support for column rendering,
-          template: '{{OrderID}} - {{ShipCountry}}',
+          template: '{{source_id}} - {{source_name}}',
         }, {
-          field: 'ShipCountry',
+          field: 'source_name',
           title: 'Data Name',
           width: 150,
-          template: function(row) {
-            // callback function support for column rendering
-            return row.ShipCountry + ' - ' + row.ShipCity;
-          },
         }, {
-          field: 'ShipCity',
+          field: 'publisher',
           title: 'Uploader',
         }, {
-          field: 'ShipDate',
+          field: 'publish_date',
           title: 'Upload Time',
           type: 'date',
-          format: 'MM/DD/YYYY',
+         // format: 'MM/DD/YYYY',
         }, {
-          field: 'Latitude',
+          field: 'number',
           title: 'Percentage',
           type: 'number',
         }, {
-          field: 'Status',
+          field: 'if_finished',
           title: 'Status',
           // callback function support for column rendering
           template: function(row) {
             var status = {
-              1: {'title': 'New', 'class': 'm-badge--brand'},
-              2: {'title': 'Labeling', 'class': ' m-badge--metal'},
-              3: {'title': 'Done', 'class': ' m-badge--primary'},
-              4: {'title': 'Success', 'class': ' m-badge--success'},
-              5: {'title': 'Info', 'class': ' m-badge--info'},
-              6: {'title': 'Danger', 'class': ' m-badge--danger'},
-              7: {'title': 'Warning', 'class': ' m-badge--warning'},
+              1: {'title': 'Done', 'class': 'm-badge--brand'},
+              else: {'title': 'Labeling', 'class': ' m-badge--metal'},
+              0: {'title': 'New', 'class': ' m-badge--primary'},
             };
-            return '<span class="m-badge ' + status[row.Status].class + ' m-badge--wide">' + status[row.Status].title + '</span>';
+            return '<span class="m-badge ' + status[row.if_finished].class + ' m-badge--wide">' + status[row.if_finished].title + '</span>';
           },
         }, {
-          field: 'Type',
-          title: 'Type',
+          field: 'priority',
+          title: 'Priority',
           // callback function support for column rendering
           template: function(row) {
             var status = {
-              1: {'title': 'New', 'state': 'New'},
-              2: {'title': 'Labeling', 'state': 'Labeling'},
-              3: {'title': 'Done', 'state': 'Done'},
+              1: {'title': 'III.Low', 'state': 'New'},
+              2: {'title': 'II.Normal', 'state': 'Labeling'},
+              3: {'title': 'I.High', 'state': 'Done'},
             };
-            return '<span class="m-badge m-badge--' + status[row.Type].state + ' m-badge--dot"></span>&nbsp;<span class="m--font-bold m--font-' + status[row.Type].state + '">' +
-                status[row.Type].title + '</span>';
+            return '<span class="m-badge m-badge--' + status[row.priority].state + ' m-badge--dot"></span>&nbsp;<span class="m--font-bold m--font-' + status[row.priority].state + '">' +
+                status[row.priority].title + '</span>';
           },
         }, {
           field: 'Actions',
           width: 110,
-          title: 'Actions',
+          title: 'Label',
           sortable: false,
           overflow: 'visible',
           template: function (row, index, datatable) {
             var dropup = (datatable.getPageSize() - index) <= 4 ? 'dropup' : '';
             return '\
             <div>\
-						<a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Edit details">\
+						<a href="textlabel.html" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Edit details">\
 							<i class="la la-edit"></i>\
 						</a>\
 						</div>\
