@@ -69,7 +69,7 @@ var DatatableRemoteAjaxDemo = function() {
           filterable: false, // disable or enable filtering
           width: 150,
           // basic templating support for column rendering,
-          template: '{{source_id}} - {{source_name}}',
+          //template: '{{source_id}} - {{source_name}}',
         }, {
           field: 'source_name',
           title: 'Data Name',
@@ -94,7 +94,7 @@ var DatatableRemoteAjaxDemo = function() {
             var status = {
               1: {'title': 'Done', 'class': 'm-badge--brand'},
               else: {'title': 'Labeling', 'class': ' m-badge--metal'},
-              0: {'title': 'New', 'class': ' m-badge--primary'},
+              3: {'title': 'New', 'class': ' m-badge--primary'},
             };
             return '<span class="m-badge ' + status[row.if_finished].class + ' m-badge--wide">' + status[row.if_finished].title + '</span>';
           },
