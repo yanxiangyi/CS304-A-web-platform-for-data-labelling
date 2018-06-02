@@ -22,9 +22,17 @@
 
 #### 2.1 User Utility
 
+- `get_all_user(self)`
+    
+  return all users
+   
 - `get_user(self, userid=None, username=None, user_email=None)`
 
   return all the information of the corresponding user
+  
+- `ger_user_number(self)`
+
+  return the total number of users
 
 - `get_user_id(self, username=None, user_email=None)` 
 
@@ -44,7 +52,19 @@
 
    return the user's total number of answers 
 
-- `get_user_nb_examined(self, userid=None, username=None, user_email=None)`
+- `get_user_nb_val(self, userid=None, username=None, user_email=None)`
+
+- `get_user_nb_val_tp(self, userid=None, username=None, user_email=None)`
+    
+   return `val_tp` of the user
+   
+- `get_user_val_acc(self,userid=None, username=None, user_email=None)`
+
+   return the validation accuracy 
+   
+- `get_user_accept_rate(self,userid=None, username=None, user_email=None)`
+
+   return the accept rate 
 
 - `get_user_signin_time(self, userid=None, username=None, user_email=None)`
 
@@ -82,7 +102,15 @@
 
 #### 2.3 Source Utility
 
-- `def get_source(self, sourcename=None, sourceid=None)`
+- `get_source_number(self)`
+
+   return the total number of sources
+   
+- `get_all_source(self)`
+
+   return all source information
+   
+- `get_source(self, sourcename=None, sourceid=None)`
 
   return all the information of the corresponding source
   
