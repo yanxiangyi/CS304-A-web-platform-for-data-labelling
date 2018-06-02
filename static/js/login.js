@@ -91,32 +91,53 @@ var SnippetLogin = function () {
 
             var passWord = document.getElementById("s_password").value;
 
-            // userName = userName.split('@')[0];
+            if (document.getElementById("checkAdmin").checked) {
 
-            form.ajaxSubmit({
-                type: "GET",
-                url: "http://47.106.34.103:5000/login/email/" + eMail + "/password/" + passWord,
-                // data:{username:"11510693",password:"wangzehuai1234"},
-                // success: function(response, status, xhr, $form) {
-                success: function (json) {
-                    // similate 2s dela
-                    // alert(json.code);
-                    if (json.code == 0) {
-                        // alert("Welcome, someone");
-                        window.location.href = "index.html";
-                    } else {
-                        setTimeout(function () {
-                            btn.removeClass('m-loader m-loader--right m-loader--light').attr('disabled', false);
-                            form.clearForm();
-                            form.validate().resetForm();
-                            var signInForm = login.find('.m-login__signin form');
-                            signInForm.clearForm();
-                            signInForm.validate().resetForm();
-                            showErrorMsg(signInForm, 'danger', json.message);
-                        }, 1000);
+                form.ajaxSubmit({
+                    type: "GET",
+                    url: "http://47.106.34.103:5000/login_admin/email/" + eMail + "/password/" + passWord,
+                    success: function (json) {
+                        // similate 2s dela
+                        if (json.code == 0) {
+                            // alert("Welcome, someone");
+                            window.location.href = "index.html";
+                        } else {
+                            setTimeout(function () {
+                                btn.removeClass('m-loader m-loader--right m-loader--light').attr('disabled', false);
+                                form.clearForm();
+                                form.validate().resetForm();
+                                var signInForm = login.find('.m-login__signin form');
+                                signInForm.clearForm();
+                                signInForm.validate().resetForm();
+                                showErrorMsg(signInForm, 'danger', json.message);
+                            }, 1000);
+                        }
                     }
-                }
-            });
+                });
+
+            }else{
+                form.ajaxSubmit({
+                    type: "GET",
+                    url: "http://47.106.34.103:5000/login/email/" + eMail + "/password/" + passWord,
+                    success: function (json) {
+                        // similate 2s dela
+                        if (json.code == 0) {
+                            // alert("Welcome, someone");
+                            window.location.href = "index.html";
+                        } else {
+                            setTimeout(function () {
+                                btn.removeClass('m-loader m-loader--right m-loader--light').attr('disabled', false);
+                                form.clearForm();
+                                form.validate().resetForm();
+                                var signInForm = login.find('.m-login__signin form');
+                                signInForm.clearForm();
+                                signInForm.validate().resetForm();
+                                showErrorMsg(signInForm, 'danger', json.message);
+                            }, 1000);
+                        }
+                    }
+                });
+            }
         });
     }
 
@@ -214,7 +235,6 @@ var SnippetLogin = function () {
     var handleForgetPasswordFormSubmit = function () {
         $('#m_login_forget_password_submit').click(function (e) {
             e.preventDefault();
-
             var btn = $(this);
             var form = $(this).closest('form');
 

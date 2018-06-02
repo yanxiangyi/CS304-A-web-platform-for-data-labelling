@@ -93,31 +93,53 @@ var SnippetLogin = function () {
 
             // userName = userName.split('@')[0];
 
-            form.ajaxSubmit({
-                type: "GET",
-                url: "http://47.106.34.103:5000/login/email/" + eMail + "/password/" + passWord,
-                // data:{username:"11510693",password:"wangzehuai1234"},
-                // success: function(response, status, xhr, $form) {
-                success: function (json) {
-                    // similate 2s dela
-                    // alert(json.code);
-                    if (json.code == 0) {
-                        // alert("Welcome, someone");
-                        window.location.href = "index.html";
-                    } else {
-                        setTimeout(function () {
-                            btn.removeClass('m-loader m-loader--right m-loader--light').attr('disabled', false);
-                            form.clearForm();
-                            form.validate().resetForm();
-                            // displaySignInForm();
-                            var signInForm = login.find('.m-login__signup form');
-                            signInForm.clearForm();
-                            signInForm.validate().resetForm();
-                            showErrorMsg(signInForm, 'danger', json.message);
-                        }, 1000);
+            if (document.getElementById("checkAdmin").checked) {
+
+                form.ajaxSubmit({
+                    type: "GET",
+                    url: "http://47.106.34.103:5000/login_admin/email/" + eMail + "/password/" + passWord,
+                    success: function (json) {
+                        // similate 2s dela
+                        if (json.code == 0) {
+                            // alert("Welcome, someone");
+                            window.location.href = "index.html";
+                        } else {
+                            setTimeout(function () {
+                                btn.removeClass('m-loader m-loader--right m-loader--light').attr('disabled', false);
+                                form.clearForm();
+                                form.validate().resetForm();
+                                var signInForm = login.find('.m-login__signup form');
+                                signInForm.clearForm();
+                                signInForm.validate().resetForm();
+                                showErrorMsg(signInForm, 'danger', json.message);
+                            }, 1000);
+                        }
                     }
-                }
-            });
+                });
+
+            }else{
+                form.ajaxSubmit({
+                    type: "GET",
+                    url: "http://47.106.34.103:5000/login/email/" + eMail + "/password/" + passWord,
+                    success: function (json) {
+                        // similate 2s dela
+                        if (json.code == 0) {
+                            // alert("Welcome, someone");
+                            window.location.href = "index.html";
+                        } else {
+                            setTimeout(function () {
+                                btn.removeClass('m-loader m-loader--right m-loader--light').attr('disabled', false);
+                                form.clearForm();
+                                form.validate().resetForm();
+                                var signInForm = login.find('.m-login__signup form');
+                                signInForm.clearForm();
+                                signInForm.validate().resetForm();
+                                showErrorMsg(signInForm, 'danger', json.message);
+                            }, 1000);
+                        }
+                    }
+                });
+            }
         });
     }
 
