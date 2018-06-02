@@ -418,13 +418,53 @@
                                 </li>
 
                                 <!--data-->
-                                <li class="m-menu__item " aria-haspopup="true">
-                                    <a href="index.html" class="m-menu__link ">
+                                <li class="m-menu__item  m-menu__item--submenu m-menu__item--rel"
+                                    data-menu-submenu-toggle="click" aria-haspopup="true">
+                                    <a href="#" class="m-menu__link m-menu__toggle">
                                         <span class="m-menu__item-here"></span>
                                         <span class="m-menu__link-text">
 													Statistics
 												</span>
+                                        <i class="m-menu__hor-arrow la la-angle-down"></i>
+                                        <i class="m-menu__ver-arrow la la-angle-right"></i>
                                     </a>
+
+                                    <div class="m-menu__submenu m-menu__submenu--classic m-menu__submenu--left">
+
+                                        <span class="m-menu__arrow m-menu__arrow--adjust"></span>
+
+                                        <ul class="m-menu__subnav">
+
+                                            <!--label1-->
+                                            <li class="m-menu__item " aria-haspopup="true">
+                                                <a href="datastatistic.html" class="m-menu__link ">
+                                                    <i class="m-menu__link-icon flaticon-diagram"></i>
+                                                    <span class="m-menu__link-title">
+																<span class="m-menu__link-wrap">
+																	<span class="m-menu__link-text">
+																		Data
+																	</span>
+																</span>
+															</span>
+                                                </a>
+                                            </li>
+
+                                            <!--label2-->
+                                            <li class="m-menu__item" aria-haspopup="true">
+                                                <a href="userstatistic.html" class="m-menu__link">
+                                                    <i class="m-menu__link-icon flaticon-business"></i>
+                                                    <span class="m-menu__link-title">
+																<span class="m-menu__link-wrap">
+																	<span class="m-menu__link-text">
+																		User
+																	</span>
+																</span>
+															</span>
+                                                </a>
+
+                                            </li>
+                                        </ul>
+                                    </div>
                                 </li>
                             </ul>
                         </div>
