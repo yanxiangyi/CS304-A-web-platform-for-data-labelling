@@ -441,22 +441,98 @@
         </div>
     </header>
     <!-- end::Header -->
-
     <!-- begin::Body -->
     <div class="m-grid__item m-grid__item--fluid  m-grid m-grid--ver-desktop m-grid--desktop 	m-container m-container--responsive m-container--xxl m-page__container m-body">
         <div class="m-grid__item m-grid__item--fluid m-wrapper">
-            <!-- BEGIN: Subheader -->
-            <div class="m-subheader ">
-                <div class="d-flex align-items-center">
-                    <div class="mr-auto">
-                        <h3 class="m-subheader__title ">
-                            Choose A Data Set
-                        </h3>
+            <div class="m-portlet m-portlet--mobile">
+                <div class="m-portlet__head">
+                    <div class="m-portlet__head-caption">
+                        <div class="m-portlet__head-title">
+                            <h3 class="m-portlet__head-text">
+                                 Choose a data set
+                            </h3>
+                        </div>
+                    </div>
+                    <div class="m-portlet__head-tools">
+                        <ul class="m-portlet__nav">
+                            <li class="m-portlet__nav-item">
+                                <div class="m-dropdown m-dropdown--inline m-dropdown--arrow m-dropdown--align-right m-dropdown--align-push" data-dropdown-toggle="hover" aria-expanded="true">
+                                    <a href="#" class="m-portlet__nav-link btn btn-lg btn-secondary  m-btn m-btn--icon m-btn--icon-only m-btn--pill  m-dropdown__toggle">
+                                        <i class="la la-ellipsis-h m--font-brand"></i>
+                                    </a>
+                                    <div class="m-dropdown__wrapper">
+                                        <span class="m-dropdown__arrow m-dropdown__arrow--right m-dropdown__arrow--adjust"></span>
+                                        <div class="m-dropdown__inner">
+                                            <div class="m-dropdown__body">
+                                                <div class="m-dropdown__content">
+                                                    <ul class="m-nav">
+                                                        <li class="m-nav__section m-nav__section--first">
+																		<span class="m-nav__section-text">
+																			Quick Actions
+																		</span>
+                                                        </li>
+                                                        <li class="m-nav__item">
+                                                            <a href="" class="m-nav__link">
+                                                                <i class="m-nav__link-icon flaticon-share"></i>
+                                                                <span class="m-nav__link-text">
+																				Create Post
+																			</span>
+                                                            </a>
+                                                        </li>
+                                                        <li class="m-nav__item">
+                                                            <a href="" class="m-nav__link">
+                                                                <i class="m-nav__link-icon flaticon-chat-1"></i>
+                                                                <span class="m-nav__link-text">
+																				Send Messages
+																			</span>
+                                                            </a>
+                                                        </li>
+                                                        <li class="m-nav__item">
+                                                            <a href="" class="m-nav__link">
+                                                                <i class="m-nav__link-icon flaticon-multimedia-2"></i>
+                                                                <span class="m-nav__link-text">
+																				Upload File
+																			</span>
+                                                            </a>
+                                                        </li>
+                                                        <li class="m-nav__section">
+																		<span class="m-nav__section-text">
+																			Useful Links
+																		</span>
+                                                        </li>
+                                                        <li class="m-nav__item">
+                                                            <a href="" class="m-nav__link">
+                                                                <i class="m-nav__link-icon flaticon-info"></i>
+                                                                <span class="m-nav__link-text">
+																				FAQ
+																			</span>
+                                                            </a>
+                                                        </li>
+                                                        <li class="m-nav__item">
+                                                            <a href="" class="m-nav__link">
+                                                                <i class="m-nav__link-icon flaticon-lifebuoy"></i>
+                                                                <span class="m-nav__link-text">
+																				Support
+																			</span>
+                                                            </a>
+                                                        </li>
+                                                        <li class="m-nav__separator m-nav__separator--fit m--hide"></li>
+                                                        <li class="m-nav__item m--hide">
+                                                            <a href="#" class="btn btn-outline-danger m-btn m-btn--pill m-btn--wide btn-sm">
+                                                                Submit
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
                     </div>
                 </div>
-            </div>
-            <!-- END: Subheader -->
-            <div class="m-portlet__body">
+                <div class="m-portlet__body">
                     <!--begin: Search Form -->
                     <div class="m-form m-form--label-align-right m--margin-top-20 m--margin-bottom-30">
                         <div class="row align-items-center">
@@ -470,26 +546,20 @@
                                                 </label>
                                             </div>
                                             <div class="m-form__control">
-                                                <div class="btn-group bootstrap-select form-control m-bootstrap-select m-bootstrap-select--solid"><button type="button" class="btn dropdown-toggle bs-placeholder btn-default" data-toggle="dropdown" role="button" data-id="m_form_status" title="All"><span class="filter-option pull-left">
-                                                        All
-                                                    </span>&nbsp;<span class="bs-caret"><span class="caret"></span></span></button><div class="dropdown-menu open" role="combobox"><ul class="dropdown-menu inner" role="listbox" aria-expanded="false"><li data-original-index="0" class="selected"><a tabindex="0" class="" data-tokens="null" role="option" aria-disabled="false" aria-selected="true"><span class="text">
-                                                        All
-                                                    </span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="1"><a tabindex="0" class="" data-tokens="null" role="option" aria-disabled="false" aria-selected="false"><span class="text">
-                                                        History
-                                                    </span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="2"><a tabindex="0" class="" data-tokens="null" role="option" aria-disabled="false" aria-selected="false"><span class="text">
-                                                        New
-                                                    </span>
-                                                    <span class="glyphicon glyphicon-ok check-mark"></span></a></li></ul></div><select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="m_form_status" tabindex="-98">
+                                                <select class="form-control m-bootstrap-select" id="m_form_status">
                                                     <option value="">
                                                         All
                                                     </option>
                                                     <option value="1">
-                                                        History
+                                                        Pending
                                                     </option>
                                                     <option value="2">
-                                                        New
+                                                        Delivered
                                                     </option>
-                                                </select></div>
+                                                    <option value="3">
+                                                        Canceled
+                                                    </option>
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="d-md-none m--margin-bottom-10"></div>
@@ -502,85 +572,54 @@
                                                 </label>
                                             </div>
                                             <div class="m-form__control">
-                                                <div class="btn-group bootstrap-select form-control m-bootstrap-select m-bootstrap-select--solid"><button type="button" class="btn dropdown-toggle bs-placeholder btn-default" data-toggle="dropdown" role="button" data-id="m_form_type" title="All"><span class="filter-option pull-left">
-                                                        All
-                                                    </span>&nbsp;<span class="bs-caret"><span class="caret"></span></span></button><div class="dropdown-menu open" role="combobox"><ul class="dropdown-menu inner" role="listbox" aria-expanded="false"><li data-original-index="0" class="selected"><a tabindex="0" class="" data-tokens="null" role="option" aria-disabled="false" aria-selected="true"><span class="text">
-                                                        All
-                                                    </span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="1"><a tabindex="0" class="" data-tokens="null" role="option" aria-disabled="false" aria-selected="false"><span class="text">
-                                                        Picture
-                                                    </span><span class="glyphicon glyphicon-ok check-mark"></span></a></li><li data-original-index="2"><a tabindex="0" class="" data-tokens="null" role="option" aria-disabled="false" aria-selected="false"><span class="text">
-                                                        Text
-                                                    </span>
-                                                    <span class="glyphicon glyphicon-ok check-mark"></span></a></li></ul></div><select class="form-control m-bootstrap-select m-bootstrap-select--solid" id="m_form_type" tabindex="-98">
+                                                <select class="form-control m-bootstrap-select" id="m_form_type">
                                                     <option value="">
                                                         All
                                                     </option>
                                                     <option value="1">
-                                                        Picture
+                                                        New
                                                     </option>
                                                     <option value="2">
-                                                        Text
+                                                        Labeling
                                                     </option>
-                                                </select></div>
+                                                    <option value="3">
+                                                        Done
+                                                    </option>
+                                                </select>
                                             </div>
                                         </div>
                                         <div class="d-md-none m--margin-bottom-10"></div>
                                     </div>
                                     <div class="col-md-4">
                                         <div class="m-input-icon m-input-icon--left">
-                                            <input type="text" class="form-control m-input m-input--solid" placeholder="Search..." id="generalSearch">
+                                            <input type="text" class="form-control m-input" placeholder="Search..." id="generalSearch">
                                             <span class="m-input-icon__icon m-input-icon__icon--left">
-                                                <span>
-                                                    <i class="la la-search"></i>
-                                                </span>
-                                            </span>
+															<span>
+																<i class="la la-search"></i>
+															</span>
+														</span>
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="col-xl-4 order-1 order-xl-2 m--align-right">
+                                <a href="#" class="btn btn-primary m-btn m-btn--custom m-btn--icon m-btn--air m-btn--pill">
+												<span>
+													<i class="la la-cart-plus"></i>
+													<span>
+														New Order
+													</span>
+												</span>
+                                </a>
+                                <div class="m-separator m-separator--dashed d-xl-none"></div>
                             </div>
                         </div>
                     </div>
                     <!--end: Search Form -->
                     <!--begin: Datatable -->
-                    <div class="m_datatable m-datatable m-datatable--default m-datatable--loaded" id="local_data" style="">
-                        <table class="m-datatable__table" style="display: block; min-height: 300px; overflow-x: auto;">
-                            <thead class="m-datatable__head">
-                                <tr class="m-datatable__row">
-                                    <th data-field="RecordID" class="m-datatable__cell--center m-datatable__cell m-datatable__cell--check">
-                                        <span style="width: 50px;">
-                                            <label class="m-checkbox m-checkbox--single m-checkbox--all m-checkbox--solid m-checkbox--brand">
-                                                <input type="checkbox">
-                                                <span>
-
-                                                </span>
-                                            </label>
-                                        </span>
-                                    </th>
-                                    <th data-field="OrderID" class="m-datatable__cell">
-                                        <span style="width: 110px;">
-                                            Order ID
-                                        </span>
-                                    </th>
-                                    <th data-field="ShipName" class="m-datatable__cell">
-                                        <span style="width: 110px;">
-                                            Ship Name
-                                        </span>
-                                    </th>
-                                    <th data-field="Currency" class="m-datatable__cell">
-                                        <span style="width: 100px;">
-                                            Currency
-                                        </span>
-                                    </th>
-                                    <th data-field="ShipAddress" class="m-datatable__cell">
-                                        <span style="width: 110px;">
-                                            Ship Address
-                                        </span>
-                                    </th>
-                                    <th data-field="ShipDate" class="m-datatable__cell"></th>
-                                </tr>
-                            </thead>
-                        </table>
-                    </div>
+                    <div class="m_datatable" id="ajax_data"></div>
+                    <!--end: Datatable -->
+                </div>
             </div>
         </div>
     <!-- end::Body -->
@@ -589,47 +628,7 @@
     <!-- end::Footer -->
     </div>
 </div>
-<footer class="m-grid__item m-footer ">
-    <div class="m-container m-container--responsive m-container--xxl m-container--full-height m-page__container">
-        <div class="m-footer__wrapper">
-            <div class="m-stack m-stack--flex-tablet-and-mobile m-stack--ver m-stack--desktop">
-                <div class="m-stack__item m-stack__item--left m-stack__item--middle m-stack__item--last">
-                        <span class="m-footer__copyright">
-                            2018 &copy; Copyright | Made by
-                            <a href="https://github.com/DNXie/CS304-A-web-platform-for-data-labelling" class="m-link">
-                                SkyCat
-                            </a>
-                        </span>
-                </div>
-                <div class="m-stack__item m-stack__item--right m-stack__item--middle m-stack__item--first">
-                    <ul class="m-footer__nav m-nav m-nav--inline m--pull-right">
-                        <li class="m-nav__item">
-                            <a href="#" class="m-nav__link">
-                                    <span class="m-nav__link-text">
-                                        About Us
-                                    </span>
-                            </a>
-                        </li>
-                        <li class="m-nav__item">
-                            <a href="#" class="m-nav__link">
-                                    <span class="m-nav__link-text">
-                                        Privacy
-                                    </span>
-                            </a>
-                        </li>
-                        <li class="m-nav__item">
-                            <a href="#" class="m-nav__link">
-                                    <span class="m-nav__link-text">
-                                        Upgrade
-                                    </span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </div>
-</footer>
+
 
 <!-- end:: Page -->
 <!--begin::Base Scripts -->
@@ -638,6 +637,7 @@
 <!--end::Base Scripts -->
 <!--begin::Page Snippets -->
 <script src="../static/js/dashboard.js" type="text/javascript"></script>
+<script src="../static/js/data-ajax.js" type="text/javascript"></script>
 <!--end::Page Snippets -->
 </body>
 <!-- end::Body -->
