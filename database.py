@@ -88,7 +88,7 @@ class sql_conn:
                                     head=False)
 
     def get_user_number(self):
-        return len(self.get_all_user())
+        return self.__exe_sql("select count(*) from users;")[0][0]
 
     def get_user_id(self, username=None, user_email=None):
         return self.__get_by_option('users', 'userid', {'username': username, 'email_address': user_email})
@@ -195,7 +195,7 @@ class sql_conn:
     # source*****************************************************************************
 
     def get_source_number(self):
-        return len(self.__exe_sql("select * from source;"))
+        return self.__exe_sql("select count(*) from source;")[0][0]
 
     def get_source(self, sourcename=None, sourceid=None):
         return self.__get_by_option('source', '*', {'sourceid': sourceid, 'sourcename': sourcename}, head=False)
