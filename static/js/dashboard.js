@@ -1679,33 +1679,27 @@ var Dashboard = function() {
 //== Class initialization on page load
 jQuery(document).ready(function() {
     Dashboard.init();
-
-    // $("#figure1").load("http://47.106.34.103:5000/forget/email/uu@uu.com",function (json) {
-    //     return json.code.value;
-    // });
-    // $("#figure1").load("http://47.106.34.103:5000/forget/email/uu@uu.com");
     var user_email;
     $.ajax({
         type: 'GET',
         url: 'http://47.106.34.103:5000/email_current',
         success: function (json) {
-            user_email = JSON.parse(json).message
-            // document.getElementById('figure1').innerHTML = stat;
-        }
-    });
-
-    $.ajax({
-        type: 'GET',
-        url: 'http://47.106.34.103:5000/profile/' + user_email,
-        success: function (json) {
-            var parsedData = JSON.parse(JSON.parse(json).message);
-            document.getElementById('usrname').innerHTML = parsedData.user_name;
-            document.getElementById('inner_usrname').innerHTML = parsedData.user_name;
-            document.getElementById('inner_email').innerHTML = parsedData.user_email;
-            document.getElementById('figure1').innerHTML = parsedData.num_total;
-            document.getElementById('figure2').innerHTML = parsedData.num_examined;
-            document.getElementById('figure3').innerHTML = parsedData.num_acc;
-            document.getElementById('figure4').innerHTML = parsedData.user_credit;
+            user_email = json.message
+            // user_email='jiangtk@sb.com';
+            $.ajax({
+                type: 'GET',
+                url: 'http://47.106.34.103:5000/profile/' + user_email,
+                success: function (json) {
+                    var parsedData = json.message;
+                    document.getElementById('usrname').innerHTML = parsedData.user_name;
+                    document.getElementById('inner_usrname').innerHTML = parsedData.user_name;
+                    document.getElementById('inner_email').innerHTML = parsedData.user_email;
+                    document.getElementById('figure1').innerHTML = parsedData.num_val;
+                    document.getElementById('figure2').innerHTML = parsedData.num_val_tp;
+                    document.getElementById('figure3').innerHTML = parsedData.num_acc;
+                    document.getElementById('figure4').innerHTML = parsedData.user_credit;
+                }
+            });
         }
     });
 });
