@@ -75,19 +75,9 @@ var DatatableRemoteAjaxDemo = function() {
                     title: 'Data Name',
                     width: 150,
                 }, {
-                    field: 'priority',
-                    title: 'Priority',
-                    // callback function support for column rendering
-                    template: function(row) {
-                        var status = {
-                            1: {'title': 'III.Low', 'state': 'success'},
-                            2: {'title': 'II.Normal', 'state': 'warning'},
-                            3: {'title': 'I.High', 'state': 'danger'},
-                        };
-                        return '<span class="m-badge m-badge--' + status[row.priority].state + ' m-badge--dot"></span>&nbsp;<span class="m--font-bold m--font-' + status[row.priority].state + '">' +
-                            status[row.priority].title + '</span>';
-                    },
-                },{
+                    field: 'publisher',
+                    title: 'Uploader',
+                }, {
                     field: 'publish_date',
                     title: 'Upload Time',
                     type: 'date',
@@ -104,12 +94,40 @@ var DatatableRemoteAjaxDemo = function() {
                         var status = {
                             1: {'title': 'Done', 'class': 'm-badge--brand'},
                             else: {'title': 'Labeling', 'class': ' m-badge--metal'},
-                            0: {'title': 'New', 'class': ' m-badge--primary'},
+                            3: {'title': 'New', 'class': ' m-badge--primary'},
                         };
                         return '<span class="m-badge ' + status[row.if_finished].class + ' m-badge--wide">' + status[row.if_finished].title + '</span>';
                     },
-                }
-                ],
+                }, {
+                    field: 'priority',
+                    title: 'Priority',
+                    // callback function support for column rendering
+                    template: function(row) {
+                        var status = {
+                            1: {'title': 'III.Low', 'state': 'success'},
+                            2: {'title': 'II.Normal', 'state': 'warning'},
+                            3: {'title': 'I.High', 'state': 'danger'},
+                        };
+                        return '<span class="m-badge m-badge--' + status[row.priority].state + ' m-badge--dot"></span>&nbsp;<span class="m--font-bold m--font-' + status[row.priority].state + '">' +
+                            status[row.priority].title + '</span>';
+                    },
+                }, {
+                    field: 'Actions',
+                    width: 110,
+                    title: 'Label',
+                    sortable: false,
+                    overflow: 'visible',
+                    template: function (row, index, datatable) {
+                        var dropup = (datatable.getPageSize() - index) <= 4 ? 'dropup' : '';
+                        return '\
+            <div>\
+						<a href="textlabel.html" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill" title="Edit details">\
+							<i class="la la-edit"></i>\
+						</a>\
+						</div>\
+					';
+                    },
+                }],
         });
 
         $('#m_form_status').on('change', function() {
