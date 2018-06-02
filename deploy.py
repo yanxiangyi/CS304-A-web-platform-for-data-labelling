@@ -90,6 +90,11 @@ def register():
 def mainpage():
     return render_template('mainpage.html')
 
+@app.route("/choose.html")
+@cross_origin()
+def choose():
+    return render_template('choose.html')
+
 
 @app.route("/imagelabel.html")
 @cross_origin()
@@ -298,16 +303,16 @@ def profile():
             c = init_cnx()
             if c.user_exist(user_email=email):
                 [user_id, user_email, user_name, password, signup_time, user_credit, num_answer, num_acc, num_val, num_val_tp] = c.get_user(user_email=email)
-                # try:
-                #     user_num = c.get_user_number()
-                # except:
-                #     user_num = 100
-                user_num = 100
+                user_num = c.get_user_number()
+                source_involved = len(c.get_user_source(user_email=email))
+                rank = c.get_user_credit_rank(user_email=email)
+                source_number = c.get_source_number()
                 result = {"user_id": user_id, "user_email": user_email,
                           "user_name": user_name, "user_credit": user_credit,
                           "num_acc": num_acc, "num_answer": num_answer,
                           "signup_time": signup_time, "num_val": num_val,
-                          "num_val_tp": num_val_tp, "rank": 1-float(user_id)/float(user_num)}
+                          "num_val_tp": num_val_tp, "rank": 1-(float(rank-1)/float(user_num)),
+                          "percentage_involved": float(source_involved)/float(source_number)}
                 result = {"code": 0, "message": result}
             else:
                 result = {"code": 1, "message": "User doesn\'t exist!"}
@@ -332,9 +337,7 @@ def recent_task():
     # if "email" in session:
     c = init_cnx()
     source_number = c.get_source_number()
-    c.close()
-    c = init_cnx()
-    all_source = c.get_all_source()
+    all_source = c.get_recent_source(limit=5)
     c.close()
     tasks = []
     for source in all_source:
@@ -353,7 +356,7 @@ def recent_task():
     result = {"code": 0,
               "message": {
                   "task_num": source_number,
-                  "tasks": tasks[:5]
+                  "tasks": tasks
               }
               }
     # else:
@@ -462,6 +465,7 @@ def task():
     #     result = {"code": 1, "message": "User doesn\'t exist!"}
     return jsonify(result)
 
+
 @app.route('/task1')
 @cross_origin()
 def task1():
@@ -489,6 +493,25 @@ def task1():
               }
               }
     return jsonify(result)
+
+@app.route('/data/<sourcename>')
+@cross_origin()
+def send_data(sourcename):
+    if "email" in session:
+        email = session['email']
+        c = init_cnx()
+        jsons = c.fetch_data(sourcename=sourcename, user_email=email, nb=5)
+        c.close()
+        # for json in jsons:
+        #     json['data'] = json['data'].encode('utf8')
+        result = {"code": 0, "message": jsons}
+    else:
+        result = {"code": 1, "message": "Please login first!"}
+    return jsonify(result)
+
+
+
+
+
 if __name__ == '__main__':
    app.run(host="0.0.0.0", port="5000", debug=True, threaded=True)
-   session.clear()

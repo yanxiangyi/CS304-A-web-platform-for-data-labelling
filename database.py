@@ -268,6 +268,7 @@ class sql_conn:
         sourceid = self.__get_by_option('source', 'sourceid', {'sourceid': sourceid, 'sourcename': sourcename})
         try:
             _, _, files = next(os.walk(root_path))
+            self.__exe_sql("UPDATE `se_proj`.`source` SET `nb_json`= {}  WHERE `sourceid`={};".format(len(files), sourceid))
             for f in files:
                 with open(os.path.join(root_path, f)) as js:
                     data_index = json.load(js)['index']
