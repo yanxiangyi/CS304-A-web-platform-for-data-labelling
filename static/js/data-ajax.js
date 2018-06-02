@@ -92,9 +92,9 @@ var DatatableRemoteAjaxDemo = function() {
           // callback function support for column rendering
           template: function(row) {
             var status = {
-              1: {'title': 'Done', 'class': 'm-badge--brand'},
-              else: {'title': 'Labeling', 'class': ' m-badge--metal'},
-              3: {'title': 'New', 'class': ' m-badge--primary'},
+              0: {'title': 'Done', 'class': 'm-badge--brand'},
+              1: {'title': 'Labeling', 'class': ' m-badge--metal'},
+              else: {'title': 'New', 'class': ' m-badge--primary'},
             };
             return '<span class="m-badge ' + status[row.if_finished].class + ' m-badge--wide">' + status[row.if_finished].title + '</span>';
           },
@@ -104,12 +104,11 @@ var DatatableRemoteAjaxDemo = function() {
           // callback function support for column rendering
           template: function(row) {
             var status = {
-              1: {'title': 'III.Low', 'state': 'New'},
-              2: {'title': 'II.Normal', 'state': 'Labeling'},
-              3: {'title': 'I.High', 'state': 'Done'},
+              1: {'title': 'III.Low', 'state': 'success'},
+              2: {'title': 'II.Normal', 'state': 'warning'},
+              3: {'title': 'I.High', 'state': 'danger'},
             };
-            return '<span class="m-badge m-badge--' + status[row.priority].state + ' m-badge--dot"></span>&nbsp;<span class="m--font-bold m--font-' + status[row.priority].state + '">' +
-                status[row.priority].title + '</span>';
+              return '<span class="m-badge m-badge--' + status[row.priority].state + ' m-badge--dot"></span>&nbsp;<span class="m--font-bold m--font-' + status[row.priority].state + '">' + status[row.priority].title + '</span>';
           },
         }, {
           field: 'Actions',
