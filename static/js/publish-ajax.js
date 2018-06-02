@@ -69,7 +69,7 @@ var DatatableRemoteAjaxDemo = function() {
                     filterable: false, // disable or enable filtering
                     width: 150,
                     // basic templating support for column rendering,
-                    template: '{{source_id}} - {{source_name}}',
+                    //template: '{{source_id}} - {{source_name}}',
                 }, {
                     field: 'source_name',
                     title: 'Data Name',
