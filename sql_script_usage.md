@@ -99,6 +99,10 @@
 
   - default `access_level` is 1, i.e. normal admin
   - insertion operations return : **1** success; **0** already exist; **-1** fail
+  
+- `get_admin_source(self, adminid=None, adminname=None, admin_email=None)`
+
+  return all sources published by the admin
 
 #### 2.3 Source Utility
 
@@ -144,6 +148,13 @@
   - insertion operations return : **1** success; **0** already exist; **-1** fail
   - Note that `sourcename` shoule be unique
 
+- `get_recent_source(self, limit=5)`
+
+  return recent published source. Default 5 latest.
+  
+- `get_source_by_priority(self, priority)`
+
+  return all sources have given priority
 
 #### 2.4 Data Utility
 

@@ -186,6 +186,11 @@ class sql_conn:
             return self.__insertion(sql)
         else:
             return 0
+        
+    def get_admin_source(self, adminid=None, adminname=None, admin_email=None):
+        if adminid==None:
+            adminid = self.__get_by_option('admin', 'adminid', {'email_address': admin_email, 'adminname': adminname})
+        return self.__exe_sql("select * from source where publisher={}".format(adminid))
 
     # source*****************************************************************************
 
@@ -227,6 +232,13 @@ class sql_conn:
             return self.__insertion(sql)
         else:
             return 0
+        
+    def get_recent_source(self, limit=5):
+        return self.__exe_sql("select * from source order by publish_date desc limit {};".format(limit))
+    
+    def get_source_by_priority(self, priority):
+        # priority should be 1 2 or 3
+        return self.__exe_sql("select * from se_proj.source where priority ={};".format(priority))
 
     # data *****************************************************************************
     def __insert_textdata(self, sourceid, data_index, data_path, final_labelid='NULL'):
@@ -298,7 +310,7 @@ class sql_conn:
         return self.__get_label_sth('correct', userid, username, user_email)
 
     # def insert_label(self, userid, label_path, label_date=get_timestamp(), correct=0)
-
+        
     def close(self):
         self.cursor.close()
         self.conn.close()
