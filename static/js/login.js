@@ -100,7 +100,7 @@ var SnippetLogin = function () {
                         // similate 2s dela
                         if (json.code == 0) {
                             // alert("Welcome, someone");
-                            window.location.href = "indexA1.html";
+                            window.location.href = "index.html";
                         } else {
                             setTimeout(function () {
                                 btn.removeClass('m-loader m-loader--right m-loader--light').attr('disabled', false);

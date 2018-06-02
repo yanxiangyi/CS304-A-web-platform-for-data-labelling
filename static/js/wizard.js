@@ -38,86 +38,10 @@ var WizardDemo = function () {
                 name: {
                     required: true
                 },
-                description: {},
-
-                //== Mailing address
-                address1: {
-                    required: true
-                },
-                city: {
-                    required: true
-                },
-                state: {
-                    required: true
-                },
-                city: {
-                    required: true
-                },
-                country: {
-                    required: true
-                },
-
                 //=== Client Information(step 2)
                 //== Account Details
-                account_url: {
+                file: {
                     required: true,
-                    url: true
-                },
-                account_username: {
-                    required: true,
-                    minlength: 4
-                },
-                account_password: {
-                    required: true,
-                    minlength: 6
-                },
-
-                //== Client Settings
-                account_group: {
-                    required: true
-                },
-                'account_communication[]': {
-                    required: true
-                },
-
-                //=== Client Information(step 3)
-                //== Billing Information
-                billing_card_name: {
-                    required: true
-                },
-                billing_card_number: {
-                    required: true,
-                    creditcard: true
-                },
-                billing_card_exp_month: {
-                    required: true
-                },
-                billing_card_exp_year: {
-                    required: true
-                },
-                billing_card_cvv: {
-                    required: true,
-                    minlength: 2,
-                    maxlength: 3
-                },
-
-                //== Billing Address
-                billing_address_1: {
-                    required: true
-                },
-                billing_address_2: {},
-                billing_city: {
-                    required: true
-                },
-                billing_state: {
-                    required: true
-                },
-                billing_zip: {
-                    required: true,
-                    number: true
-                },
-                billing_delivery: {
-                    required: true
                 },
 
                 //=== Confirmation(step 4)
@@ -156,11 +80,12 @@ var WizardDemo = function () {
     }
 
     var initSubmit = function () {
+
         var btn = formEl.find('[data-wizard-action="submit"]');
 
         btn.on('click', function (e) {
             e.preventDefault();
-            alert(20);
+            // alert(20);
             if (validator.form()) {
                 //== See: src\js\framework\base\app.js
                 mApp.progress(btn);
@@ -181,13 +106,16 @@ var WizardDemo = function () {
                         });
 
                         setTimeout(function () {
-                            window.location.href = "index.html";
+                            window.location.href =history.back();
                         }, 2000);
 
                     }
 
                 });
             }
+            setTimeout(function () {
+                window.location.href =history.back();
+            }, 2000);
         });
     }
 
@@ -213,6 +141,7 @@ jQuery(document).ready(function () {
             document.getElementById('usrname').innerHTML = parsedData.user_name;
             document.getElementById('inner_usrname').innerHTML = parsedData.user_name;
             document.getElementById('inner_email').innerHTML = parsedData.user_email;
+            document.getElementById('updater').innerHTML = parsedData.user_email;
         }
     });
     WizardDemo.init();

@@ -25,6 +25,8 @@
                 document.getElementById("Project_Name").value;
             document.getElementById('Show_Project_Description').innerHTML =
                 document.getElementById("Project_Description").value;
+            document.getElementById('path').innerHTML =
+                document.getElementById("customFile").value;
         }
     </script>
     <!--end::Web font -->
@@ -135,9 +137,7 @@
                                             </div>
                                         </div>
                                     </li>
-
                                     <!--Notification-->
-
                                 </ul>
                             </div>
                         </div>
@@ -194,7 +194,6 @@
                 </div>
             </div>
             <!-- END: Subheader -->
-
             <div class="m-content">
                 <div class="m-portlet m-portlet--full-height">
                     <!--begin: Portlet Head-->
@@ -277,13 +276,10 @@
                                     </div>
                                     <!--end: Form Wizard Head -->
                                 </div>
+
                                 <div class="col-xl-9 col-lg-12">
                                     <!--begin: Form Wizard Form-->
                                     <div class="m-wizard__form">
-                                        <!--
-                    1) Use m-form--label-align-left class to alight the form input lables to the right
-                    2) Use m-form--state class to highlight input control borders on form validation
-                -->
                                         <form name = 'myform' class="m-form m-form--label-align-left- m-form--state-" id="m_form"
                                               action="" method=post enctype=multipart/form-data>
                                             <!--begin: Form Body -->
@@ -305,10 +301,9 @@
                                                             <input id="Project_Name" type="text" name="name"
                                                                    class="form-control m-input" placeholder=""
                                                                    value="Amazing Cars">
-
                                                             <span class="m-form__help">
-																			Please enter the name of project
-																		</span>
+                                                                Please enter the name of project
+                                                            </span>
                                                         </div>
                                                     </div>
                                                     <div class="form-group m-form__group row">
@@ -321,8 +316,7 @@
                                                                    class="form-control m-input" placeholder=""
                                                                    value="A fantastic journey">
                                                             <span class="m-form__help">
-																			Please description your project(optional)
-																		</span>
+                                                                Please description your project(optional)</span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -344,7 +338,6 @@
                                                             <label class="custom-file-label" for="customFile">
                                                                 Choose file
                                                             </label>
-
                                                         </div>
                                                     </div>
                                                 </div>
@@ -412,7 +405,7 @@
                                                         <div class="m-accordion__item-head collapsed" role="tab"
                                                              id="m_accordion_1_item_2_head" data-toggle="collapse"
                                                              href="#m_accordion_1_item_2_body"
-                                                             aria-expanded="    false">
+                                                             aria-expanded="false">
 																		<span class="m-accordion__item-icon">
 																			<i class="fa  flaticon-placeholder"></i>
 																		</span>
@@ -436,11 +429,11 @@
                                                                     </div>
                                                                     <div class="form-group m-form__group m-form__group--sm row">
                                                                         <label class="col-xl-4 col-lg-4 col-form-label">
-                                                                            Number of Texts:
+                                                                            File path:
                                                                         </label>
                                                                         <div class="col-xl-8 col-lg-8">
-																						<span class="m-form__control-static">
-																							5
+																						<span class="m-form__control-static" id = "path">
+
 																						</span>
                                                                         </div>
                                                                     </div>
@@ -449,8 +442,7 @@
                                                                             Updater:
                                                                         </label>
                                                                         <div class="col-xl-8 col-lg-8">
-																						<span class="m-form__control-static">
-																							uuu@u.com
+																						<span class="m-form__control-static" id = "updater">
 																						</span>
                                                                         </div>
                                                                     </div>
@@ -497,7 +489,19 @@
 																			</span>
 																		</span>
                                                             </a>
+                                                            <a href="javascript:history.back()"
+                                                               class="btn btn-danger m-btn m-btn--custom m-btn--icon"
+                                                               data-wizard-action="cancel">
+																		<span>
+																			<i class="la la-warning"></i>
+																			&nbsp;&nbsp;
+																			<span>
+																				Cancel
+																			</span>
+																		</span>
+                                                            </a>
                                                         </div>
+
                                                         <div class="col-lg-6 m--align-right">
                                                             <!--<input type=submit value=Submit>-->
                                                             <a href="#"
