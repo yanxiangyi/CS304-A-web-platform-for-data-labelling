@@ -39,6 +39,12 @@ class sql_conn:
             return 1
         except:
             return -1
+    def __exe_sql(self, sql):
+        try:
+            self.cursor.execute(sql)
+            return self.cursor.fetchall()
+        except:
+            return None
 
     def __get_by_option(self, tablename, target_col, col_val_dict, head=True):
         # search by one of the condition
@@ -71,8 +77,14 @@ class sql_conn:
             return None
     
     # user*******************************************************************************
+    def get_all_user(self):
+        return self.__exe_sql("select * from users;")
+    
     def get_user(self, userid=None, username=None, user_email=None):
         return self.__get_by_option('users', '*', {'userid': userid, 'username': username, 'email_address':user_email}, head=False)
+    
+    def ger_user_number(self):
+        return len(self.get_all_user())
     
     def get_user_id(self, username=None, user_email=None):
         return self.__get_by_option('users', 'userid', {'username': username, 'email_address': user_email})
@@ -95,9 +107,26 @@ class sql_conn:
     def get_user_nb_answer(self, userid=None, username=None, user_email=None):
         return self.__get_by_option('users', 'nb_answer', {'userid': userid, 'username': username, 'email_address':user_email})
     
-    def get_user_nb_examined(self, userid=None, username=None, user_email=None):
-        return self.__get_by_option('users', 'nb_examined', {'userid': userid, 'username': username, 'email_address':user_email})
+    def get_user_nb_val(self, userid=None, username=None, user_email=None):
+        return self.__get_by_option('users', 'nb_val', {'userid': userid, 'username': username, 'email_address':user_email})
     
+    def get_user_nb_val_tp(self, userid=None, username=None, user_email=None):
+        return self.__get_by_option('users', 'nb_val_tp', {'userid': userid, 'username': username, 'email_address':user_email})
+    
+    def get_user_val_acc(self,userid=None, username=None, user_email=None):
+        total = self.get_user_nb_val(userid, username, user_email)
+        if total != 0:
+            return self.get_user_nb_val_tp(userid, username, user_email)/total
+        else:
+            return 0
+    
+    def get_user_accept_rate(self,userid=None, username=None, user_email=None):
+        total = self.get_user_nb_answer(userid, username, user_email)
+        if total != 0:
+            return self.get_user_nb_accept(userid, username, user_email)/self.get_user_nb_answer(userid, username, user_email)
+        else:
+            return 0
+        
     def get_user_signin_time(self, userid=None, username=None, user_email=None):
         return self.__get_by_option('users', 'signin_date', {'userid': userid, 'username': username, 'email_address':user_email})
 
@@ -118,6 +147,7 @@ class sql_conn:
     # admin******************************************************************************
     def get_admin(self, adminid=None, adminname=None, admin_email=None):
         return self.__get_by_option('admin', '*', {'adminid': adminid, 'adminname': adminname, 'email_address': admin_email}, head=False)
+    
     
     def get_admin_id(self, adminname=None, admin_email=None):
         return self.__get_by_option('admin', 'adminid', {'email_address': admin_email, 'adminname': adminname})
@@ -142,9 +172,16 @@ class sql_conn:
             return 0
 
     # source*****************************************************************************
+    
+    def get_source_number(self):
+        return len(self.__exe_sql("select * from source;"))
+    
     def get_source(self, sourcename=None, sourceid=None):
         return self.__get_by_option('source', '*',{'sourceid': sourceid, 'sourcename': sourcename}, head=False)
     
+    def get_all_source(self):
+        return self.__exe_sql("select * from source;")
+
     def get_source_id(self, sourcename):
         return self.__get_by_option('source','sourceid', {'sourcename':sourcename})
     
@@ -188,11 +225,11 @@ class sql_conn:
         try:
             _, _, files = next(os.walk(root_path))
             for f in files:
-                with open(os.path.join(root_path, f)) as js:
+                with open(root_path+f) as js:
                     data_index = json.load(js)['index']
-                if None is self.__get_by_mul_cond('text_data', 'dataid', {'datasouce': sourceid, 'data_index': data_index}):
+                if None==self.__get_by_mul_cond('text_data','dataid', {'datasouce':sourceid, 'data_index':data_index}):
                     continue
-                self.__insert_textdata(sourceid, data_index, os.path.join(root_path, f))
+                self.__insert_textdata(sourceid, data_index, root_path+f)
             return 1
         except:
             return 0
