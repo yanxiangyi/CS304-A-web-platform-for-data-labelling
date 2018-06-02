@@ -32,7 +32,7 @@
 <!-- begin:: Page -->
 <div class="m-grid m-grid--hor m-grid--root m-page">
     <!-- begin::Header -->
-    <header class="m-grid__item		m-header " data-minimize="minimize" data-minimize-offset="200"
+    <header class="m-grid__item m-header " data-minimize="minimize" data-minimize-offset="200"
             data-minimize-mobile-offset="200">
         <div class="m-header__top">
             <div class="m-container m-container--responsive m-container--xxl m-container--full-height m-page__container">
@@ -84,7 +84,7 @@
                                             <span class="m-topbar__welcome">
 														Hello,&nbsp;
 													</span>
-                                            <span class="m-topbar__username">
+                                            <span class="m-topbar__username" id = "usrname">
 													</span>
                                         </a>
 
@@ -100,10 +100,10 @@
                                                                  class="m--img-rounded m--marginless" alt=""/>
                                                         </div>
                                                         <div class="m-card-user__details">
-																	<span class="m-card-user__name m--font-weight-500">
+																	<span class="m-card-user__name m--font-weight-500" id="inner_usrname">
 																	</span>
                                                             <a href=""
-                                                               class="m-card-user__email m--font-weight-300 m-link">
+                                                               class="m-card-user__email m--font-weight-300 m-link" id="inner_email">
                                                             </a>
                                                         </div>
                                                     </div>
@@ -116,7 +116,7 @@
                                                             <li class="m-nav__separator m-nav__separator--fit"></li>
                                                             <!--logout-->
                                                             <li class="m-nav__item">
-                                                                <a href="snippets/pages/user/login-1.html"
+                                                                <a href="/logout"
                                                                    class="btn m-btn--pill btn-secondary m-btn m-btn--custom m-btn--label-brand m-btn--bolder">
                                                                     Logout
                                                                 </a>
@@ -140,7 +140,6 @@
         </div>
         <div class="m-header__bottom">
             <div class="m-container m-container--responsive m-container--xxl m-container--full-height m-page__container">
-
                 <div class="m-stack m-stack--ver m-stack--desktop">
 
                     <!-- begin::Horizontal Menu -->
@@ -154,19 +153,10 @@
 
                                 <!--overviewing-->
                                 <li class="m-menu__item m-menu__item--active " aria-haspopup="true">
-                                    <a href="index.html" class="m-menu__link ">
+                                    <a href="indexA1.html" class="m-menu__link ">
                                         <span class="m-menu__item-here"></span>
                                         <span class="m-menu__link-text">
-													Overview
-												</span>
-                                    </a>
-                                </li>
-
-                                <li class="m-menu__item" aria-haspopup="true">
-                                    <a href="choose.html" class="m-menu__link ">
-                                        <span class="m-menu__item-here"></span>
-                                        <span class="m-menu__link-text">
-													Labeling
+													Publish
 												</span>
                                     </a>
                                 </li>
