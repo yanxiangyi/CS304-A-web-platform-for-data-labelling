@@ -156,7 +156,21 @@ class sql_conn:
         result = self.__get_by_option('users', '*',
                                       {'userid': userid, 'username': username, 'email_address': user_email})
         return True if result != None else False
+    
+    def get_user_credit_rank(self, user_email):
+        userid = self.get_user_id(user_email=user_email)
+        sql = "select i.rank from \
+        (SELECT u.userid,\
+        @curRank := @curRank + 1 AS rank  FROM  se_proj.users u, (SELECT @curRank := 0) r \
+        ORDER BY  u.credits desc ) i where i.userid={};".format(userid)
+        return int(self.__exe_sql(sql)[0][0])
 
+    
+    def get_user_source(self, user_email):
+        userid = self.get_user_id(user_email=user_email)
+        return self.__exe_sql("select distinct(td.datasource) from text_label tl \
+        join text_data td on td.dataid=tl.dataid join users u  on tl.userid= u.userid where u.userid={};".format(userid))
+    
     # admin******************************************************************************
     def get_admin(self, adminid=None, adminname=None, admin_email=None):
         return self.__get_by_option('admin', '*',
@@ -297,12 +311,14 @@ class sql_conn:
         where td.datasource ={} and td.final_labelid is NULL and (tl.userid!={} or tl.userid is NULL)\
         limit {};".format(sourceid, userid, nb))
         
-        result={}
+        dataid_list= []
+        json_list = []
         for i in l:
             with open(i[-1]) as f:
                 data = json.load(f)
-            result[i[0]] = data
-        return result
+            dataid_list.append(int(i[0]))
+            json_list.append(data)
+        return dataid_list, json_list
 
 
     # label *****************************************************************************

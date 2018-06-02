@@ -78,6 +78,14 @@
 - `user_exist(self, userid=None, username=None, user_email=None)`
 
   return `True` if the user exists otherwise `False`
+  
+- `get_user_credit_rank(self, user_email)`
+
+   return user credits rank
+   
+- `get_user_source(self, user_email)`
+
+   Get the labeling task the user participated. Return a list of `sourceid`
 
 #### 2.2 Admin Utility
 
