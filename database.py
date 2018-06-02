@@ -311,14 +311,13 @@ class sql_conn:
         where td.datasource ={} and td.final_labelid is NULL and (tl.userid!={} or tl.userid is NULL)\
         limit {};".format(sourceid, userid, nb))
         
-        dataid_list= []
-        json_list = []
+        result = []
         for i in l:
             with open(i[-1]) as f:
                 data = json.load(f)
-            dataid_list.append(int(i[0]))
-            json_list.append(data)
-        return dataid_list, json_list
+            data['dataid'] = int(i[0])
+            result.append(data)
+        return result
 
 
     # label *****************************************************************************
