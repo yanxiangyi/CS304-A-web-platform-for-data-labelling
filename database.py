@@ -287,6 +287,23 @@ class sql_conn:
             return self.__insertion(sql)
         else:
             return 0
+    
+    def fetch_data(self, sourcename, user_email, nb=5):
+        userid=self.get_user_id(user_email=user_email)
+        sourceid = self.get_source_id(sourcename=sourcename)
+        
+        l = self.__exe_sql("select td.dataid, td.datasource, td.data_index, td.data_path from text_data td \
+        left join text_label tl on tl.dataid = td.dataid \
+        where td.datasource ={} and td.final_labelid is NULL and (tl.userid!={} or tl.userid is NULL)\
+        limit {};".format(sourceid, userid, nb))
+        
+        result={}
+        for i in l:
+            with open(i[-1]) as f:
+                data = json.load(f)
+            result[i[0]] = data
+        return result
+
 
     # label *****************************************************************************
 
@@ -309,7 +326,7 @@ class sql_conn:
         # return 0 not determined, 1 correct, -1 not correct
         return self.__get_label_sth('correct', userid, username, user_email)
 
-    # def insert_label(self, userid, label_path, label_date=get_timestamp(), correct=0)
+    #def insert_label(self, userid, label_path, label_date=get_timestamp(), correct=0)
         
     def close(self):
         self.cursor.close()
