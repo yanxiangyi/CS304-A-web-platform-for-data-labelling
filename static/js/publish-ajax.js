@@ -167,10 +167,10 @@ var DatatableRemoteAjaxDemo = function() {
                             ' m-badge--wide">' + status[finish].title + '</span>';
                     },
                 }, {
-                    field: 'num_finished/number',
+                    field: 'per_finished',
                     title: 'Percentage',
                     template: function (row) {
-                        var finish = row.num_finished / row.number;
+                        var finish = row.per_finished;
                         finish = (finish * 100).toFixed(2);
                         return finish + '%';
                     },

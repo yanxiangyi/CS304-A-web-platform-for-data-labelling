@@ -117,10 +117,10 @@ var DatatableRemoteAjaxDemo = function () {
                             ' m-badge--wide">' + status[finish].title + '</span>';
                     },
                 }, {
-                    field: 'num_finished/number',
+                    field: 'per_finished',
                     title: 'Percentage',
                     template: function (row) {
-                        var finish = row.num_finished / row.number;
+                        var finish = row.per_finished;
                         finish = (finish * 100).toFixed(2);
                         return finish + '%';
                     },
@@ -133,7 +133,7 @@ var DatatableRemoteAjaxDemo = function () {
                     template: function (row, index, datatable) {
                         var dropup = (datatable.getPageSize() - index) <= 4 ? 'dropup' : '';
                         return '<div>\
-						<a href="textlabel.html" class="m-portlet__nav-link btn m-btn m-btn--hover-info\
+						<a href="47.106.34.103:5000/choose/'+row.source_name+'" class="m-portlet__nav-link btn m-btn m-btn--hover-info\
 						 m-btn--icon m-btn--icon-only m-btn--pill" title="Edit details"><i class="la la-edit"></i>\
 						</a></div>\
 					';
