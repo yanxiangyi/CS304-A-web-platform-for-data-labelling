@@ -510,41 +510,22 @@
                         </div>
 
                     </div>
-                    <div class="m-portlet__body">
-                        The University of California, Berkeley (UC Berkeley, Berkeley, Cal, or California) is a public
-                        research university in Berkeley, California. Founded in 1868, Berkeley is the flagship
-                        institution of the ten research universities affiliated with the University of California
-                        system. It is often ranked as a top-ten university in the world and the top public university in
-                        the United States.
-                        <div class="m-separator m-separator--dashed m-separator--lg"></div>
-                        <div class="row">
-                            <div class="col-lg-4 m--align-center">
-                                <br>
-                                <button type="button"
-                                        class="btn btn-outline-success m-btn m-btn--custom m-btn--outline-2x"
-                                        style="width: 120px">
-                                    Positive
-                                </button>
-                            </div>
-                            <div class="col-lg-4 m--align-center">
-                                <br>
-                                <button type="button"
-                                        class="btn btn-outline-metal m-btn m-btn--custom m-btn--outline-2x"
-                                        style="width: 120px">
-                                    Neutral
-                                </button>
-                            </div>
-                            <div class="col-lg-4 m--align-center">
-                                <br>
-                                <button type="button"
-                                        class="btn btn-outline-danger m-btn m-btn--custom m-btn--outline-2x"
-                                        style="width: 120px">
-                                    Negative
-                                </button>
-                            </div>
-                        </div>
-                        <br>
-                    </div>
+                    
+                    <form class="m-form m-form--fit m-form--label-align-right">
+                                <div class="m-portlet__body">
+                                    <div class="col-lg-4 col-md-9 col-sm-12">
+                                            <select class="form-control m-select2" id="m_select2_3" name="param" multiple="multiple">
+                                                    <option value="AK" selected=false>
+                                                        Alaska
+                                                    </option>
+                                                    <option value="HI" selected=false>
+                                                        Hawaii
+                                                    </option>
+                                            </select>
+                                        </div>
+                                    
+                                </div>
+                    </form>
                     <div class="m-portlet__foot">
                         <div class="row align-items-center">
                             <div class="col-lg-6 m--valign-middle">
@@ -622,6 +603,7 @@
 <!--begin::Base Scripts -->
 <script src="../static/js/vendors.bundle.js" type="text/javascript"></script>
 <script src="../static/js/scripts.bundle.js" type="text/javascript"></script>
+<script src="../static/js/select2.js" type="text/javascript"></script>
 <!--end::Base Scripts -->
 <!--begin::Page Snippets -->
 <script src="../static/js/dashboard.js" type="text/javascript"></script>
