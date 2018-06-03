@@ -121,6 +121,7 @@ var DatatableRemoteAjaxDemo = function () {
                     title: 'Percentage',
                     template: function (row) {
                         var finish = row.num_finished / row.number;
+                        finish = (finish * 100).toFixed(2);
                         return finish + '%';
                     },
                 }, {
