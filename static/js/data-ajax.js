@@ -135,7 +135,7 @@ var DatatableRemoteAjaxDemo = function () {
                     template: function (row, index, datatable) {
                         var dropup = (datatable.getPageSize() - index) <= 4 ? 'dropup' : '';
                         return '<div>\
-						<a href="/choose'+row.source_name+'" class="m-portlet__nav-link btn m-btn m-btn--hover-info\
+						<a href="/choose/'+row.source_name+'" class="m-portlet__nav-link btn m-btn m-btn--hover-info\
 						 m-btn--icon m-btn--icon-only m-btn--pill" title="Edit details"><i class="la la-edit"></i>\
 						</a></div>\
 					';
