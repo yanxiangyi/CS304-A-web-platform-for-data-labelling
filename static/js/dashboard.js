@@ -11,22 +11,19 @@ var Dashboard = function () {
         Morris.Donut({
             element: 'm_chart_support_tickets',
             data: [{
-                label: "Margins",
+                label: "High",
                 value: 20
-            },
-                {
-                    label: "Profit",
-                    value: 70
-                },
-                {
-                    label: "Lost",
-                    value: 10
-                }
-            ],
+            }, {
+                label: "Mid",
+                value: 70
+            }, {
+                label: "Low",
+                value: 10
+            }],
             labelColor: '#a7a7c2',
             colors: [
-                mUtil.getColor('accent'),
-                mUtil.getColor('brand'),
+                mUtil.getColor('success'),
+                mUtil.getColor('info'),
                 mUtil.getColor('danger')
             ]
             //formatter: function (x) { return x + "%"}
@@ -106,19 +103,19 @@ jQuery(document).ready(function () {
             document.getElementById('progress1').style.width = parsedData.percentage_involved + "%";
             document.getElementById('show_progress1').innerHTML = parsedData.percentage_involved + "%";
             var temp2 = "0%"
-            if (parsedData.num_val_tp !=0 ){
-                temp2 = ((parsedData.num_val_tp/parsedData.num_val)*100).toFixed(2) + "%";
+            if (parsedData.num_val_tp != 0) {
+                temp2 = ((parsedData.num_val_tp / parsedData.num_val) * 100).toFixed(2) + "%";
             }
             document.getElementById('progress2').style.width = temp2;
             document.getElementById('show_progress2').innerHTML = temp2;
             var temp3 = "0%";
-            if (parsedData.num_acc !=0 ){
-                temp3 = ((parsedData.num_acc/parsedData.num_answer)*100).toFixed(2) + "%";
+            if (parsedData.num_acc != 0) {
+                temp3 = ((parsedData.num_acc / parsedData.num_answer) * 100).toFixed(2) + "%";
             }
             document.getElementById('progress3').style.width = temp3;
             document.getElementById('show_progress3').innerHTML = temp3;
-            document.getElementById('progress4').style.width = (parsedData.rank*100).toFixed(2) + "%";
-            document.getElementById('show_progress4').innerHTML = (parsedData.rank*100).toFixed(2) + "%";
+            document.getElementById('progress4').style.width = (parsedData.rank * 100).toFixed(2) + "%";
+            document.getElementById('show_progress4').innerHTML = (parsedData.rank * 100).toFixed(2) + "%";
 
         }
     });
@@ -133,7 +130,7 @@ jQuery(document).ready(function () {
             temps[3] = "success";
             temps[4] = "danger";
             for (let i = 0; i < json.message.task_num; i++) {
-                $("#broadcast").append(" <div class=\"m-timeline-3__item m-timeline-3__item--"+temps[i]+"\">\n" +
+                $("#broadcast").append(" <div class=\"m-timeline-3__item m-timeline-3__item--" + temps[i] + "\">\n" +
                     "<span class=\"m-timeline-3__item-time\">\n" +
                     json.message.tasks[i].publish_date +
                     "</span>\n" +
