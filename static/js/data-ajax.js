@@ -75,6 +75,7 @@ var DatatableRemoteAjaxDemo = function () {
                     field: 'publish_date',
                     title: 'Upload Time',
                     type: 'date',
+                    width: 200,
                     template: function (row) {
                         var date = new Date(row.publish_date * 1000);//如果date为13位不需要乘1000
                         var Y = date.getFullYear() + '-';
@@ -89,6 +90,7 @@ var DatatableRemoteAjaxDemo = function () {
                 }, {
                     field: 'priority',
                     title: 'Priority',
+                    width: 100,
                     // callback function support for column rendering
                     template: function (row) {
                         var status = {
@@ -133,7 +135,7 @@ var DatatableRemoteAjaxDemo = function () {
                     template: function (row, index, datatable) {
                         var dropup = (datatable.getPageSize() - index) <= 4 ? 'dropup' : '';
                         return '<div>\
-						<a href="47.106.34.103:5000/choose/'+row.source_name+'" class="m-portlet__nav-link btn m-btn m-btn--hover-info\
+						<a href="/choose'+row.source_name+'" class="m-portlet__nav-link btn m-btn m-btn--hover-info\
 						 m-btn--icon m-btn--icon-only m-btn--pill" title="Edit details"><i class="la la-edit"></i>\
 						</a></div>\
 					';
