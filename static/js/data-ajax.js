@@ -14,7 +14,7 @@ var DatatableRemoteAjaxDemo = function () {
                     read: {
                         // sample GET method
                         method: 'GET',
-                        url: 'http://47.106.34.103:5000/task',
+                        url: 'http://47.106.34.103:5000/task1',
                         map: function (raw) {
                             // sample data mapping
                             var dataSet = raw.message.tasks;
@@ -81,7 +81,7 @@ var DatatableRemoteAjaxDemo = function () {
                     title: 'Percentage',
                     type: 'number',
                 }, {
-                    field: 'if_finished',
+                    field: 'num_finished',
                     title: 'Status',
                     // callback function support for column rendering
                     template: function (row) {
