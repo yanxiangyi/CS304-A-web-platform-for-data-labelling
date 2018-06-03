@@ -14,17 +14,11 @@ var DatatableRemoteAjaxDemo = function () {
                     read: {
                         // sample GET method
                         method: 'GET',
-                        url: 'http://47.106.34.103:5000/task1',
+                        url: 'http://47.106.34.103:5000/task',
                         map: function (raw) {
                             // sample data mapping
-                            //var temp = eval(raw);
                             var dataSet = raw.message.tasks;
-                            // if (typeof raw.message !== 'undefined') {
-                            //   dataSet = raw.message[tasks];
-                            // }
-                            console.log(dataSet);
                             return dataSet;
-                            //return '{[{"description": "this is a test project","if_finished": 0,"number": 0,"priority": 1,"publish_date": 1527402240.0,"publisher": 1,"source_id": 11,"source_name": "test_proj"},{"description": "test_desc","if_finished": 0,"number": 1,"priority": 1,"publish_date": 1527409408.0,"publisher": 2,"source_id": 12,"source_name": "test"},{"description": "xiedn single option project","if_finished": 0,"number": 11,"priority": 2,"publish_date": 1527928320.0,"publisher": 1,"source_id": 13,"source_name": "xiednproj"}]}';
                         },
                     },
                 },
@@ -96,12 +90,13 @@ var DatatableRemoteAjaxDemo = function () {
                             2: {'title': 'Labeling', 'class': ' m-badge--metal'},
                             0: {'title': 'New', 'class': ' m-badge--primary'},
                         };
-                        if (row.if_finished < 1 && row.if_finished > 0) {
+                        var finish = row.num_finished / row.number;
+                        if (finish < 1 && finish > 0) {
                             return '<span class="m-badge ' + status[2].class +
                                 ' m-badge--wide">' + status[2].title + '</span>';
                         }
-                        return '<span class="m-badge ' + status[row.if_finished].class +
-                            ' m-badge--wide">' + status[row.if_finished].title + '</span>';
+                        return '<span class="m-badge ' + status[finish].class +
+                            ' m-badge--wide">' + status[finish].title + '</span>';
                     },
                 }, {
                     field: 'priority',
@@ -146,9 +141,55 @@ var DatatableRemoteAjaxDemo = function () {
 
     };
 
+    var daterangepickerInit = function () {
+
+        if ($('#m_dashboard_daterangepicker').length == 0) {
+            return;
+        }
+
+        var picker = $('#m_dashboard_daterangepicker');
+        var start = moment();
+        var end = moment();
+
+        function cb(start, end, label) {
+            var title = '';
+            var range = '';
+
+            if ((end - start) < 100) {
+                title = 'Today:';
+                range = start.format('MMM D');
+            } else if (label == 'Yesterday') {
+                title = 'Yesterday:';
+                range = start.format('MMM D');
+            } else {
+                range = start.format('MMM D') + ' - ' + end.format('MMM D');
+            }
+
+            picker.find('.m-subheader__daterange-date').html(range);
+            picker.find('.m-subheader__daterange-title').html(title);
+        }
+
+        picker.daterangepicker({
+            startDate: start,
+            endDate: end,
+            opens: 'left',
+            ranges: {
+                'Today': [moment(), moment()],
+                // 'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                // 'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                // 'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                // 'This Month': [moment().startOf('month'), moment().endOf('month')],
+                // 'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            }
+        }, cb);
+
+        cb(start, end, '');
+    }
+
     return {
         // public functions
         init: function () {
+            daterangepickerInit();
             demo();
         },
     };
@@ -165,20 +206,6 @@ jQuery(document).ready(function () {
             document.getElementById('usrname').innerHTML = parsedData.user_name;
             document.getElementById('inner_usrname').innerHTML = parsedData.user_name;
             document.getElementById('inner_email').innerHTML = parsedData.user_email;
-            // $.ajax({
-            //     type: 'GET',
-            //     url: 'http://47.106.34.103:5000/profile/' + user_email,
-            //     success: function (json) {
-            //         var parsedData = json.message;
-            //         document.getElementById('usrname').innerHTML = parsedData.user_name;
-            //         document.getElementById('inner_usrname').innerHTML = parsedData.user_name;
-            //         document.getElementById('inner_email').innerHTML = parsedData.user_email;
-            //         document.getElementById('figure1').innerHTML = parsedData.num_val;
-            //         document.getElementById('figure2').innerHTML = parsedData.num_val_tp;
-            //         document.getElementById('figure3').innerHTML = parsedData.num_acc;
-            //         document.getElementById('figure4').innerHTML = parsedData.user_credit;
-            //     }
-            // });
         }
     });
     DatatableRemoteAjaxDemo.init();
