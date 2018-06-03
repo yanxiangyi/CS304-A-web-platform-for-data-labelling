@@ -109,43 +109,51 @@ var DatatableRemoteAjaxDemo = function() {
             columns: [
                 {
                     field: 'source_id',
-                    title: 'Data ID',
+                    title: 'Task ID',
                     // sortable: 'asc', // default sort
                     filterable: false, // disable or enable filtering
-                    width: 150,
+                    width: 100,
                     // basic templating support for column rendering,
                     //template: '{{source_id}} - {{source_name}}',
                 }, {
                     field: 'source_name',
                     title: 'Data Name',
-                    width: 150,
+                    width: 200,
+                }, {
+                    field: 'publisher',
+                    title: 'Uploader',
+                }, {
+                    field: 'publish_date',
+                    title: 'Upload Time',
+                    type: 'date',
+                    template: function (row) {
+                        var date = new Date(row.publish_date * 1000);//如果date为13位不需要乘1000
+                        var Y = date.getFullYear() + '-';
+                        var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+                        var D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + ' ';
+                        var h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':';
+                        var m = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':';
+                        var s = (date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds());
+                        return Y + M + D + h + m + s;
+
+                    },
                 }, {
                     field: 'priority',
                     title: 'Priority',
                     // callback function support for column rendering
-                    template: function(row) {
+                    template: function (row) {
                         var status = {
                             1: {'title': 'III.Low', 'state': 'success'},
                             2: {'title': 'II.Normal', 'state': 'warning'},
                             3: {'title': 'I.High', 'state': 'danger'},
                         };
-                        return '<span class="m-badge m-badge--' + status[row.priority].state + ' m-badge--dot"></span>&nbsp;<span class="m--font-bold m--font-' + status[row.priority].state + '">' +
-                            status[row.priority].title + '</span>';
+                        return '<span class="m-badge m-badge--' + status[row.priority].state + ' m-badge--dot"></span>&nbsp;<span class="m--font-bold m--font-' + status[row.priority].state + '">' + status[row.priority].title + '</span>';
                     },
-                },{
-                    field: 'publish_date',
-                    title: 'Upload Time',
-                    type: 'date',
-                    // format: 'MM/DD/YYYY',
                 }, {
-                    field: 'number',
-                    title: 'Percentage',
-                    type: 'number',
-                }, {
-                    field: 'if_finished',
+                    field: 'num_finished',
                     title: 'Status',
                     // callback function support for column rendering
-                    template: function(row) {
+                    template: function (row) {
                         var status = {
                             1: {'title': 'Done', 'class': 'm-badge--brand'},
                             2: {'title': 'Labeling', 'class': ' m-badge--metal'},
@@ -159,8 +167,14 @@ var DatatableRemoteAjaxDemo = function() {
                         return '<span class="m-badge ' + status[finish].class +
                             ' m-badge--wide">' + status[finish].title + '</span>';
                     },
-                }
-                ],
+                }, {
+                    field: 'number',
+                    title: 'Percentage',
+                    template: function (row) {
+                        var finish = row.num_finished / row.number;
+                        return finish + '%';
+                    },
+                }],
         });
 
         $('#m_form_status').on('change', function() {

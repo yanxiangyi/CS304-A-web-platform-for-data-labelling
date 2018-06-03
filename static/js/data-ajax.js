@@ -14,7 +14,7 @@ var DatatableRemoteAjaxDemo = function () {
                     read: {
                         // sample GET method
                         method: 'GET',
-                        url: 'http://47.106.34.103:5000/task1',
+                        url: 'http://47.106.34.103:5000/task',
                         map: function (raw) {
                             // sample data mapping
                             var dataSet = raw.message.tasks;
@@ -58,16 +58,16 @@ var DatatableRemoteAjaxDemo = function () {
             columns: [
                 {
                     field: 'source_id',
-                    title: 'Data ID',
+                    title: 'Task ID',
                     // sortable: 'asc', // default sort
                     filterable: false, // disable or enable filtering
-                    width: 150,
+                    width: 100,
                     // basic templating support for column rendering,
                     //template: '{{source_id}} - {{source_name}}',
                 }, {
                     field: 'source_name',
                     title: 'Data Name',
-                    width: 150,
+                    width: 200,
                 }, {
                     field: 'publisher',
                     title: 'Uploader',
@@ -75,11 +75,29 @@ var DatatableRemoteAjaxDemo = function () {
                     field: 'publish_date',
                     title: 'Upload Time',
                     type: 'date',
-                    // format: 'MM/DD/YYYY',
+                    template: function (row) {
+                        var date = new Date(row.publish_date * 1000);//如果date为13位不需要乘1000
+                        var Y = date.getFullYear() + '-';
+                        var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+                        var D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + ' ';
+                        var h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':';
+                        var m = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':';
+                        var s = (date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds());
+                        return Y + M + D + h + m + s;
+
+                    },
                 }, {
-                    field: 'number',
-                    title: 'Percentage',
-                    type: 'number',
+                    field: 'priority',
+                    title: 'Priority',
+                    // callback function support for column rendering
+                    template: function (row) {
+                        var status = {
+                            1: {'title': 'III.Low', 'state': 'success'},
+                            2: {'title': 'II.Normal', 'state': 'warning'},
+                            3: {'title': 'I.High', 'state': 'danger'},
+                        };
+                        return '<span class="m-badge m-badge--' + status[row.priority].state + ' m-badge--dot"></span>&nbsp;<span class="m--font-bold m--font-' + status[row.priority].state + '">' + status[row.priority].title + '</span>';
+                    },
                 }, {
                     field: 'num_finished',
                     title: 'Status',
@@ -99,16 +117,11 @@ var DatatableRemoteAjaxDemo = function () {
                             ' m-badge--wide">' + status[finish].title + '</span>';
                     },
                 }, {
-                    field: 'priority',
-                    title: 'Priority',
-                    // callback function support for column rendering
+                    field: 'number',
+                    title: 'Percentage',
                     template: function (row) {
-                        var status = {
-                            1: {'title': 'III.Low', 'state': 'success'},
-                            2: {'title': 'II.Normal', 'state': 'warning'},
-                            3: {'title': 'I.High', 'state': 'danger'},
-                        };
-                        return '<span class="m-badge m-badge--' + status[row.priority].state + ' m-badge--dot"></span>&nbsp;<span class="m--font-bold m--font-' + status[row.priority].state + '">' + status[row.priority].title + '</span>';
+                        var finish = row.num_finished / row.number;
+                        return finish + '%';
                     },
                 }, {
                     field: 'Actions',
@@ -118,12 +131,10 @@ var DatatableRemoteAjaxDemo = function () {
                     overflow: 'visible',
                     template: function (row, index, datatable) {
                         var dropup = (datatable.getPageSize() - index) <= 4 ? 'dropup' : '';
-                        return '\
-            <div>\
-						<a href="textlabel.html" class="m-portlet__nav-link btn m-btn m-btn--hover-info m-btn--icon m-btn--icon-only m-btn--pill" title="Edit details">\
-							<i class="la la-edit"></i>\
-						</a>\
-						</div>\
+                        return '<div>\
+						<a href="textlabel.html" class="m-portlet__nav-link btn m-btn m-btn--hover-info\
+						 m-btn--icon m-btn--icon-only m-btn--pill" title="Edit details"><i class="la la-edit"></i>\
+						</a></div>\
 					';
                     },
                 }],
