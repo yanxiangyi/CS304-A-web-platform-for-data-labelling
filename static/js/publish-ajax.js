@@ -67,7 +67,6 @@ var DatatableRemoteAjaxDemo = function() {
                             // if (typeof raw.message !== 'undefined') {
                             //   dataSet = raw.message[tasks];
                             // }
-                            console.log(dataSet);
                             return dataSet;
                             //return '{[{"description": "this is a test project","if_finished": 0,"number": 0,"priority": 1,"publish_date": 1527402240.0,"publisher": 1,"source_id": 11,"source_name": "test_proj"},{"description": "test_desc","if_finished": 0,"number": 1,"priority": 1,"publish_date": 1527409408.0,"publisher": 2,"source_id": 12,"source_name": "test"},{"description": "xiedn single option project","if_finished": 0,"number": 11,"priority": 2,"publish_date": 1527928320.0,"publisher": 1,"source_id": 13,"source_name": "xiednproj"}]}';
                         },
