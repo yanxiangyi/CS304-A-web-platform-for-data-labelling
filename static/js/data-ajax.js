@@ -117,7 +117,7 @@ var DatatableRemoteAjaxDemo = function () {
                             ' m-badge--wide">' + status[finish].title + '</span>';
                     },
                 }, {
-                    field: 'number',
+                    field: 'num_finished',
                     title: 'Percentage',
                     template: function (row) {
                         var finish = row.num_finished / row.number;
@@ -126,7 +126,7 @@ var DatatableRemoteAjaxDemo = function () {
                     },
                 }, {
                     field: 'Actions',
-                    width: 110,
+                    width: min,
                     title: 'Label',
                     sortable: false,
                     overflow: 'visible',
