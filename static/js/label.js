@@ -45,7 +45,7 @@ jQuery(document).ready(function () {
             document.getElementById("m_portlet_head_title_Div" + i).appendChild(m_portlet_head_label_info_Div);
 
             var questionNumberWrapper = document.createElement("span"); 
-            questionNumberWrapper.appendChild(document.createTextNode("Question" + i)); 
+            questionNumberWrapper.appendChild(document.createTextNode("Question" + "&nbsp;" +(i+1))); 
             document.getElementById("m_portlet_head_label_info_Div" + i).appendChild(questionNumberWrapper);    
 
             var m_portlet_body_Div = document.createElement("div"); 
