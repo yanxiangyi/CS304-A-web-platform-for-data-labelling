@@ -87,7 +87,15 @@ def mainpage():
 @app.route("/choose.html")
 @cross_origin()
 def choose():
-    return render_template('choose.html')
+    if "email" not in session:
+        result = {"code": 1, "message": "Please login first!"}
+        return jsonify(result)
+    else:
+        if session['level'] != 0:
+            result = {"code": 1, "message": "Please login as users!"}
+            return jsonify(result)
+        else:
+            return render_template('choose.html')
 
 
 @app.route("/imagelabel.html")
@@ -303,7 +311,7 @@ def recent_task():
         task = {"publisher": publisher,
                 "publish_date": str(date.month) + "." + str(date.day),
                 "source_name": source_name,
-                "if_finished": finished,
+                "num_finished": finished,
                 "source_id": source_id,
                 "description": description,
                 "priority": priority,
@@ -341,7 +349,7 @@ def task():
                 task = {"publisher": publisher,
                         "publish_date": publish_date,
                         "source_name": source_name,
-                        "if_finished": finished,
+                        "num_finished": finished,
                         "source_id": source_id,
                         "description": description,
                         "priority": priority,
@@ -369,7 +377,7 @@ def task():
                     task = {"publisher": publisher,
                             "publish_date": publish_date,
                             "source_name": source_name,
-                            "if_finished": finished,
+                            "num_finished": finished,
                             "source_id": source_id,
                             "description": description,
                             "priority": priority,
@@ -395,7 +403,7 @@ def task():
                 task = {"publisher": publisher,
                         "publish_date": publish_date,
                         "source_name": source_name,
-                        "if_finished": finished,
+                        "num_finished": finished,
                         "source_id": source_id,
                         "description": description,
                         "priority": priority,
@@ -423,47 +431,175 @@ def task():
     #     result = {"code": 1, "message": "User doesn\'t exist!"}
     return jsonify(result)
 
-
-@app.route('/task1')
-@cross_origin()
-def task1():
-    c = init_cnx()
-    source_number = c.get_source_number()
-    all_source = c.get_all_source()
-    c.close()
-    tasks = []
-    for source in all_source:
-        [source_id, source_name, finished, publisher, publish_date, description, priority, num_json] = source
-        task = {"publisher": publisher,
-                "publish_date": publish_date,
-                "source_name": source_name,
-                "if_finished": finished,
-                "source_id": source_id,
-                "description": description,
-                "priority": priority,
-                "number": num_json
-                }
-        tasks.append(task)
-    result = {"code": 0,
-              "message": {
-                  "task_num": source_number,
-                  "tasks": tasks
-              }
-              }
-    return jsonify(result)
+#
+# @app.route('/task1')
+# @cross_origin()
+# def task1():
+#     c = init_cnx()
+#     source_number = c.get_source_number()
+#     all_source = c.get_all_source()
+#     c.close()
+#     tasks = []
+#     for source in all_source:
+#         [source_id, source_name, finished, publisher, publish_date, description, priority, num_json] = source
+#         task = {"publisher": publisher,
+#                 "publish_date": publish_date,
+#                 "source_name": source_name,
+#                 "num_finished": finished,
+#                 "source_id": source_id,
+#                 "description": description,
+#                 "priority": priority,
+#                 "number": num_json
+#                 }
+#         tasks.append(task)
+#     result = {"code": 0,
+#               "message": {
+#                   "task_num": source_number,
+#                   "tasks": tasks
+#               }
+#               }
+#     return jsonify(result)
 
 
 @app.route('/data/<sourcename>')
 @cross_origin()
 def send_data(sourcename):
     if "email" in session:
-        email = session['email']
-        c = init_cnx()
-        jsons = c.fetch_data(sourcename=sourcename, user_email=email, nb=5)
-        c.close()
-        # for json in jsons:
-        #     json['data'] = json['data'].encode('utf8')
-        result = {"code": 0, "message": jsons}
+        if session['level'] == 0:
+            if 'jsons' not in session:
+                email = session['email']
+                c = init_cnx()
+                jsons = c.fetch_data(sourcename=sourcename, user_email=email, nb=5)
+                c.close()
+                session['jsons'] = jsons
+            else:
+                jsons = session['jsons']
+            result = {"code": 0, "message": jsons}
+        else:
+            result = {"code": 1, "message": "Please login as users!"}
+    else:
+        result = {"code": 1, "message": "Please login first!"}
+    return jsonify(result)
+
+
+@app.route('/retrieve', methods=['GET', 'POST'])
+@cross_origin()
+def retrieve_label():
+    if "email" in session:
+        if session['level'] == 0:
+            if 'jsons' in session:
+                content = request.get_json(silent=True)
+                content = {
+  "code": 0,
+  "message": [
+    {
+      "data": "\u8c22\u4e39\u5b81\u771f\u6f02\u4eae",
+      "dataid": 34,
+      "index": 1,
+      "projectName": "xiedn_proj",
+      "task": [
+        {
+          "aim": "",
+          "choices": [
+            "Positive",
+            "Neutral",
+            "Negative"
+          ],
+          "front": "option",
+          "label": "",
+          "mode": "single"
+        }
+      ]
+    },
+    {
+      "data": "\u4eca\u5929\u5929\u6c14\u771f\u597d\u554a",
+      "dataid": 27,
+      "index": 2,
+      "projectName": "xiedn_proj",
+      "task": [
+        {
+          "aim": "",
+          "choices": [
+            "Positive",
+            "Neutral",
+            "Negative"
+          ],
+          "front": "option",
+          "label": "",
+          "mode": "single"
+        }
+      ]
+    },
+    {
+      "data": "\u8bf7\u95ee\u6559\u5b66\u697c\u5728\u54ea",
+      "dataid": 31,
+      "index": 3,
+      "projectName": "xiedn_proj",
+      "task": [
+        {
+          "aim": "",
+          "choices": [
+            "Positive",
+            "Neutral",
+            "Negative"
+          ],
+          "front": "option",
+          "label": "",
+          "mode": "single"
+        }
+      ]
+    },
+    {
+      "data": "\u8fd9\u4e2a\u83dc\u771f\u96be\u5403",
+      "dataid": 29,
+      "index": 4,
+      "projectName": "xiedn_proj",
+      "task": [
+        {
+          "aim": "",
+          "choices": [
+            "Positive",
+            "Neutral",
+            "Negative"
+          ],
+          "front": "option",
+          "label": "",
+          "mode": "single"
+        }
+      ]
+    },
+    {
+      "data": "\u6211\u5b9e\u5728\u60f3\u4e0d\u51fa\u6765\u4e86",
+      "dataid": 32,
+      "index": 5,
+      "projectName": "xiedn_proj",
+      "task": [
+        {
+          "aim": "",
+          "choices": [
+            "Positive",
+            "Neutral",
+            "Negative"
+          ],
+          "front": "option",
+          "label": "",
+          "mode": "single"
+        }
+      ]
+    }
+  ]
+}
+                jsons = content['message']
+                c = init_cnx()
+                # Store label jsons in database
+
+                c.close()
+                session.pop('jsons', None)
+                result = {"code": 0}
+            else:
+                result = {"code": 1, "message": "Session time out! Please apply for another 10 data!"}
+        else:
+            result = {"code": 1, "message": "Please login as users!"}
     else:
         result = {"code": 1, "message": "Please login first!"}
     return jsonify(result)
