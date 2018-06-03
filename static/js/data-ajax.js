@@ -117,7 +117,7 @@ var DatatableRemoteAjaxDemo = function () {
                             ' m-badge--wide">' + status[finish].title + '</span>';
                     },
                 }, {
-                    field: 'num_finished',
+                    field: 'num_finished/number',
                     title: 'Percentage',
                     template: function (row) {
                         var finish = row.num_finished / row.number;
