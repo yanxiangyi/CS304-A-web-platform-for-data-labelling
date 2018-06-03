@@ -1,7 +1,7 @@
 jQuery(document).ready(function () {
     $.ajax({
         type: 'GET',
-        url: 'http://47.106.34.103:5000/data/nb_test',
+        url: 'http://47.106.34.103:5000/data',
         success: function (json){
         for (let i = 0; i < json.message.length; i++){
             jsonObject = json.message;
