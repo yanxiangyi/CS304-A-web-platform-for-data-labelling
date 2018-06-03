@@ -14,17 +14,11 @@ var DatatableRemoteAjaxDemo = function () {
                     read: {
                         // sample GET method
                         method: 'GET',
-                        url: 'http://47.106.34.103:5000/task1',
+                        url: 'http://47.106.34.103:5000/task',
                         map: function (raw) {
                             // sample data mapping
-                            //var temp = eval(raw);
                             var dataSet = raw.message.tasks;
-                            // if (typeof raw.message !== 'undefined') {
-                            //   dataSet = raw.message[tasks];
-                            // }
-                            console.log(dataSet);
                             return dataSet;
-                            //return '{[{"description": "this is a test project","if_finished": 0,"number": 0,"priority": 1,"publish_date": 1527402240.0,"publisher": 1,"source_id": 11,"source_name": "test_proj"},{"description": "test_desc","if_finished": 0,"number": 1,"priority": 1,"publish_date": 1527409408.0,"publisher": 2,"source_id": 12,"source_name": "test"},{"description": "xiedn single option project","if_finished": 0,"number": 11,"priority": 2,"publish_date": 1527928320.0,"publisher": 1,"source_id": 13,"source_name": "xiednproj"}]}';
                         },
                     },
                 },
@@ -64,16 +58,16 @@ var DatatableRemoteAjaxDemo = function () {
             columns: [
                 {
                     field: 'source_id',
-                    title: 'Data ID',
+                    title: 'Task ID',
                     // sortable: 'asc', // default sort
                     filterable: false, // disable or enable filtering
-                    width: 150,
+                    width: 100,
                     // basic templating support for column rendering,
                     //template: '{{source_id}} - {{source_name}}',
                 }, {
                     field: 'source_name',
                     title: 'Data Name',
-                    width: 150,
+                    width: 200,
                 }, {
                     field: 'publisher',
                     title: 'Uploader',
@@ -81,27 +75,16 @@ var DatatableRemoteAjaxDemo = function () {
                     field: 'publish_date',
                     title: 'Upload Time',
                     type: 'date',
-                    // format: 'MM/DD/YYYY',
-                }, {
-                    field: 'number',
-                    title: 'Percentage',
-                    type: 'number',
-                }, {
-                    field: 'if_finished',
-                    title: 'Status',
-                    // callback function support for column rendering
                     template: function (row) {
-                        var status = {
-                            1: {'title': 'Done', 'class': 'm-badge--brand'},
-                            2: {'title': 'Labeling', 'class': ' m-badge--metal'},
-                            0: {'title': 'New', 'class': ' m-badge--primary'},
-                        };
-                        if (row.if_finished < 1 && row.if_finished > 0) {
-                            return '<span class="m-badge ' + status[2].class +
-                                ' m-badge--wide">' + status[2].title + '</span>';
-                        }
-                        return '<span class="m-badge ' + status[row.if_finished].class +
-                            ' m-badge--wide">' + status[row.if_finished].title + '</span>';
+                        var date = new Date(row.publish_date * 1000);//如果date为13位不需要乘1000
+                        var Y = date.getFullYear() + '-';
+                        var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+                        var D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + ' ';
+                        var h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':';
+                        var m = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':';
+                        var s = (date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds());
+                        return Y + M + D + h + m + s;
+
                     },
                 }, {
                     field: 'priority',
@@ -116,19 +99,43 @@ var DatatableRemoteAjaxDemo = function () {
                         return '<span class="m-badge m-badge--' + status[row.priority].state + ' m-badge--dot"></span>&nbsp;<span class="m--font-bold m--font-' + status[row.priority].state + '">' + status[row.priority].title + '</span>';
                     },
                 }, {
+                    field: 'num_finished',
+                    title: 'Status',
+                    // callback function support for column rendering
+                    template: function (row) {
+                        var status = {
+                            1: {'title': 'Done', 'class': 'm-badge--brand'},
+                            2: {'title': 'Labeling', 'class': ' m-badge--metal'},
+                            0: {'title': 'New', 'class': ' m-badge--primary'},
+                        };
+                        var finish = row.num_finished / row.number;
+                        if (finish < 1 && finish > 0) {
+                            return '<span class="m-badge ' + status[2].class +
+                                ' m-badge--wide">' + status[2].title + '</span>';
+                        }
+                        return '<span class="m-badge ' + status[finish].class +
+                            ' m-badge--wide">' + status[finish].title + '</span>';
+                    },
+                }, {
+                    field: 'num_finished/number',
+                    title: 'Percentage',
+                    template: function (row) {
+                        var finish = row.num_finished / row.number;
+                        finish = (finish * 100).toFixed(2);
+                        return finish + '%';
+                    },
+                }, {
                     field: 'Actions',
-                    width: 110,
+                    width: 50,
                     title: 'Label',
                     sortable: false,
                     overflow: 'visible',
                     template: function (row, index, datatable) {
                         var dropup = (datatable.getPageSize() - index) <= 4 ? 'dropup' : '';
-                        return '\
-            <div>\
-						<a href="textlabel.html" class="m-portlet__nav-link btn m-btn m-btn--hover-info m-btn--icon m-btn--icon-only m-btn--pill" title="Edit details">\
-							<i class="la la-edit"></i>\
-						</a>\
-						</div>\
+                        return '<div>\
+						<a href="textlabel.html" class="m-portlet__nav-link btn m-btn m-btn--hover-info\
+						 m-btn--icon m-btn--icon-only m-btn--pill" title="Edit details"><i class="la la-edit"></i>\
+						</a></div>\
 					';
                     },
                 }],
@@ -146,9 +153,55 @@ var DatatableRemoteAjaxDemo = function () {
 
     };
 
+    var daterangepickerInit = function () {
+
+        if ($('#m_dashboard_daterangepicker').length == 0) {
+            return;
+        }
+
+        var picker = $('#m_dashboard_daterangepicker');
+        var start = moment();
+        var end = moment();
+
+        function cb(start, end, label) {
+            var title = '';
+            var range = '';
+
+            if ((end - start) < 100) {
+                title = 'Today:';
+                range = start.format('MMM D');
+            } else if (label == 'Yesterday') {
+                title = 'Yesterday:';
+                range = start.format('MMM D');
+            } else {
+                range = start.format('MMM D') + ' - ' + end.format('MMM D');
+            }
+
+            picker.find('.m-subheader__daterange-date').html(range);
+            picker.find('.m-subheader__daterange-title').html(title);
+        }
+
+        picker.daterangepicker({
+            startDate: start,
+            endDate: end,
+            opens: 'left',
+            ranges: {
+                'Today': [moment(), moment()],
+                // 'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                // 'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                // 'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                // 'This Month': [moment().startOf('month'), moment().endOf('month')],
+                // 'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            }
+        }, cb);
+
+        cb(start, end, '');
+    }
+
     return {
         // public functions
         init: function () {
+            daterangepickerInit();
             demo();
         },
     };
@@ -165,20 +218,6 @@ jQuery(document).ready(function () {
             document.getElementById('usrname').innerHTML = parsedData.user_name;
             document.getElementById('inner_usrname').innerHTML = parsedData.user_name;
             document.getElementById('inner_email').innerHTML = parsedData.user_email;
-            // $.ajax({
-            //     type: 'GET',
-            //     url: 'http://47.106.34.103:5000/profile/' + user_email,
-            //     success: function (json) {
-            //         var parsedData = json.message;
-            //         document.getElementById('usrname').innerHTML = parsedData.user_name;
-            //         document.getElementById('inner_usrname').innerHTML = parsedData.user_name;
-            //         document.getElementById('inner_email').innerHTML = parsedData.user_email;
-            //         document.getElementById('figure1').innerHTML = parsedData.num_val;
-            //         document.getElementById('figure2').innerHTML = parsedData.num_val_tp;
-            //         document.getElementById('figure3').innerHTML = parsedData.num_acc;
-            //         document.getElementById('figure4').innerHTML = parsedData.user_credit;
-            //     }
-            // });
         }
     });
     DatatableRemoteAjaxDemo.init();
