@@ -1,9 +1,9 @@
 jQuery(document).ready(function () {
     $.ajax({
         type: 'GET',
-        url: 'http://47.106.34.103:5000/data/yxy_test',
+        url: 'http://47.106.34.103:5000/data/nb_test',
         success: function (json){
-        for (let i = 0; i < 5; i++){
+        for (let i = 0; i < json.message.length; i++){
             jsonObject = json.message;
             jsdata = jsonObject[i];
             jsdataTask=jsdata.task;
