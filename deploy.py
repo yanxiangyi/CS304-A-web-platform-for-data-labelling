@@ -11,7 +11,7 @@ from werkzeug.utils import secure_filename
 
 UPLOAD_FOLDER = '/home/se2018/CS304-A-web-platform-for-data-labelling/upload'
 EXTRACT_FOLDER = '/home/se2018/data'
-ALLOWED_EXTENSIONS = set(['pdf', 'zip'])
+ALLOWED_EXTENSIONS = set(['zip'])
 
 app = Flask(__name__)
 app.secret_key = 'any random string'
@@ -34,6 +34,12 @@ def init_cnx():
     return c
 
 
+@app.route("/index.html")
+@cross_origin()
+def index():
+    return redirect(url_for('index_void'))
+
+
 @app.route("/")
 @cross_origin()
 def index_void():
@@ -41,9 +47,9 @@ def index_void():
         if session['level'] == 0:
             return render_template('index.html')
         elif session['level'] == 1:
-            return render_template('index.html')
+            return render_template('indexA1.html')
         else:
-            return render_template('index.html')
+            return render_template('indexAX.html')
     return redirect(url_for('mainpage'))
 
 
@@ -58,19 +64,6 @@ def logout():
 @cross_origin()
 def logout_page():
     return render_template("logout.html")
-
-
-@app.route("/index.html")
-@cross_origin()
-def index():
-    if 'email' in session:
-        if session['level'] == 0:
-            return render_template('index.html')
-        elif session['level'] == 1:
-            return render_template('index.html')
-        else:
-            return render_template('index.html')
-    return redirect(url_for('mainpage'))
 
 
 @app.route("/login.html", methods=['GET', 'POST'])
@@ -90,6 +83,7 @@ def register():
 def mainpage():
     return render_template('mainpage.html')
 
+
 @app.route("/choose.html")
 @cross_origin()
 def choose():
@@ -106,24 +100,6 @@ def imagelabel():
 @cross_origin()
 def textlabel():
     return render_template('textlabel.html')
-
-
-# @app.route("/textlabel2.html")
-# @cross_origin()
-# def textlabel2():
-#     return render_template('textlabel2.html')
-
-
-# @app.route('/email_current')
-# @cross_origin()
-# def email_current():
-#     try:
-#         email = session['email']
-#         result = {'code': 0, 'message': email}
-#         return jsonify(result)
-#     except:
-#         result = {'code': 1, 'message': "Please log in first!"}
-#         return jsonify(result)
 
 
 @app.route('/login_admin/email/<admin_email>/password/<pass_word>')
@@ -168,20 +144,6 @@ def email_login(user_email, pass_word):
     return jsonify(result)
 
 
-# @app.route('/login/username/<user_name>/password/<pass_word>')
-# @cross_origin()
-# def username_login(user_name, pass_word):
-#     password = c.get_user_passwd(username=user_name)
-#     if password is not None:
-#         if password == pass_word:
-#             result = {'code': 0}
-#         elif password != pass_word:
-#             result = {'code': 1, 'message': 'Wrong password!'}
-#     else:
-#         result = {'code': 1, 'message': 'User doesn\'t exist!'}
-#     return jsonify(result)
-
-
 @app.route('/register/email/<user_email>/username/<user_name>/password/<pass_word>')
 @cross_origin()
 def email_register(user_name, user_email, pass_word):
@@ -217,79 +179,74 @@ def allowed_file(filename):
 @app.route('/publish.html', methods=['GET', 'POST'])
 @cross_origin()
 def upload_file():
-    if request.method == 'POST':
-        # check if the post request has the file part
-        if 'file' not in request.files:
-            print('no file')
-            return redirect(request.url)
-        file = request.files['file']
-        # if user does not select file, browser also
-        # submit a empty part without filename
-        if file.filename == '':
-            print('no filename')
-            return redirect(request.url)
-        if file and allowed_file(file.filename):
-            # Save file
-            filename = secure_filename(file.filename)
-            save_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-            file.save(save_path)
-            # Unzip file to the 'EXTRACT_FOLDER/projectName_timeStamp'
-            zip_ref = zipfile.ZipFile(save_path, 'r')
-            final_path = os.path.join(EXTRACT_FOLDER, filename.split(".zip")[0] + "_" + datetime.datetime.today().strftime('%Y-%m-%d'))
-            if not os.path.exists(final_path):
-                os.makedirs(final_path)
-            zip_ref.extractall(final_path)
-            zip_ref.close()
-            # Only keep Json files
-            for filename in os.listdir(final_path):
-                if not os.path.join(final_path, filename).endswith(".json"):
-                    if os.path.isdir(os.path.join(final_path, filename)):
-                        shutil.rmtree(os.path.join(final_path, filename))
-                    else:
-                        os.remove(os.path.join(final_path, filename))
-                elif filename == "meta.json":
-                    with open(os.path.join(final_path, filename)) as f:
-                        meta = json.load(f)
-                        sourcename = meta['projectName']
-                        description = meta['description']
-                    f.close()
-                    os.remove(os.path.join(final_path, filename))
-            # root_path = os.path.join(EXTRACT_FOLDER, sourcename + "_" + datetime.datetime.today().strftime('%Y-%m-%d'))
-            # os.renames(final_path, root_path)
-            root_path = final_path
-            admin_email = session['email']
-            c = init_cnx()
-            admin_id = c.get_admin_id(admin_email=admin_email)
-            c.close()
-            result = {"code": 0}
-            c = init_cnx()
-            insert = c.insert_source(sourcename=sourcename, finished=0, publisher=admin_id, description=description, publish_time=get_timestamp(), priority=1)
-            c.close()
-            if insert == -1:
-                result = {"code": 1, "message": "Task insertion failed!"}
-            else:
-                c = init_cnx()
-                load = c.load_data(root_path=root_path, sourcename=sourcename)
-                c.close()
-                if load == 0:
-                    result = {"code": 1, "message": "Data insertion failed!"}
+    if 'email' not in session:
+        result = {"code": 1, "message": "Please login first!"}
+        return jsonify(result)
+    else:
+        if session['level'] == 0:
+            result = {"code": 1, "message": "Users can't publish tasks!"}
             return jsonify(result)
+        else:
+            if request.method == 'POST':
+                # check if the post request has the file part
+                if 'file' not in request.files:
+                    print('no file')
+                    return redirect(request.url)
+                file = request.files['file']
+                # if user does not select file, browser also
+                # submit a empty part without filename
+                if file.filename == '':
+                    print('no filename')
+                    return redirect(request.url)
+                if file and allowed_file(file.filename):
+                    # Save file
+                    filename = secure_filename(file.filename)
+                    save_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+                    file.save(save_path)
+                    # Unzip file to the 'EXTRACT_FOLDER/projectName_timeStamp'
+                    zip_ref = zipfile.ZipFile(save_path, 'r')
+                    final_path = os.path.join(EXTRACT_FOLDER, filename.split(".zip")[0] + "_" + datetime.datetime.today().strftime('%Y-%m-%d'))
+                    if not os.path.exists(final_path):
+                        os.makedirs(final_path)
+                    zip_ref.extractall(final_path)
+                    zip_ref.close()
+                    # Only keep Json files
+                    for filename in os.listdir(final_path):
+                        if not os.path.join(final_path, filename).endswith(".json"):
+                            if os.path.isdir(os.path.join(final_path, filename)):
+                                shutil.rmtree(os.path.join(final_path, filename))
+                            else:
+                                os.remove(os.path.join(final_path, filename))
+                        elif filename == "meta.json":
+                            with open(os.path.join(final_path, filename)) as f:
+                                meta = json.load(f)
+                                sourcename = meta['projectName']
+                                description = meta['description']
+                            f.close()
+                            os.remove(os.path.join(final_path, filename))
+                    # root_path = os.path.join(EXTRACT_FOLDER,
+                    # sourcename + "_" + datetime.datetime.today().strftime('%Y-%m-%d'))
+                    # os.renames(final_path, root_path)
+                    root_path = final_path
+                    admin_email = session['email']
+                    c = init_cnx()
+                    admin_id = c.get_admin_id(admin_email=admin_email)
+                    c.close()
+                    result = {"code": 0}
+                    c = init_cnx()
+                    insert = c.insert_source(sourcename=sourcename, finished=0, publisher=admin_id, description=description, publish_time=get_timestamp(), priority=1)
+                    c.close()
+                    if insert == -1:
+                        result = {"code": 1, "message": "Task insertion failed!"}
+                    else:
+                        c = init_cnx()
+                        load = c.load_data(root_path=root_path, sourcename=sourcename)
+                        c.close()
+                        if load == 0:
+                            result = {"code": 1, "message": "Data insertion failed!"}
+                    return jsonify(result)
     return render_template('publish.html')
 
-
-# @app.route('/test/<email>')
-# @cross_origin()
-# def test(email):
-#     if session
-#         return jsonify(result)
-
-@app.route('/test')
-@cross_origin()
-def test():
-    if 'email' in session:
-        return jsonify(session.keys())
-    else:
-        return jsonify([])
 
 @app.route('/profile')
 @cross_origin()
@@ -365,6 +322,7 @@ def recent_task():
     #               }
 
     return jsonify(result)
+
 
 @app.route('/task')
 @cross_origin()
@@ -494,6 +452,7 @@ def task1():
               }
     return jsonify(result)
 
+
 @app.route('/data/<sourcename>')
 @cross_origin()
 def send_data(sourcename):
@@ -508,9 +467,6 @@ def send_data(sourcename):
     else:
         result = {"code": 1, "message": "Please login first!"}
     return jsonify(result)
-
-
-
 
 
 if __name__ == '__main__':
