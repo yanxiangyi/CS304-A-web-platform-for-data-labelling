@@ -126,7 +126,7 @@ var DatatableRemoteAjaxDemo = function () {
                     },
                 }, {
                     field: 'Actions',
-                    width: fit-content,
+                    width: 50,
                     title: 'Label',
                     sortable: false,
                     overflow: 'visible',
