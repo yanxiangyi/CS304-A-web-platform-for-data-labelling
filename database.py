@@ -221,7 +221,7 @@ class sql_conn:
         return self.__get_by_option('source', 'sourceid', {'sourcename': sourcename})
 
     def get_source_finished(self, sourcename=None, sourceid=None):
-        result = self.__get_by_option('source', 'finished', {'sourceid': sourceid, 'sourcename': sourcename})
+        result = self.__get_by_option('source', 'nb_finished', {'sourceid': sourceid, 'sourcename': sourcename})
         return True if result == 1 else False
 
     def get_source_publisherid(self, sourcename=None, sourceid=None):
@@ -234,13 +234,13 @@ class sql_conn:
     def get_source_priority(self, sourcename=None, sourceid=None):
         return self.__get_by_option('source', 'priority', {'sourceid': sourceid, 'sourcename': sourcename})
 
-    def insert_source(self, sourcename, finished=0, publisher='NULL', description='', publish_time=get_timestamp(),
+    def insert_source(self, sourcename, nb_finished=0, publisher='NULL', description='', publish_time=get_timestamp(),
                       priority=1):
         # insertion: 1 success, 0: already exist, -1: fail
         if self.__search_source_by_name(sourcename) == None:
 
-            sql = "INSERT INTO `se_proj`.`source` (`sourcename`,`finished`,`publisher`,`description`,`publish_date`, `priority`)\
-            VALUES ('{}',{}, {},'{}',{},{});".format(sourcename, finished, publisher, description, publish_time,
+            sql = "INSERT INTO `se_proj`.`source` (`sourcename`,`nb_finished`,`publisher`,`description`,`publish_date`, `priority`)\
+            VALUES ('{}',{}, {},'{}',{},{});".format(sourcename, nb_finished, publisher, description, publish_time,
                                                      priority)
             # print(sql)
             return self.__insertion(sql)

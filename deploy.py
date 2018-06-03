@@ -215,6 +215,7 @@ def upload_file():
                     zip_ref = zipfile.ZipFile(save_path, 'r')
                     final_path = os.path.join(EXTRACT_FOLDER, filename.split(".zip")[0] + "_" + datetime.datetime.today().strftime('%Y-%m-%d'))
                     if not os.path.exists(final_path):
+                        print(final_path)
                         os.makedirs(final_path)
                     zip_ref.extractall(final_path)
                     zip_ref.close()
@@ -242,7 +243,7 @@ def upload_file():
                     c.close()
                     result = {"code": 0}
                     c = init_cnx()
-                    insert = c.insert_source(sourcename=sourcename, finished=0, publisher=admin_id, description=description, publish_time=get_timestamp(), priority=1)
+                    insert = c.insert_source(sourcename=sourcename, nb_finished=0, publisher=admin_id, description=description, publish_time=get_timestamp(), priority=1)
                     c.close()
                     if insert == -1:
                         result = {"code": 1, "message": "Task insertion failed!"}
@@ -460,16 +461,29 @@ def task():
 #               }
 #     return jsonify(result)
 
-
-@app.route('/data/<sourcename>')
+@app.route('/choose/<sourcename>')
 @cross_origin()
-def send_data(sourcename):
+def choose_source(sourcename):
+    if "email" in session:
+        if session['level'] == 0:
+            session['sourcename'] = sourcename
+            return redirect(url_for('textlabel'))
+        else:
+            result = {"code": 1, "message": "Please login as users!"}
+    else:
+        result = {"code": 1, "message": "Please login first!"}
+    return jsonify(result)
+
+
+@app.route('/data')
+@cross_origin()
+def send_data():
     if "email" in session:
         if session['level'] == 0:
             if 'jsons' not in session:
                 email = session['email']
                 c = init_cnx()
-                jsons = c.fetch_data(sourcename=sourcename, user_email=email, nb=5)
+                jsons = c.fetch_data(sourcename=session['sourcename'], user_email=email, nb=5)
                 c.close()
                 session['jsons'] = jsons
             else:
@@ -603,6 +617,8 @@ def retrieve_label():
     else:
         result = {"code": 1, "message": "Please login first!"}
     return jsonify(result)
+
+
 
 
 if __name__ == '__main__':
