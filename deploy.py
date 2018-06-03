@@ -316,7 +316,8 @@ def recent_task():
                 "source_id": source_id,
                 "description": description,
                 "priority": priority,
-                "number": num_json
+                "number": num_json,
+                "per_finished": float(finished) / float(num_json)
         }
         tasks.append(task)
     result = {"code": 0,
@@ -354,7 +355,8 @@ def task():
                         "source_id": source_id,
                         "description": description,
                         "priority": priority,
-                        "number": num_json
+                        "number": num_json,
+                        "per_finished": float(finished) / float(num_json)
                 }
                 tasks.append(task)
             result = {"code": 0,
@@ -382,7 +384,8 @@ def task():
                             "source_id": source_id,
                             "description": description,
                             "priority": priority,
-                            "number": num_json
+                            "number": num_json,
+                            "per_finished": float(finished) / float(num_json)
                             }
                     tasks.append(task)
             source_number = len(tasks)
@@ -408,7 +411,8 @@ def task():
                         "source_id": source_id,
                         "description": description,
                         "priority": priority,
-                        "number": num_json
+                        "number": num_json,
+                        "per_finished": float(finished) / float(num_json)
                 }
                 tasks.append(task)
             result = {"code": 0,
@@ -481,11 +485,15 @@ def send_data():
     if "email" in session:
         if session['level'] == 0:
             if 'jsons' not in session:
-                email = session['email']
-                c = init_cnx()
-                jsons = c.fetch_data(sourcename=session['sourcename'], user_email=email, nb=5)
-                c.close()
-                session['jsons'] = jsons
+                if 'sourcename' in session:
+                    email = session['email']
+                    c = init_cnx()
+                    jsons = c.fetch_data(sourcename=session['sourcename'], user_email=email, nb=5)
+                    c.close()
+                    session['jsons'] = jsons
+                else:
+                    result = {"code": 1, "message": "Please choose a task first!"}
+                    return jsonify(result)
             else:
                 jsons = session['jsons']
             result = {"code": 0, "message": jsons}
