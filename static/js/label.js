@@ -114,9 +114,11 @@ jQuery(document).ready(function () {
                         checkboxWrapper.setAttribute("name", "checkboxWrapper" + i + j);
                         checkboxWrapper.setAttribute("type", "checkbox");
                         checkboxWrapper.setAttribute("value", jsdataTask[j].choices[k]);
-                        for(l in jsdataTask[j].label){
-                            if(l === jsdataTask[j].choices[k]){
-                                checkboxWrapper.checked=true;
+                        if(jsdataTask[j].label !== null) {
+                            for (let l = 0; l < jsdataTask[j].label.length; l++) {
+                                if (jsdataTask[j].label[l] === jsdataTask[j].choices[k]) {
+                                    checkboxWrapper.checked = true;
+                                }
                             }
                         }
                         document.getElementById("labelWrapper" + i + j + k).appendChild(checkboxWrapper);
