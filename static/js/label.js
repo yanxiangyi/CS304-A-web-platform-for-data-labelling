@@ -63,12 +63,12 @@ jQuery(document).ready(function () {
                     sep.className = "m-separator m-separator--dashed m-separator--lg"
                     document.getElementById("m_portlet_body_Div" + i).appendChild(sep);
 
-                    document.getElementById("m_portlet_body_Div" + i).appendChild(document.createTextNode(jsdataTask[j].aim)); //show subquestion
+                    document.getElementById("m_portlet_body_Div" + i).appendChild(document.createTextNode(jsdataTask[j].aim + '\n')); //show subquestion
 
                     var rowWrapper = document.createElement("div");
                     rowWrapper.setAttribute("id", "rowWrapper" + i + j);
                     rowWrapper.className = "row";
-                    document.getElementById("m_portlet_body_Div" + i).appendChild(document.createElement("br"));
+                    // document.getElementById("m_portlet_body_Div" + i).appendChild(document.createElement("br"));
                     document.getElementById("m_portlet_body_Div" + i).appendChild(rowWrapper);
                     // rowWrapper.insertBefore(document.createElement("br"), rowWrapper);
                 }
