@@ -144,7 +144,9 @@ jQuery(document).ready(function () {
                     for(let j = 0; j<json_to_return.message[i].task.length; j++){
                         if(json_to_return.message[i].task[j].mode === "single"){
                             var radioname = "radioWrapper" + i + j;
-                            json_to_return.message[i].task[j].label = document.querySelector('input[name="' + radioname + '"]:checked').value;
+                            if ($("input[name=" + radioname + "]:checked").length > 0){
+                                json_to_return.message[i].task[j].label = document.querySelector('input[name="' + radioname + '"]:checked').value;
+                            }
                             // var radios = document.getElementsByName("radioWrapper" + i + j);
                             // for (let k = 0; k < radios.length; k++){
                             //     if (radios[i].checked){
@@ -154,7 +156,9 @@ jQuery(document).ready(function () {
                             // }
                         }else if(json_to_return.message[i].task[j].mode === "multiple"){
                             var checkboxname = "checkboxWrapper" + i + j;
-                            json_to_return.message[i].task[j].label = document.querySelector('input[name="' + checkboxname + '"]:checked').value;
+                            var returnArray = $("input:checkbox[name=" + checkboxname + "]:checked").map(function(){return $(this).val()}).get();
+                            // json_to_return.message[i].task[j].label = document.querySelector('input[name="' + checkboxname + '"]:checked').value;
+                            json_to_return.message[i].task[j].label = returnArray;
                         }else if(json_to_return.message[i].task[j].mode === "open"){
                             var selectedname = "#selectedwrapper" + i + j;
                             json_to_return.message[i].task[j].label = $(selectedname).val();
