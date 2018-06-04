@@ -6,7 +6,7 @@ jQuery(document).ready(function () {
         success: function (json){
             var json_to_return;
         for (let i = 0; i < json.message.length; i++){
-            json_to_return = json;
+            json_to_return = json.stringify();
             jsonObject = json.message;
             jsdata = jsonObject[i];
             jsdataTask=jsdata.task;
@@ -140,6 +140,7 @@ jQuery(document).ready(function () {
         }
 
             $('button#submit_result').on('click', function() {
+                alert(json_to_return);
                 for (let i = 0; i < json_to_return.message.length; i++){
                     for(let j = 0; j<json_to_return.message[i].task.length; j++){
                         if(json_to_return.message[i].task[j].mode === "single"){
