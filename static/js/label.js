@@ -202,6 +202,8 @@ jQuery(document).ready(function () {
             }
             // $('button#submit_result').on('click', gatherValues())
             // $('button#five_more').on('click', gatherValues(), queryAgain());
+            $( "#submit_result" ).click(gatherValues());
+            $( "#five_more" ).click(gatherValues(), queryAgain());
         }
     });
 });
