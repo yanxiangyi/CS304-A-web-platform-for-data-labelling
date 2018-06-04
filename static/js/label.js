@@ -6,7 +6,7 @@ jQuery(document).ready(function () {
         success: function (json){
             var json_to_return;
         for (let i = 0; i < json.message.length; i++){
-            json_to_return = json.stringify();
+            json_to_return = json;
             jsonObject = json.message;
             jsdata = jsonObject[i];
             jsdataTask=jsdata.task;
