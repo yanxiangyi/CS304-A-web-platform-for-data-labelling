@@ -1,5 +1,5 @@
 // var json_to_return;
-jQuery(document).onload(function () {
+jQuery(document).ready(function () {
     $.ajax({
         type: 'GET',
         url: 'http://47.106.34.103:5000/data',
