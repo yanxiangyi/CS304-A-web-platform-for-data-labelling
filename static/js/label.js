@@ -1,4 +1,4 @@
-var json_to_return = null;
+var json_to_return;
 jQuery(document).ready(function () {
     $.ajax({
         type: 'GET',
