@@ -88,6 +88,9 @@ jQuery(document).ready(function () {
                         radioWrapper.setAttribute("name", "radioWrapper" + i + j);
                         radioWrapper.setAttribute("type", "radio");
                         radioWrapper.setAttribute("value", jsdataTask[j].choices[k]);
+                        if(jsdataTask[j].choices[k] === jsdataTask[j].label){
+                            radioWrapper.setAttribute("checked", "checked");
+                        }
                         document.getElementById("labelWrapper" + i + j + k).appendChild(radioWrapper);
                         document.getElementById("labelWrapper" + i + j + k).appendChild(document.createTextNode(jsdataTask[j].choices[k]));
                         document.getElementById("labelWrapper" + i + j + k).appendChild(document.createElement("span"));       
