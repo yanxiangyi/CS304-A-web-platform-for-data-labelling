@@ -86,7 +86,7 @@ jQuery(document).ready(function () {
                         radioWrapper.setAttribute("id", "radioWrapper" + i + j + k);
                         radioWrapper.setAttribute("name", "radioWrapper" + i + j);
                         radioWrapper.setAttribute("type", "radio");
-                        radioWrapper.setAttribute("value", k);
+                        radioWrapper.setAttribute("value", jsdataTask[j].choices[k]);
                         document.getElementById("labelWrapper" + i + j + k).appendChild(radioWrapper);
                         document.getElementById("labelWrapper" + i + j + k).appendChild(document.createTextNode(jsdataTask[j].choices[k]));
                         document.getElementById("labelWrapper" + i + j + k).appendChild(document.createElement("span"));       
@@ -108,7 +108,7 @@ jQuery(document).ready(function () {
                         checkboxWrapper.setAttribute("id", "checkboxWrapper" + i + j + k);
                         checkboxWrapper.setAttribute("name", "checkboxWrapper" + i + j);
                         checkboxWrapper.setAttribute("type", "checkbox");
-                        // checkboxWrapper.setAttribute("value", k);
+                        checkboxWrapper.setAttribute("value", jsdataTask[j].choices[k]);
                         document.getElementById("labelWrapper" + i + j + k).appendChild(checkboxWrapper);
                         document.getElementById("labelWrapper" + i + j + k).appendChild(document.createTextNode(jsdataTask[j].choices[k]));
                         document.getElementById("labelWrapper" + i + j + k).appendChild(document.createElement("span"));       
@@ -140,7 +140,6 @@ jQuery(document).ready(function () {
         }
 
             $('button#submit_result').on('click', function() {
-                alert(json_to_return);
                 for (let i = 0; i < json_to_return.message.length; i++){
                     for(let j = 0; j<json_to_return.message[i].task.length; j++){
                         if(json_to_return.message[i].task[j].mode === "single"){
@@ -162,7 +161,7 @@ jQuery(document).ready(function () {
                         }
                     }
                 }
-                alert(json_to_return.message[0].task[0].label);
+                alert(json_to_return.message[0].task[1].label);
                 // $.ajax({
                 //     type: 'POST',
                 //     url: 'http://47.106.34.103:5000/retrieve',
