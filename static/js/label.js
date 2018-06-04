@@ -5,6 +5,7 @@ jQuery(document).ready(function () {
         url: 'http://47.106.34.103:5000/data',
         success: function (json){
         for (let i = 0; i < json.message.length; i++){
+            json_to_return = json;
             jsonObject = json.message;
             jsdata = jsonObject[i];
             jsdataTask=jsdata.task;
@@ -164,7 +165,7 @@ $('button#submit_result').on('click', function() {
     //     type: 'POST',
     //     url: 'http://47.106.34.103:5000/retrieve',
     //     data:  JSON.stringify (json_to_return), //'{"name":"jonas"}',
-    //     success: function(data) { 
+    //     success: function(data) {
     //         alert("Thank you!");
     //         window.location.href = "choose.html";
     //     },
