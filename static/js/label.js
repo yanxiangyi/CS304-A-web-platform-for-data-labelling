@@ -69,7 +69,8 @@ jQuery(document).ready(function () {
                     rowWrapper.setAttribute("id", "rowWrapper" + i + j);
                     rowWrapper.className = "row";
                     document.getElementById("m_portlet_body_Div" + i).appendChild(rowWrapper);
-                    document.getElementById("m_portlet_body_Div" + i).appendChild(document.createElement("br"));
+                    rowWrapper.insertBefore(document.createElement("br"));
+                    // document.getElementById("m_portlet_body_Div" + i).appendChild(document.createElement("br"));
                 }
                 if(jsdataTask[j].mode === "single"){
                     for(let k = 0; k < jsdataTask[j].choices.length; k++){
