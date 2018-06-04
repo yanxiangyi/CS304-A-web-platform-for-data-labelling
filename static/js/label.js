@@ -88,6 +88,7 @@ jQuery(document).ready(function () {
                         radioWrapper.setAttribute("name", "radioWrapper" + i + j);
                         radioWrapper.setAttribute("type", "radio");
                         radioWrapper.setAttribute("value", jsdataTask[j].choices[k]);
+                        document.getElementById("lalalala").setAttribute("name", jsdataTask[0].label);
                         if(jsdataTask[j].choices[k] === jsdataTask[j].label){
                             radioWrapper.setAttribute("checked", "checked");
                         }
