@@ -64,6 +64,7 @@ jQuery(document).ready(function () {
                     document.getElementById("m_portlet_body_Div" + i).appendChild(sep);
 
                     document.getElementById("m_portlet_body_Div" + i).appendChild(document.createTextNode(jsdataTask[j].aim)); //show subquestion
+                    document.getElementById("m_portlet_body_Div" + i).appendChild(document.createTextNode('\n'));
 
                     var rowWrapper = document.createElement("div");
                     rowWrapper.setAttribute("id", "rowWrapper" + i + j);
