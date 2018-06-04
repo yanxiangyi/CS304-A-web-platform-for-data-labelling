@@ -154,9 +154,11 @@ jQuery(document).ready(function () {
                             //     }
                             // }
                         }else if(json_to_return.message[i].task[j].mode === "multiple"){
-                            json_to_return.message[i].task[j].label = document.querySelector('input[name="checkboxWrapper"' + i + j +']:checked').value;
+                            var checkboxname = "checkboxWrapper" + i + j;
+                            json_to_return.message[i].task[j].label = document.querySelector('input[name="' + checkboxname + '"]:checked').value;
                         }else if(json_to_return.message[i].task[j].mode === "open"){
-                            json_to_return.message[i].task[j].label = $("#selectedwrapper" + i + j).val();
+                            var selectedname = "#selectedwrapper" + i + j;
+                            json_to_return.message[i].task[j].label = $(selectedname).val();
                         }
                     }
                 }
