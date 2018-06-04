@@ -58,17 +58,18 @@ jQuery(document).ready(function () {
             document.getElementById("m_portlet_bordered_semi_Div" + i).appendChild(m_portlet_body_Div); 
 
             for(let j = 0; j < jsdataTask.length; j++){//the length of sub-questions in a question
-                var sep = document.createElement("div"); 
-                sep.className="m-separator m-separator--dashed m-separator--lg"
-                document.getElementById("m_portlet_body_Div" + i).appendChild(sep);
+                if((jsdataTask[j].mode !== "open" || jsdataTask[j].label.length > 0)) {
+                    var sep = document.createElement("div");
+                    sep.className = "m-separator m-separator--dashed m-separator--lg"
+                    document.getElementById("m_portlet_body_Div" + i).appendChild(sep);
 
-                document.getElementById("m_portlet_body_Div" + i).appendChild(document.createTextNode(jsdataTask[j].aim)); //show subquestion
+                    document.getElementById("m_portlet_body_Div" + i).appendChild(document.createTextNode(jsdataTask[j].aim)); //show subquestion
 
-                var rowWrapper = document.createElement("div"); 
-                rowWrapper.setAttribute("id", "rowWrapper" + i + j);
-                rowWrapper.className="row";
-                document.getElementById("m_portlet_body_Div" + i).appendChild(rowWrapper);
-
+                    var rowWrapper = document.createElement("div");
+                    rowWrapper.setAttribute("id", "rowWrapper" + i + j);
+                    rowWrapper.className = "row";
+                    document.getElementById("m_portlet_body_Div" + i).appendChild(rowWrapper);
+                }
                 if(jsdataTask[j].mode === "single"){
                     for(let k = 0; k < jsdataTask[j].choices.length; k++){
                         var optionWrapper = document.createElement("div"); 
@@ -114,7 +115,6 @@ jQuery(document).ready(function () {
                         document.getElementById("labelWrapper" + i + j + k).appendChild(document.createElement("span"));       
                     }                   
                 }else if(jsdataTask[j].mode === "open" && jsdataTask[j].label.length > 0){
-                    alert(jsdataTask[j].label[0]);
                   var col_sm_12_Div = document.createElement("div"); 
                   col_sm_12_Div.setAttribute("id", "col_sm_12_Div" + i + j);
                   col_sm_12_Div.className = "col-lg-4 col-md-9 col-sm-12";
