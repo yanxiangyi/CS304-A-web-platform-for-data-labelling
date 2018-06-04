@@ -5,9 +5,11 @@ jQuery(document).ready(function () {
         url: 'http://47.106.34.103:5000/data',
         success: function (json){
             var json_to_return;
-        for (let i = 0; i < json.message.length; i++){
+            var ds_name;
+            for (let i = 0; i < json.message.length; i++){
             json_to_return = json;
             jsonObject = json.message;
+            ds_name = jsonObject.projectName;
             jsdata = jsonObject[i];
             jsdataTask=jsdata.task;
 
@@ -63,7 +65,7 @@ jQuery(document).ready(function () {
                     sep.className = "m-separator m-separator--dashed m-separator--lg"
                     document.getElementById("m_portlet_body_Div" + i).appendChild(sep);
 
-                    document.getElementById("m_portlet_body_Div" + i).appendChild(document.createTextNode(jsdataTask[j].aim + '\n')); //show subquestion
+                    document.getElementById("m_portlet_body_Div" + i).appendChild(document.createTextNode(jsdataTask[j].aim)); //show subquestion
 
                     var rowWrapper = document.createElement("div");
                     rowWrapper.setAttribute("id", "rowWrapper" + i + j);
@@ -154,7 +156,7 @@ jQuery(document).ready(function () {
             }    
         }
 
-            $('button#submit_result').on('click', function() {
+            function gatherValues() {
                 for (let i = 0; i < json_to_return.message.length; i++){
                     for(let j = 0; j<json_to_return.message[i].task.length; j++){
                         if(json_to_return.message[i].task[j].mode === "single"){
@@ -192,7 +194,14 @@ jQuery(document).ready(function () {
                 //     contentType: "application/json",
                 //     dataType: 'json'
                 // });
-            });
-    }
+            }
+
+            function queryAgain(){
+                fetch_address = "http://47.106.34.103:5000/choose/" + ds_name;
+                window.location.href = fetch_address;
+            }
+            $('button#submit_result').on('click', gatherValues())
+            $('button#five_more').on('click', gatherValues(), queryAgain());
+        }
     });
 });
