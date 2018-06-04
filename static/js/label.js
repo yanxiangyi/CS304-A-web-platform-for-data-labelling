@@ -64,12 +64,12 @@ jQuery(document).ready(function () {
                     document.getElementById("m_portlet_body_Div" + i).appendChild(sep);
 
                     document.getElementById("m_portlet_body_Div" + i).appendChild(document.createTextNode(jsdataTask[j].aim)); //show subquestion
-                    document.getElementById("m_portlet_body_Div" + i).appendChild(document.createElement("br"));
 
                     var rowWrapper = document.createElement("div");
                     rowWrapper.setAttribute("id", "rowWrapper" + i + j);
                     rowWrapper.className = "row";
                     document.getElementById("m_portlet_body_Div" + i).appendChild(rowWrapper);
+                    document.getElementById("m_portlet_body_Div" + i).appendChild(document.createElement("br"));
                 }
                 if(jsdataTask[j].mode === "single"){
                     for(let k = 0; k < jsdataTask[j].choices.length; k++){
