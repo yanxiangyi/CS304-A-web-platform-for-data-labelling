@@ -68,9 +68,9 @@ jQuery(document).ready(function () {
                     var rowWrapper = document.createElement("div");
                     rowWrapper.setAttribute("id", "rowWrapper" + i + j);
                     rowWrapper.className = "row";
+                    document.getElementById("m_portlet_body_Div" + i).appendChild(document.createElement("br"));
                     document.getElementById("m_portlet_body_Div" + i).appendChild(rowWrapper);
-                    rowWrapper.insertBefore(document.createElement("br"), rowWrapper);
-                    // document.getElementById("m_portlet_body_Div" + i).appendChild(document.createElement("br"));
+                    // rowWrapper.insertBefore(document.createElement("br"), rowWrapper);
                 }
                 if(jsdataTask[j].mode === "single"){
                     for(let k = 0; k < jsdataTask[j].choices.length; k++){
