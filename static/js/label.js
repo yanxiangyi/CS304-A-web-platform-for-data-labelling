@@ -1,9 +1,10 @@
-var json_to_return;
+// var json_to_return;
 jQuery(document).ready(function () {
     $.ajax({
         type: 'GET',
         url: 'http://47.106.34.103:5000/data',
         success: function (json){
+            var json_to_return;
         for (let i = 0; i < json.message.length; i++){
             json_to_return = json;
             jsonObject = json.message;
@@ -137,39 +138,39 @@ jQuery(document).ready(function () {
                 
             }    
         }
+
+            $('button#submit_result').on('click', function() {
+                for (let i = 0; i < json_to_return.message.length; i++){
+                    for(let j = 0; j<json_to_return.message[i].task.length; j++){
+                        if(json_to_return.message[i].task[j].mode === "single"){
+                            json_to_return.message[i].task[j].label = document.querySelector('input[name="radioWrapper" + i + j]:checked').value;
+                            // var radios = document.getElementsByName("radioWrapper" + i + j);
+                            // for (let k = 0; k < radios.length; k++){
+                            //     if (radios[i].checked){
+                            //         json_to_return.message[i].task[j].label = radios[i].value;
+                            //         break;
+                            //     }
+                            // }
+                        }else if(json_to_return.message[i].task[j].mode === "multiple"){
+                            json_to_return.message[i].task[j].label = document.querySelector('input[name="checkboxWrapper" + i + j]:checked').value;
+                        }else if(json_to_return.message[i].task[j].mode === "open"){
+                            json_to_return.message[i].task[j].label = $("#selectedwrapper" + i + j).val();
+                        }
+                    }
+                }
+                alert(json_to_return.message[0].task[0].label);
+                // $.ajax({
+                //     type: 'POST',
+                //     url: 'http://47.106.34.103:5000/retrieve',
+                //     data:  JSON.stringify (json_to_return), //'{"name":"jonas"}',
+                //     success: function(data) {
+                //         alert("Thank you!");
+                //         window.location.href = "choose.html";
+                //     },
+                //     contentType: "application/json",
+                //     dataType: 'json'
+                // });
+            });
     }
     });
-});
-
-$('button#submit_result').on('click', function() {
-    for (let i = 0; i < json_to_return.message.length; i++){
-        for(let j = 0; j<json_to_return.message[i].task.length; j++){
-            if(json_to_return.message[i].task[j].mode === "single"){
-                json_to_return.message[i].task[j].label = document.querySelector('input[name="radioWrapper" + i + j]:checked').value;
-                // var radios = document.getElementsByName("radioWrapper" + i + j);
-                // for (let k = 0; k < radios.length; k++){
-                //     if (radios[i].checked){
-                //         json_to_return.message[i].task[j].label = radios[i].value;
-                //         break;
-                //     }
-                // }
-            }else if(json_to_return.message[i].task[j].mode === "multiple"){
-                json_to_return.message[i].task[j].label = document.querySelector('input[name="checkboxWrapper" + i + j]:checked').value;
-            }else if(json_to_return.message[i].task[j].mode === "open"){
-                json_to_return.message[i].task[j].label = $("#selectedwrapper" + i + j).val();
-            }
-        }
-    }
-    alert(json_to_return.message[0].task[0].label);
-    // $.ajax({
-    //     type: 'POST',
-    //     url: 'http://47.106.34.103:5000/retrieve',
-    //     data:  JSON.stringify (json_to_return), //'{"name":"jonas"}',
-    //     success: function(data) {
-    //         alert("Thank you!");
-    //         window.location.href = "choose.html";
-    //     },
-    //     contentType: "application/json",
-    //     dataType: 'json'
-    // });
 });
