@@ -114,6 +114,7 @@ jQuery(document).ready(function () {
                         document.getElementById("labelWrapper" + i + j + k).appendChild(document.createElement("span"));       
                     }                   
                 }else if(jsdataTask[j].mode === "open" && jsdataTask[j].label.length > 0){
+                    alert(jsdataTask[j].label[0]);
                   var col_sm_12_Div = document.createElement("div"); 
                   col_sm_12_Div.setAttribute("id", "col_sm_12_Div" + i + j);
                   col_sm_12_Div.className = "col-lg-4 col-md-9 col-sm-12";
