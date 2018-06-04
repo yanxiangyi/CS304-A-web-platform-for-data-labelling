@@ -1,5 +1,5 @@
 // var json_to_return;
-jQuery(document).ready(function () {
+jQuery(document).onload(function () {
     $.ajax({
         type: 'GET',
         url: 'http://47.106.34.103:5000/data',
@@ -88,9 +88,9 @@ jQuery(document).ready(function () {
                         radioWrapper.setAttribute("name", "radioWrapper" + i + j);
                         radioWrapper.setAttribute("type", "radio");
                         radioWrapper.setAttribute("value", jsdataTask[j].choices[k]);
-                        document.getElementById("lalalala").setAttribute("name", jsdataTask[0].label);
+                        // document.getElementById("lalalala").setAttribute("name", jsdataTask[0].label);
                         if(jsdataTask[j].choices[k] === jsdataTask[j].label){
-                            radioWrapper.setAttribute("checked", "checked");
+                            radioWrapper.checked = true;
                         }
                         document.getElementById("labelWrapper" + i + j + k).appendChild(radioWrapper);
                         document.getElementById("labelWrapper" + i + j + k).appendChild(document.createTextNode(jsdataTask[j].choices[k]));
@@ -114,6 +114,11 @@ jQuery(document).ready(function () {
                         checkboxWrapper.setAttribute("name", "checkboxWrapper" + i + j);
                         checkboxWrapper.setAttribute("type", "checkbox");
                         checkboxWrapper.setAttribute("value", jsdataTask[j].choices[k]);
+                        for(l in jsdataTask[j].label){
+                            if(l === jsdataTask[j].choices[k]){
+                                checkboxWrapper.checked=true;
+                            }
+                        }
                         document.getElementById("labelWrapper" + i + j + k).appendChild(checkboxWrapper);
                         document.getElementById("labelWrapper" + i + j + k).appendChild(document.createTextNode(jsdataTask[j].choices[k]));
                         document.getElementById("labelWrapper" + i + j + k).appendChild(document.createElement("span"));       
@@ -135,7 +140,8 @@ jQuery(document).ready(function () {
                     var singleOption = document.createElement("option");
                     singleOption.setAttribute("id", "singleOption" + i + j + k); 
                     singleOption.setAttribute("value", jsdataTask[j].label[k]);
-                    singleOption.setAttribute("selected", "selected");
+                    // singleOption.setAttribute("selected", "selected");
+                    singleOption.selected=true;
                     document.getElementById("selectedWrapper" + i + j).appendChild(singleOption);
                     document.getElementById("singleOption" + i + j + k).appendChild(document.createTextNode(jsdataTask[j].label[k]));
                   }            
