@@ -1,14 +1,14 @@
 var json_to_return;
 var ds_name;
-jQuery(document).ready(function () {
+jQuery(document).ready(function() {
     $.ajax({
         type: 'GET',
         url: 'http://47.106.34.103:5000/data',
         success: function (json){
-            window.json_to_return = json;
-            window.ds_name = json.message.projectName;
+            json_to_return = json;
+            ds_name = json.message.projectName;
             for (let i = 0; i < json.message.length; i++){
-            // window.json_to_return = json;
+            // json_to_return = json;
             jsonObject = json.message;
 
             jsdata = jsonObject[i];
@@ -161,12 +161,12 @@ jQuery(document).ready(function () {
 });
 
 function gatherValues() {
-    for (let i = 0; i < window.json_to_return.message.length; i++){
-        for(let j = 0; j<window.json_to_return.message[i].task.length; j++){
-            if(window.json_to_return.message[i].task[j].mode === "single"){
+    for (let i = 0; i < json_to_return.message.length; i++){
+        for(let j = 0; j<json_to_return.message[i].task.length; j++){
+            if(json_to_return.message[i].task[j].mode === "single"){
                 var radioname = "radioWrapper" + i + j;
                 if ($("input[name=" + radioname + "]:checked").length > 0){
-                    window.json_to_return.message[i].task[j].label = document.querySelector('input[name="' + radioname + '"]:checked').value;
+                    json_to_return.message[i].task[j].label = document.querySelector('input[name="' + radioname + '"]:checked').value;
                 }
                 // var radios = document.getElementsByName("radioWrapper" + i + j);
                 // for (let k = 0; k < radios.length; k++){
@@ -175,18 +175,18 @@ function gatherValues() {
                 //         break;
                 //     }
                 // }
-            }else if(window.json_to_return.message[i].task[j].mode === "multiple"){
+            }else if(json_to_return.message[i].task[j].mode === "multiple"){
                 var checkboxname = "checkboxWrapper" + i + j;
                 var returnArray = $("input:checkbox[name=" + checkboxname + "]:checked").map(function(){return $(this).val()}).get();
                 // json_to_return.message[i].task[j].label = document.querySelector('input[name="' + checkboxname + '"]:checked').value;
-                window.json_to_return.message[i].task[j].label = returnArray;
-            }else if(window.json_to_return.message[i].task[j].mode === "open"){
+                json_to_return.message[i].task[j].label = returnArray;
+            }else if(json_to_return.message[i].task[j].mode === "open"){
                 var selectedname = "#selectedwrapper" + i + j;
-                window.json_to_return.message[i].task[j].label = $(selectedname).val();
+                json_to_return.message[i].task[j].label = $(selectedname).val();
             }
         }
     }
-    alert(window.json_to_return.message[0].task[1].label);
+    alert(json_to_return.message[0].task[1].label);
     // $.ajax({
     //     type: 'POST',
     //     url: 'http://47.106.34.103:5000/retrieve',
@@ -201,7 +201,7 @@ function gatherValues() {
 }
 
 function queryAgain(){
-    fetch_address = "http://47.106.34.103:5000/choose/" + window.ds_name;
+    fetch_address = "http://47.106.34.103:5000/choose/" + ds_name;
     window.location.href = fetch_address;
 }
 // $('button#submit_result').on('click', gatherValues())
