@@ -1,6 +1,6 @@
-// var json_to_return;
-// var ds_name;
 jQuery(document).ready(function() {
+    var json_to_return;
+    var ds_name;
     $.ajax({
         type: 'GET',
         url: 'http://47.106.34.103:5000/data',
@@ -158,53 +158,52 @@ jQuery(document).ready(function() {
         }
         }
     });
-});
 
-function gatherValues() {
-    for (let i = 0; i < json_to_return.message.length; i++){
-        for(let j = 0; j<json_to_return.message[i].task.length; j++){
-            if(json_to_return.message[i].task[j].mode === "single"){
-                var radioname = "radioWrapper" + i + j;
-                if ($("input[name=" + radioname + "]:checked").length > 0){
-                    json_to_return.message[i].task[j].label = document.querySelector('input[name="' + radioname + '"]:checked').value;
+    function gatherValues() {
+        for (let i = 0; i < json_to_return.message.length; i++){
+            for(let j = 0; j<json_to_return.message[i].task.length; j++){
+                if(json_to_return.message[i].task[j].mode === "single"){
+                    var radioname = "radioWrapper" + i + j;
+                    if ($("input[name=" + radioname + "]:checked").length > 0){
+                        json_to_return.message[i].task[j].label = document.querySelector('input[name="' + radioname + '"]:checked').value;
+                    }
+                    // var radios = document.getElementsByName("radioWrapper" + i + j);
+                    // for (let k = 0; k < radios.length; k++){
+                    //     if (radios[i].checked){
+                    //         json_to_return.message[i].task[j].label = radios[i].value;
+                    //         break;
+                    //     }
+                    // }
+                }else if(json_to_return.message[i].task[j].mode === "multiple"){
+                    var checkboxname = "checkboxWrapper" + i + j;
+                    var returnArray = $("input:checkbox[name=" + checkboxname + "]:checked").map(function(){return $(this).val()}).get();
+                    // json_to_return.message[i].task[j].label = document.querySelector('input[name="' + checkboxname + '"]:checked').value;
+                    json_to_return.message[i].task[j].label = returnArray;
+                }else if(json_to_return.message[i].task[j].mode === "open"){
+                    var selectedname = "#selectedwrapper" + i + j;
+                    json_to_return.message[i].task[j].label = $(selectedname).val();
                 }
-                // var radios = document.getElementsByName("radioWrapper" + i + j);
-                // for (let k = 0; k < radios.length; k++){
-                //     if (radios[i].checked){
-                //         json_to_return.message[i].task[j].label = radios[i].value;
-                //         break;
-                //     }
-                // }
-            }else if(json_to_return.message[i].task[j].mode === "multiple"){
-                var checkboxname = "checkboxWrapper" + i + j;
-                var returnArray = $("input:checkbox[name=" + checkboxname + "]:checked").map(function(){return $(this).val()}).get();
-                // json_to_return.message[i].task[j].label = document.querySelector('input[name="' + checkboxname + '"]:checked').value;
-                json_to_return.message[i].task[j].label = returnArray;
-            }else if(json_to_return.message[i].task[j].mode === "open"){
-                var selectedname = "#selectedwrapper" + i + j;
-                json_to_return.message[i].task[j].label = $(selectedname).val();
             }
         }
+        alert(json_to_return.message[0].task[1].label);
+        // $.ajax({
+        //     type: 'POST',
+        //     url: 'http://47.106.34.103:5000/retrieve',
+        //     data:  JSON.stringify (json_to_return), //'{"name":"jonas"}',
+        //     success: function(data) {
+        //         alert("Thank you!");
+        //         window.location.href = "choose.html";
+        //     },
+        //     contentType: "application/json",
+        //     dataType: 'json'
+        // });
     }
-    alert(json_to_return.message[0].task[1].label);
-    // $.ajax({
-    //     type: 'POST',
-    //     url: 'http://47.106.34.103:5000/retrieve',
-    //     data:  JSON.stringify (json_to_return), //'{"name":"jonas"}',
-    //     success: function(data) {
-    //         alert("Thank you!");
-    //         window.location.href = "choose.html";
-    //     },
-    //     contentType: "application/json",
-    //     dataType: 'json'
-    // });
-}
-
-function queryAgain(){
-    fetch_address = "http://47.106.34.103:5000/choose/" + ds_name;
-    window.location.href = fetch_address;
-}
+    function queryAgain(){
+        fetch_address = "http://47.106.34.103:5000/choose/" + ds_name;
+        window.location.href = fetch_address;
+    }
 // $('button#submit_result').on('click', gatherValues())
 // $('button#five_more').on('click', gatherValues(), queryAgain());
-$( "#submit_result" ).click(gatherValues());
-$( "#five_more" ).click(gatherValues(), queryAgain());
+    $( "#submit_result" ).click(gatherValues());
+    $( "#five_more" ).click(gatherValues(), queryAgain());
+});
