@@ -210,7 +210,7 @@ function queryAgain(){
     fetch_address = "http://47.106.34.103:5000/choose/" + ds_name;
     window.location.href = fetch_address;
 }
-$('button#submit_result').on('click', gatherValues())
-$('button#five_more').on('click', gatherValues(), queryAgain());
+// $('button#submit_result').on('click', gatherValues())
+// $('button#five_more').on('click', gatherValues(), queryAgain());
 //     $( "#submit_result" ).click(gatherValues());
 //     $( "#five_more" ).click(gatherValues(), queryAgain());
