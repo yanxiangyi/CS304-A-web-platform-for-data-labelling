@@ -164,7 +164,9 @@ jQuery(document).ready(function() {
 });
 
 function gatherValues() {
-    json_to_return = JSON.parse(document.getElementById("jsonstring").getAttribute("name"));
+    t = document.getElementById("jsonstring").getAttribute("name");
+    console.log(t);
+    json_to_return = JSON.parse(t);
     for (let i = 0; i < json_to_return.message.length; i++){
         for(let j = 0; j<json_to_return.message[i].task.length; j++){
             if(json_to_return.message[i].task[j].mode === "single"){
