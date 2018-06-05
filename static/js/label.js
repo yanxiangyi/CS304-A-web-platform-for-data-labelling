@@ -7,7 +7,7 @@ jQuery(document).ready(function() {
         url: 'http://47.106.34.103:5000/data',
         success: function (json){
             document.getElementById("jsonstring").setAttribute("name", JSON.stringify(json));
-            document.getElementById("projname").setAttribute("name", json.message.projectName);
+            document.getElementById("projname").setAttribute("name", json.message[0].projectName);
             // json_to_return = JSON.stringify(json);
             // ds_name = json.message.projectName;
             for (let i = 0; i < json.message.length; i++){
@@ -164,7 +164,7 @@ jQuery(document).ready(function() {
 });
 
 function gatherValues() {
-    json_to_return = JSON.parse(document.getElementById("jsonstring").name);
+    json_to_return = JSON.parse(document.getElementById("jsonstring").getAttribute("name"));
     for (let i = 0; i < json_to_return.message.length; i++){
         for(let j = 0; j<json_to_return.message[i].task.length; j++){
             if(json_to_return.message[i].task[j].mode === "single"){
@@ -204,7 +204,7 @@ function gatherValues() {
     // });
 }
 function queryAgain(){
-    ds_name = document.getElementById("projname").name;
+    ds_name = document.getElementById("projname").getAttribute("name");
     fetch_address = "http://47.106.34.103:5000/choose/" + ds_name;
     window.location.href = fetch_address;
 }
