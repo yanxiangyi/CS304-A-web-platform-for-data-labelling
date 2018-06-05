@@ -76,8 +76,10 @@ jQuery(document).ready(function() {
                     rowWrapper.className = "row";
                     // document.getElementById("m_portlet_body_Div" + i).appendChild(document.createElement("br"));
                     document.getElementById("m_portlet_body_Div" + i).appendChild(rowWrapper);
+                    rowWrapper.appendChild(document.createElement("br"));
                     // rowWrapper.insertBefore(document.createElement("br"), rowWrapper);
                 }
+
                 if(jsdataTask[j].mode === "single"){
                     for(let k = 0; k < jsdataTask[j].choices.length; k++){
                         var optionWrapper = document.createElement("div"); 
