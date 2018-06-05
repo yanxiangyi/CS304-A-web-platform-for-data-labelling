@@ -6,6 +6,10 @@ jQuery(document).ready(function() {
         url: 'http://47.106.34.103:5000/data',
         success: function (json){
             json_to_return = json;
+            console.log(json);
+            console.log(json_to_return);
+            console.log(typeof (json));
+            console.log(typeof(json_to_return));
             ds_name = json.message.projectName;
             for (let i = 0; i < json.message.length; i++){
             // json_to_return = json;
