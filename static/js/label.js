@@ -76,7 +76,7 @@ jQuery(document).ready(function() {
                     rowWrapper.className = "row";
                     // document.getElementById("m_portlet_body_Div" + i).appendChild(document.createElement("br"));
                     document.getElementById("m_portlet_body_Div" + i).appendChild(rowWrapper);
-                    rowWrapper.appendChild(document.createElement("p").appendChild(document.createElement("br")));
+                    
                 }
 
                 if(jsdataTask[j].mode === "single"){
