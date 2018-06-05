@@ -6,7 +6,7 @@ jQuery(document).ready(function() {
         type: 'GET',
         url: 'http://47.106.34.103:5000/data',
         success: function (json){
-            window.json_to_return = json;
+            this.json_to_return = json;
             console.log(json);
             console.log(json_to_return);
             console.log(typeof (json));
