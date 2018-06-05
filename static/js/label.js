@@ -165,7 +165,7 @@ jQuery(document).ready(function() {
 
 function gatherValues() {
     t = document.getElementById("jsonstring").getAttribute("name");
-    console.log(t);
+    alert(t);
     json_to_return = JSON.parse(t);
     for (let i = 0; i < json_to_return.message.length; i++){
         for(let j = 0; j<json_to_return.message[i].task.length; j++){
