@@ -1,4 +1,5 @@
-// var json_to_return;
+var json_to_return;
+var ds_name;
 jQuery(document).ready(function () {
     $.ajax({
         type: 'GET',
