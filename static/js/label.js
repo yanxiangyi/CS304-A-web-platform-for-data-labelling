@@ -172,13 +172,6 @@ function gatherValues() {
                 if ($("input[name=" + radioname + "]:checked").length > 0){
                     json_to_return.message[i].task[j].label = document.querySelector('input[name="' + radioname + '"]:checked').value;
                 }
-                // var radios = document.getElementsByName("radioWrapper" + i + j);
-                // for (let k = 0; k < radios.length; k++){
-                //     if (radios[i].checked){
-                //         json_to_return.message[i].task[j].label = radios[i].value;
-                //         break;
-                //     }
-                // }
             }else if(json_to_return.message[i].task[j].mode === "multiple"){
                 var checkboxname = "checkboxWrapper" + i + j;
                 var returnArray = $("input:checkbox[name=" + checkboxname + "]:checked").map(function(){return $(this).val()}).get();
@@ -190,18 +183,18 @@ function gatherValues() {
             }
         }
     }
-    alert(JSON.stringify(json_to_return));
-    // $.ajax({
-    //     type: 'POST',
-    //     url: 'http://47.106.34.103:5000/retrieve',
-    //     data:  JSON.stringify (json_to_return), //'{"name":"jonas"}',
-    //     success: function(data) {
-    //         alert("Thank you!");
-    //         window.location.href = "choose.html";
-    //     },
-    //     contentType: "application/json",
-    //     dataType: 'json'
-    // });
+    // alert(JSON.stringify(json_to_return));
+    $.ajax({
+        type: 'POST',
+        url: 'http://47.106.34.103:5000/retrieve',
+        data: json_to_return, //JSON.stringify (json_to_return),
+        success: function() {
+            alert("Thank you!");
+            // window.location.href = "choose.html";
+        },
+        contentType: "application/json",
+        dataType: 'json'
+    });
 }
 function queryAgain(){
     ds_name = document.getElementById("projname").getAttribute("name");
