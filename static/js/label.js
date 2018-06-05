@@ -164,9 +164,7 @@ jQuery(document).ready(function() {
 });
 
 function gatherValues() {
-    t = document.getElementById("jsonstring").getAttribute("name");
-    alert(t);
-    json_to_return = JSON.parse(t);
+    json_to_return = JSON.parse(document.getElementById("jsonstring").getAttribute("name"));
     for (let i = 0; i < json_to_return.message.length; i++){
         for(let j = 0; j<json_to_return.message[i].task.length; j++){
             if(json_to_return.message[i].task[j].mode === "single"){
@@ -192,7 +190,7 @@ function gatherValues() {
             }
         }
     }
-    alert(json_to_return.message[0].task[1].label);
+    alert(JSON.stringify(json_to_return));
     // $.ajax({
     //     type: 'POST',
     //     url: 'http://47.106.34.103:5000/retrieve',
@@ -210,7 +208,3 @@ function queryAgain(){
     fetch_address = "http://47.106.34.103:5000/choose/" + ds_name;
     window.location.href = fetch_address;
 }
-// $('button#submit_result').on('click', gatherValues())
-// $('button#five_more').on('click', gatherValues(), queryAgain());
-//     $( "#submit_result" ).click(gatherValues());
-//     $( "#five_more" ).click(gatherValues(), queryAgain());
