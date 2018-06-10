@@ -188,7 +188,7 @@ function gatherValues() {
     $.ajax({
         type: 'POST',
         url: 'http://47.106.34.103:5000/retrieve',
-        data: json_to_return, //JSON.stringify (json_to_return),
+        data: JSON.stringify (json_to_return),
         success: function() {
             alert("Thank you!");
             // window.location.href = "choose.html";
