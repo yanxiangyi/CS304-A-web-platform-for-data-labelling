@@ -126,7 +126,6 @@ var WizardDemo = function () {
         init: function () {
             wizardEl = $('#m_wizard');
             formEl = $('#m_form');
-
             initWizard();
             initValidation();
             initSubmit();

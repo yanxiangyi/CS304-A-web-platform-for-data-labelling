@@ -80,8 +80,6 @@ var Dashboard = function () {
         init: function () {
             supportTickets();
             daterangepickerInit();
-
-
         }
     };
 }();

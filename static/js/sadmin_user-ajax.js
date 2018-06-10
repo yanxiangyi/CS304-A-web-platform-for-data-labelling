@@ -5,10 +5,6 @@ var DatatableRemoteAjax1 = function() {
 
     var daterangepickerInit = function () {
 
-        if ($('#m_dashboard_daterangepicker').length == 0) {
-            return;
-        }
-
         var picker = $('#m_dashboard_daterangepicker');
         var start = moment();
         var end = moment();

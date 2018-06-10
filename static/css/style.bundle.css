@@ -6384,12 +6384,12 @@ a.text-dark:hover, a.text-dark:focus {
 
 .btn-brand {
   color: #fff;
-  background-color: #716aca;
-  border-color: #716aca; }
+  background-color: #3daef4;
+  border-color: #3daef4; }
   .btn-brand:hover {
     color: #fff;
-    background-color: #564ec0;
-    border-color: #4d44bd; }
+    background-color: #0470FF;
+    border-color: #0470FF; }
   .btn-brand:focus, .btn-brand.focus {
     box-shadow: 0 0 0 0.2rem rgba(113, 106, 202, 0.5); }
   .btn-brand.disabled, .btn-brand:disabled {
@@ -8338,7 +8338,7 @@ b, strong {
   font-weight: bold; }
 
 .m--font-brand {
-  color: #716aca !important; }
+  color: #3daef4 !important; }
 
 .m--font-inverse-brand {
   color: #ffffff !important; }
@@ -22483,7 +22483,7 @@ body.m-portlet--fullscreen {
   background-color: transparent; }
 
 .form-control.focus, .form-control:focus {
-  border-color: #716aca;
+  border-color: #3daef4;
   color: #575962;
   -webkit-box-shadow: none ;
   -moz-box-shadow: none ;
@@ -26277,9 +26277,9 @@ body.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown) {
     color: #7b7e8a;
     background: #f9f9fd; }
   .daterangepicker .ranges li.active {
-    background: #716aca;
+    background: #3daef4;
     color: #ffffff;
-    border: 1px solid #716aca; }
+    border: 1px solid #3daef4; }
 
 .bootstrap-timepicker-widget {
   width: 175px; }
