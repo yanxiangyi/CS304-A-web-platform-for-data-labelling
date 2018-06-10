@@ -66,8 +66,6 @@
 
    return the accept rate 
 
-- `get_user_signin_time(self, userid=None, username=None, user_email=None)`
-
 - `insert_user(self, username, user_email, passwd, signin_time=get_timestamp(), credits=0, nb_accept=0, nb_answer=0, nb_examined=0)`
 
   - default `signin_time` is current time
@@ -93,16 +91,6 @@
 
   return all the information of the corresponding admin
 
-- `get_admin_id(self, adminname=None, admin_email=None)`
-
-- `get_admin_name(self, adminid=None, admin_email=None)`
-
-- `get_admin_passwd(self, adminid=None, adminname=None, admin_email=None)`
-
-- `get_admin_access_level(self, adminid=None, adminname=None, admin_email=None)`
-
-  return **1** if normal admin; **2** if super admin
-
 - `insert_admin(self, email_addr, adminname, passwd, access_level=1)`
 
   - default `access_level` is 1, i.e. normal admin
@@ -127,24 +115,6 @@
   return all the information of the corresponding source
   
 - `get_source_id(self, sourcename)`
-
-- `get_source_nb_json`
-
-  return json file count of the source
-
-- `get_source_finished(self, sourcename=None, sourceid=None)`
-
-  return `True` is the source task is finished, otherwise `False`
-
-- `get_source_publisherid(self, sourcename=None, sourceid=None)`
-
-  return the `adminid` of the source's publisher
-
-- `get_source_desc(self, sourcename=None, sourceid=None)`
-
-  return the description of the source
-
-- `get_source_priority(self, sourcename=None, sourceid=None)`
 
 - `insert_source(self, sourcename,finished=0, publisher='NULL', description='', publish_time=get_timestamp(), priority=1)`
 
@@ -176,10 +146,6 @@
 - `get_textdataid(self, data_index, sourceid=None, sourcename=None)`
 
   need both `data_index` and source information to retrieve `dataid`.
-  
-- `get_textdata_datapath(self, data_index, sourceid=None, sourcename=None)`
-
-- `get_textdata_finallabelid(self, data_index, sourceid=None, sourcename=None)`
 
 - `update_final_labelid(self, data_index, labelid, sourceid=None, sourcename=None)`
 
@@ -194,15 +160,7 @@
 
 **Combination of `dataid` and `userid` should be UNIQUE**
 
-- `get_labeldate(self, dataid, userid=None, username=None, user_email=None)`
-
-  need at least one of the value of `userid`, `username` and `user_email` to get the result.
-
-- `get_labelpath(self, dataid, userid=None, username=None, user_email=None)`
-
-- `get_label_content(self, dataid, userid=None, username=None, user_email=None)`
-
-- `get_label_correct(self, dataid, userid=None, username=None, user_email=None)`
+- `get_label_correct(self, dataid, user_email=None)`
   
   - return **0** not determined; **1** correct; **-1** incorrect.
   

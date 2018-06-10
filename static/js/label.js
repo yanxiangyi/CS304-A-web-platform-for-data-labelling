@@ -140,7 +140,7 @@ jQuery(document).ready(function() {
                   col_sm_12_Div.className = "col-lg-4 col-md-9 col-sm-12";
                   document.getElementById("rowWrapper" + i + j).appendChild(col_sm_12_Div);
 
-                  var selectedWrapper = document.createElement("div"); 
+                  var selectedWrapper = document.createElement("select"); 
                   selectedWrapper.setAttribute("id", "selectedWrapper" + i + j);
                   selectedWrapper.setAttribute("name", "selectedWrapper" + i + j);
                   selectedWrapper.setAttribute("multiple", "multiple");
@@ -151,7 +151,6 @@ jQuery(document).ready(function() {
                     var singleOption = document.createElement("option");
                     singleOption.setAttribute("id", "singleOption" + i + j + k); 
                     singleOption.setAttribute("value", jsdataTask[j].label[k]);
-                    // singleOption.setAttribute("selected", "selected");
                     singleOption.selected=true;
                     document.getElementById("selectedWrapper" + i + j).appendChild(singleOption);
                     document.getElementById("singleOption" + i + j + k).appendChild(document.createTextNode(jsdataTask[j].label[k]));
@@ -178,13 +177,17 @@ function gatherValues() {
                 var returnArray = $("input:checkbox[name=" + checkboxname + "]:checked").map(function(){return $(this).val()}).get();
                 // json_to_return.message[i].task[j].label = document.querySelector('input[name="' + checkboxname + '"]:checked').value;
                 json_to_return.message[i].task[j].label = returnArray;
-            }else if(json_to_return.message[i].task[j].mode === "open"){
-                var selectedname = "#selectedwrapper" + i + j;
-                json_to_return.message[i].task[j].label = $(selectedname).val();
+            }else if(json_to_return.message[i].task[j].mode === "open" && json_to_return.message[i].task[j].label.length > 0){
+                var selectedname = "selectedWrapper" + i + j;
+                var e = document.getElementById(selectedname);
+
+                json_to_return.message[i].task[j].label = e.options[e.selectedIndex].value;
+
+                // json_to_return.message[i].task[j].label = $(selectedname).val();
             }
         }
     }
-    // alert(JSON.stringify(json_to_return));
+    alert(JSON.stringify(json_to_return));
     $.ajax({
         type: 'POST',
         url: 'http://47.106.34.103:5000/retrieve',
@@ -212,9 +215,12 @@ function queryAgain(){
                 var returnArray = $("input:checkbox[name=" + checkboxname + "]:checked").map(function(){return $(this).val()}).get();
                 // json_to_return.message[i].task[j].label = document.querySelector('input[name="' + checkboxname + '"]:checked').value;
                 json_to_return.message[i].task[j].label = returnArray;
-            }else if(json_to_return.message[i].task[j].mode === "open"){
-                var selectedname = "#selectedwrapper" + i + j;
-                json_to_return.message[i].task[j].label = $(selectedname).val();
+            }else if(json_to_return.message[i].task[j].mode === "open" && json_to_return.message[i].task[j].label.length > 0){
+                var selectedname = "selectedWrapper" + i + j;
+                var e = document.getElementById(selectedname);
+
+                json_to_return.message[i].task[j].label = e.options[e.selectedIndex].value;
+
             }
         }
     }
