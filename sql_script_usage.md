@@ -104,6 +104,16 @@
 
   return all the information of the corresponding admin
 
+- `get_all_admin(self)`
+    
+   return all the information of all admins
+   
+- `get_admin_passwd(self, admin_email=None)`
+
+- `get_admin_access_level(self, admin_email)`
+
+   return **1** admin, **2** super admin
+   
 - `insert_admin(self, email_addr, adminname, passwd, access_level=1)`
 
   - default `access_level` is 1, i.e. normal admin
