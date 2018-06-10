@@ -141,6 +141,13 @@ class sql_conn:
             return self.get_user_nb_val_tp(userid, username, user_email) / total
         else:
             return 0
+        
+    def set_user_nb_answer(self, user_email, addoffset):
+        # return : **1** success; **0** already exist; **-1** fail
+        nb_answer = self.get_user_nb_answer(user_email = user_email)
+        sql = "UPDATE `se_proj`.`users` SET `nb_answer`={} WHERE `email_address`='{}';".format(nb_answer+addoffset, user_email)
+        print(sql)
+        return self.__insertion(sql)
 
     def get_user_accept_rate(self, userid=None, username=None, user_email=None):
         total = self.get_user_nb_answer(userid, username, user_email)
@@ -379,8 +386,7 @@ class sql_conn:
 
     def insert_label(self, user_email, json_list, save_dir='/home/se2018/label/', label_date=get_timestamp(), correct=0):
         # insert label , save label json file from the same user of the same project
-        #try:
-        if True:
+        try:
             userid=self.get_user_id(user_email=user_email)
             proj_name = json_list[0]['projectName']
             save_dir = save_dir+'{}/'.format(proj_name)
@@ -408,8 +414,8 @@ class sql_conn:
                 if(self.__insertion(sql)== -1):
                     return 0
             return 1
-#         except:
-#             return -1
+        except:
+            return -1
     
     
 
