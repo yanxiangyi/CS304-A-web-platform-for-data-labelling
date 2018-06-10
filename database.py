@@ -428,6 +428,17 @@ class sql_conn:
         sql = "SELECT tl.labelid, tl.label_content, tl.userid, u.nb_accept, u.nb_answer \
         FROM text_label tl join users u on u.userid=tl.userid where dataid={} ".format(dataid)
         return self.__exe_sql(sql)
+    
+    def get_recapcha(self):
+        try:
+            sql = "select label_path from text_label where correct =1;"
+            result = random.choice(self.__exe_sql(sql))[0]
+            #print(result)
+            with open(result) as js:
+                file = json.load(js)
+            return file
+        except:
+            return None
         
     def close(self):
         self.cursor.close()

@@ -215,7 +215,8 @@
   
   - return `[dataid, label_content, userid, user nb_accpet, user nb_answer]`
   
+- `get_recapcha(self)`
 
-
+  - return a json file whose label has already be accepted.
 
 
