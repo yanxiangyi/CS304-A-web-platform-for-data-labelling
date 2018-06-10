@@ -146,7 +146,7 @@ class sql_conn:
         # return : **1** success; **0** already exist; **-1** fail
         nb_answer = self.get_user_nb_answer(user_email = user_email)
         sql = "UPDATE `se_proj`.`users` SET `nb_answer`={} WHERE `email_address`='{}';".format(nb_answer+addoffset, user_email)
-        print(sql)
+        #print(sql)
         return self.__insertion(sql)
 
     def get_user_accept_rate(self, userid=None, username=None, user_email=None):
@@ -234,7 +234,9 @@ class sql_conn:
         return self.__exe_sql(sql)[0][0]
         
             
-            
+    def get_adminid(self, email_addr):
+        return self.__get_by_option('admin', 'adminid',  
+                                    {'email_address': email_addr},head=False)[0]
     def get_all_admin(self):
         admin_list = self.__exe_sql("select * from admin;")
         result = []
@@ -391,6 +393,9 @@ class sql_conn:
             proj_name = json_list[0]['projectName']
             save_dir = save_dir+'{}/'.format(proj_name)
             
+            
+            self.set_user_nb_answer(user_email, addoffset = len(json_list))
+            
             if not os.path.exists(save_dir):
                 os.makedirs(save_dir)
                 
@@ -417,8 +422,24 @@ class sql_conn:
         except:
             return -1
     
+    def load_ft_data(self, dataid):
+        # load data for fault tolerance
+        # return [dataid, label_content, userid, user nb_accpet, user nb_answer ]
+        sql = "SELECT tl.labelid, tl.label_content, tl.userid, u.nb_accept, u.nb_answer \
+        FROM text_label tl join users u on u.userid=tl.userid where dataid={} ".format(dataid)
+        return self.__exe_sql(sql)
     
-
+    def get_recapcha(self):
+        try:
+            sql = "select label_path from text_label where correct =1;"
+            result = random.choice(self.__exe_sql(sql))[0]
+            #print(result)
+            with open(result) as js:
+                file = json.load(js)
+            return file
+        except:
+            return None
+        
     def close(self):
         self.cursor.close()
         self.conn.close()
