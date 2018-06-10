@@ -236,7 +236,7 @@ class sql_conn:
             nb_task = self.get_admin_nb_task(adminid)
             
             
-            nb_source = len(c.get_admin_source(admin_email=email_address))
+            nb_source = len(self.get_admin_source(admin_email=email_address))
             result.append({"admin_email":email_address, "adminname":adminname,  
                           "nb_source":nb_source, "nb_task":int(nb_task if nb_task!=None else 0)})
 
