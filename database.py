@@ -83,8 +83,17 @@ class sql_conn:
 
     # user*******************************************************************************
     def get_all_user(self):
-        return self.__exe_sql("select * from users;")
-
+        user_list = self.__exe_sql("select * from users;")
+        result = []
+        for user in user_list:
+            
+            [user_id, user_email, user_name, password, signup_time, user_credit, nb_answer, nb_accept, _,_] = user
+            acc =  nb_accept/nb_answer if nb_answer!=0 else 0
+            result.append({"user_email": user_email, "user_name": user_name,  
+                           "user_credit": user_credit, "nb_answer": nb_answer, "acc":acc})
+        return result
+    
+    
     def get_user(self, userid=None, username=None, user_email=None):
         return self.__get_by_option('users', '*', {'userid': userid, 'username': username, 'email_address': user_email},
                                     head=False)
@@ -206,12 +215,32 @@ class sql_conn:
         result.append(len(ts_list))
         return result
         
-    # admin******************************************************************************
+    # admin*****************************************************************************
     def get_admin(self, adminid=None, adminname=None, admin_email=None):
-        return self.__get_by_option('admin', '*',
+        return self.__get_by_option('admin', '*',  
                                     {'adminid': adminid, 'adminname': adminname, 'email_address': admin_email},
                                     head=False)
+            
+    def get_admin_nb_task(self, adminid):
+        sql = "select sum(nb_json) from se_proj.source where publisher ={};".format(adminid)
+        return self.__exe_sql(sql)[0][0]
+        
+            
+            
+    def get_all_admin(self):
+        admin_list = self.__exe_sql("select * from admin;")
+        result = []
+        for admin in admin_list:
+            [adminid,email_address, adminname, _, _] = admin
+            nb_task = self.get_admin_nb_task(adminid)
+            
+            
+            nb_source = len(c.get_admin_source(admin_email=email_address))
+            result.append({"admin_email":email_address, "adminname":adminname,  
+                          "nb_source":nb_source, "nb_task":nb_task if nb_task!=None else 0})
 
+        return result
+        
     def get_admin_passwd(self, admin_email=None):
         return self.__get_by_option('admin', 'password',
                                     {'email_address': admin_email})
@@ -228,9 +257,8 @@ class sql_conn:
         else:
             return 0
         
-    def get_admin_source(self, adminid=None, adminname=None, admin_email=None):
-        if adminid==None:
-            adminid = self.__get_by_option('admin', 'adminid', {'email_address': admin_email, 'adminname': adminname})
+    def get_admin_source(self, admin_email=None):
+        adminid = self.__get_by_option('admin', 'adminid', {'email_address': admin_email})
         return self.__exe_sql("select * from source where publisher={}".format(adminid))
 
     # source*****************************************************************************
