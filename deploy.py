@@ -284,7 +284,7 @@ def upload_file():
                     c.close()
                     result = {"code": 0}
                     c = init_cnx()
-                    insert = c.insert_source(sourcename=sourcename, nb_finished=0, publisher=admin_id, description=description, publish_time=get_timestamp(), priority=1)
+                    insert = c.insert_source(sourcename=sourcename, publisher=admin_id, description=description, publish_time=get_timestamp(), priority=1)
                     c.close()
                     if insert == -1:
                         result = {"code": 1, "message": "Task insertion failed!"}
@@ -516,7 +516,6 @@ def choose_source(sourcename):
             return render_template('please_login_as_user.html')
     else:
         return render_template('please_login_first.html')
-    return jsonify(result)
 
 
 @app.route('/data')
@@ -537,11 +536,11 @@ def send_data():
             else:
                 jsons = session['jsons']
             result = {"code": 0, "message": jsons}
+            return jsonify(result)
         else:
             return render_template('please_login_as_user.html')
     else:
         return render_template('please_login_first.html')
-    return jsonify(result)
 
 
 @app.route('/retrieve', methods=['GET', 'POST'])
@@ -550,14 +549,8 @@ def retrieve_label():
     if "email" in session:
         if session['level'] == 0:
             if 'jsons' in session:
-                # content = request.get_json(silent=True)
-                # print(content)
                 if request.method == 'POST':
                     message = request.json['message']
-                print(message)
-                # print(message)
-                # print(message[0]['task'][0]['aim'].encode('utf-8'))
-                # jsons = content['message']
                 c = init_cnx()
                 # Store label jsons in database
                 signal = c.insert_label(user_email=session['email'], json_list=message, save_dir='/home/se2018/label/')
@@ -586,11 +579,11 @@ def user_pan():
             pan = c.get_user_mainpage_pan(user_email=session['email'])
             c.close()
             result = {"code": 0, "message": pan}
+            return jsonify(result)
         else:
             return render_template('please_login_as_user.html')
     else:
         return render_template('please_login_first.html')
-    return jsonify(result)
 
 
 @app.route('/pan_history')
@@ -602,12 +595,13 @@ def user_pan_history():
             pan = c.get_user_mainpage_pan_history(user_email=session['email'])
             c.close()
             result = {"code": 0, "message": pan}
+            return jsonify(result)
         else:
             return render_template('please_login_as_user.html')
 
     else:
         return render_template('please_login_first.html')
-    return jsonify(result)
+
 
 
 @app.route('/alluser')
@@ -638,11 +632,11 @@ def test():
             pan = "get in"
             c.close()
             result = {"code": 0, "message": pan}
+            return jsonify(result)
         else:
             return render_template('please_login_as_user.html')
     else:
         return render_template('please_login_first.html')
-    return jsonify(result)
 
 
 @app.errorhandler(404)
