@@ -138,9 +138,6 @@ class sql_conn:
         else:
             return 0
 
-    def get_user_signin_time(self, userid=None, username=None, user_email=None):
-        return self.__get_by_option('users', 'signin_date',
-                                    {'userid': userid, 'username': username, 'email_address': user_email})
 
     def insert_user(self, username, user_email, passwd, signin_time=get_timestamp(), credits=0, nb_accept=0,
                     nb_answer=0, nb_examined=0):
@@ -177,20 +174,20 @@ class sql_conn:
                                     {'adminid': adminid, 'adminname': adminname, 'email_address': admin_email},
                                     head=False)
 
-    def get_admin_id(self, adminname=None, admin_email=None):
-        return self.__get_by_option('admin', 'adminid', {'email_address': admin_email, 'adminname': adminname})
+#     def get_admin_id(self, adminname=None, admin_email=None):
+#         return self.__get_by_option('admin', 'adminid', {'email_address': admin_email, 'adminname': adminname})
 
-    def get_admin_name(self, adminid=None, admin_email=None):
-        return self.__get_by_option('admin', 'adminname', {'email_address': admin_email, 'adminid': adminid})
+#     def get_admin_name(self, adminid=None, admin_email=None):
+#         return self.__get_by_option('admin', 'adminname', {'email_address': admin_email, 'adminid': adminid})
 
-    def get_admin_passwd(self, adminid=None, adminname=None, admin_email=None):
-        return self.__get_by_option('admin', 'password',
-                                    {'adminid': adminid, 'adminname': adminname, 'email_address': admin_email})
+#     def get_admin_passwd(self, adminid=None, adminname=None, admin_email=None):
+#         return self.__get_by_option('admin', 'password',
+#                                     {'adminid': adminid, 'adminname': adminname, 'email_address': admin_email})
 
-    def get_admin_access_level(self, adminid=None, adminname=None, admin_email=None):
-        # normal or super
-        return self.__get_by_option('admin', 'access_level',
-                                    {'adminid': adminid, 'adminname': adminname, 'email_address': admin_email})
+#     def get_admin_access_level(self, adminid=None, adminname=None, admin_email=None):
+#         # normal or super
+#         return self.__get_by_option('admin', 'access_level',
+#                                     {'adminid': adminid, 'adminname': adminname, 'email_address': admin_email})
 
     def insert_admin(self, email_addr, adminname, passwd, access_level=1):
         # insertion: 1 success, 0: already exist, -1: fail
@@ -219,20 +216,6 @@ class sql_conn:
 
     def get_source_id(self, sourcename):
         return self.__get_by_option('source', 'sourceid', {'sourcename': sourcename})
-
-    def get_source_finished(self, sourcename=None, sourceid=None):
-        result = self.__get_by_option('source', 'finished', {'sourceid': sourceid, 'sourcename': sourcename})
-        return True if result == 1 else False
-
-    def get_source_publisherid(self, sourcename=None, sourceid=None):
-        # return admin id
-        return self.__get_by_option('source', 'publisher', {'sourceid': sourceid, 'sourcename': sourcename})
-
-    def get_source_desc(self, sourcename=None, sourceid=None):
-        return self.__get_by_option('source', 'description', {'sourceid': sourceid, 'sourcename': sourcename})
-
-    def get_source_priority(self, sourcename=None, sourceid=None):
-        return self.__get_by_option('source', 'priority', {'sourceid': sourceid, 'sourcename': sourcename})
 
     def insert_source(self, sourcename, finished=0, publisher='NULL', description='', publish_time=get_timestamp(),
                       priority=1):
@@ -287,11 +270,6 @@ class sql_conn:
     def get_textdataid(self, data_index, sourceid=None, sourcename=None):
         return self.__get_textdata_sth('dataid', data_index, sourceid, sourcename)
 
-    def get_textdata_datapath(self, data_index, sourceid=None, sourcename=None):
-        return self.__get_textdata_sth('data_path', data_index, sourceid, sourcename)
-
-    def get_textdata_finallabelid(self, data_index, sourceid=None, sourcename=None):
-        return self.__get_textdata_sth('final_labelid', data_index, sourceid, sourcename)
 
     def update_final_labelid(self, data_index, labelid, sourceid=None, sourcename=None):
         # 1:sucess -1:fail  0:souce or data not exist
@@ -329,22 +307,25 @@ class sql_conn:
             userid = self.__get_by_option('users', 'userid', {'username': username, 'email_address': user_email})
         return self.__get_by_mul_cond('text_label', target_col, {'dataid': dataid, 'userid': userid})
 
-    def get_labeldate(self, dataid, userid=None, username=None, user_email=None):
-        return self.__get_label_sth('labeldate', userid, username, user_email)
-
-    def get_labelpath(self, dataid, userid=None, username=None, user_email=None):
-        return self.__get_label_sth('label_path', userid, username, user_email)
-
-    def get_label_content(self, dataid, userid=None, username=None, user_email=None):
-        return self.__get_label_sth('content', userid, username, user_email)
-
     def get_label_correct(self, dataid, userid=None, username=None, user_email=None):
         # return 0 not determined, 1 correct, -1 not correct
         return self.__get_label_sth('correct', userid, username, user_email)
 
     def insert_label(self, user_email, json_list, save_dir='/home/se2018/label/', label_date=get_timestamp(), correct=0):
         # insert label , save label json file from the same user of the same project
-        try:
+        #try:
+        print('$$$$$$$$$$$$$$$$$$$$$$$$$$')
+        print(json_list[0]['task'][0]['label'])
+        for a in json_list:
+            for t in a['task']:
+                try:
+                    print(t['label'])
+                except:
+                    print('error  !!!!!!!!!!! {} mode: {}'.format(a['index'],t['mode']))
+                
+                
+        #print(json_list[0]['task'][0]['data'].encode('utf-8'))
+        if True:
             userid=self.get_user_id(user_email=user_email)
             proj_name = json_list[0]['projectName']
             save_dir = save_dir+'{}/'.format(proj_name)
@@ -368,8 +349,8 @@ class sql_conn:
                 ({},{},{},'{}','{}',{});".format(j['dataid'], userid, label_date, save_path, label_content, correct)
                 self.__insertion(sql)
             return 1
-        except:
-            return -1
+#         except:
+#             return -1
         
     def close(self):
         self.cursor.close()
