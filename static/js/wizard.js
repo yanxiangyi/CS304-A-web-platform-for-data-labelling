@@ -43,7 +43,9 @@ var WizardDemo = function () {
                 file: {
                     required: true,
                 },
-
+                docs: {
+                    required: true,
+                },
                 //=== Confirmation(step 4)
                 accept: {
                     required: true
@@ -106,7 +108,7 @@ var WizardDemo = function () {
                         });
 
                         setTimeout(function () {
-                            window.location.href =history.back();
+                            window.location.href = history.back();
                         }, 2000);
 
                     }
@@ -114,7 +116,7 @@ var WizardDemo = function () {
                 });
             }
             setTimeout(function () {
-                window.location.href =history.back();
+                window.location.href = history.back();
             }, 2000);
         });
     }
