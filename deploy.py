@@ -88,11 +88,11 @@ def mainpage():
 @cross_origin()
 def choose():
     if "email" not in session:
-        result = {"code": 1, "message": "Please login first!"}
+        return render_template('please_login_first.html')
         return jsonify(result)
     else:
         if session['level'] != 0:
-            result = {"code": 1, "message": "Please login as users!"}
+            return render_template('please_login_as_user.html')
             return jsonify(result)
         else:
             return render_template('choose.html')
@@ -129,11 +129,11 @@ def textlabel():
     #         #     return jsonify(result)
     #
     #     else:
-    #         result = {"code": 1, "message": "Please login as users!"}
+    #         return render_template('please_login_as_user.html')
     #         return jsonify(result)
     #
     # else:
-    #     result = {"code": 1, "message": "Please login first!"}
+    #     return render_template('please_login_first.html')
     #     return jsonify(result)
     return render_template('textlabel.html')
 
@@ -195,6 +195,21 @@ def email_register(user_name, user_email, pass_word):
     return jsonify(result)
 
 
+@app.route('/register/admin_email/<admin_email>/adminname/<admin_name>/password/<pass_word>')
+@cross_origin()
+def admin_email_register(admin_name, admin_email, pass_word):
+    c = init_cnx()
+    result = c.insert_admin(adminname=admin_name, email_addr=admin_email, passwd=pass_word, access_level=1)
+    c.close()
+    if result == 1:
+        return jsonify({'code': 0})
+    elif result == 0:
+        result = {'code': 1, 'message': 'Admin already exists!'}
+    else:
+        result = {'code': 1, 'message': 'Register failed! Please try later!'}
+    return jsonify(result)
+
+
 @app.route('/forget/email/<user_email>')
 @cross_origin()
 def email_forget(user_email):
@@ -216,12 +231,10 @@ def allowed_file(filename):
 @cross_origin()
 def upload_file():
     if 'email' not in session:
-        result = {"code": 1, "message": "Please login first!"}
-        return jsonify(result)
+        return render_template('please_login_first.html')
     else:
         if session['level'] == 0:
-            result = {"code": 1, "message": "Users can't publish tasks!"}
-            return jsonify(result)
+            return render_template('Users_cannot_publish_tasks.html')
         else:
             if request.method == 'POST':
                 # check if the post request has the file part
@@ -291,7 +304,7 @@ def profile():
     if 'email' in session:
         email = session['email']
         if session['email'] != email:
-            result = {"code": 1, "message": "Please login first!"}
+            return render_template('please_login_first.html')
             return jsonify(result)
         if session['level'] == 0:
             c = init_cnx()
@@ -306,7 +319,8 @@ def profile():
                           "num_acc": num_acc, "num_answer": num_answer,
                           "signup_time": signup_time, "num_val": num_val,
                           "num_val_tp": num_val_tp, "rank": 1-(float(rank-1)/float(user_num)),
-                          "percentage_involved": float(source_involved)/float(source_number)}
+                          "percentage_involved": float(source_involved)/float(source_number),
+                          "user_level": 0}
                 result = {"code": 0, "message": result}
             else:
                 result = {"code": 1, "message": "User doesn\'t exist!"}
@@ -321,7 +335,7 @@ def profile():
             }
             result = {"code": 0, "message": result}
     else:
-        result = {"code": 1, "message": "Please login first!"}
+        return render_template('please_login_first.html')
     return jsonify(result)
 
 
@@ -450,9 +464,7 @@ def task():
                       }
                       }
     else:
-        result = {"code": 1,
-                  "message": "Please login first!"
-                  }
+        return render_template('please_login_first.html')
 
     #     [user_id, user_email, user_name, password, signup_time, user_credit, num_total, num_acc, num_examined] = c.get_source_number()
     #     result = {"user_id": user_id, "user_email": user_email,
@@ -501,9 +513,9 @@ def choose_source(sourcename):
             session['sourcename'] = sourcename
             return redirect(url_for('textlabel'))
         else:
-            result = {"code": 1, "message": "Please login as users!"}
+            return render_template('please_login_as_user.html')
     else:
-        result = {"code": 1, "message": "Please login first!"}
+        return render_template('please_login_first.html')
     return jsonify(result)
 
 
@@ -526,9 +538,9 @@ def send_data():
                 jsons = session['jsons']
             result = {"code": 0, "message": jsons}
         else:
-            result = {"code": 1, "message": "Please login as users!"}
+            return render_template('please_login_as_user.html')
     else:
-        result = {"code": 1, "message": "Please login first!"}
+        return render_template('please_login_first.html')
     return jsonify(result)
 
 
@@ -559,9 +571,9 @@ def retrieve_label():
             else:
                 result = {"code": 1, "message": "Session time out! Please apply for another 10 data!"}
         else:
-            result = {"code": 1, "message": "Please login as users!"}
+            return render_template('please_login_as_user.html')
     else:
-        result = {"code": 1, "message": "Please login first!"}
+        return render_template('please_login_first.html')
     return jsonify(result)
 
 
@@ -575,9 +587,9 @@ def user_pan():
             c.close()
             result = {"code": 0, "message": pan}
         else:
-            result = {"code": 1, "message": "Please login as users!"}
+            return render_template('please_login_as_user.html')
     else:
-        result = {"code": 1, "message": "Please login first!"}
+        return render_template('please_login_first.html')
     return jsonify(result)
 
 
@@ -591,10 +603,45 @@ def user_pan_history():
             c.close()
             result = {"code": 0, "message": pan}
         else:
-            result = {"code": 1, "message": "Please login as users!"}
+            return render_template('please_login_as_user.html')
 
     else:
-        result = {"code": 1, "message": "Please login first!"}
+        return render_template('please_login_first.html')
+    return jsonify(result)
+
+
+@app.route('/alluser')
+@cross_origin()
+def all_user():
+    c = init_cnx()
+    pan = c.get_all_user()
+    c.close()
+    return jsonify(pan)
+
+
+@app.route('/alladmin')
+@cross_origin()
+def all_admin():
+    c = init_cnx()
+    pan = c.get_all_admin()
+    print(pan)
+    c.close()
+    return jsonify(pan)
+
+
+@app.route('/test')
+@cross_origin()
+def test():
+    if "email" in session:
+        if session['level'] == 0:
+            c = init_cnx()
+            pan = "get in"
+            c.close()
+            result = {"code": 0, "message": pan}
+        else:
+            return render_template('please_login_as_user.html')
+    else:
+        return render_template('please_login_first.html')
     return jsonify(result)
 
 
