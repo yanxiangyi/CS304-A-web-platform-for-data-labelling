@@ -1,6 +1,6 @@
 //== Class definition
 
-var DatatableRemoteAjaxDemo = function() {
+var DatatableRemoteAjaxDemo = function () {
     //== Private functions
 
     var daterangepickerInit = function () {
@@ -49,7 +49,7 @@ var DatatableRemoteAjaxDemo = function() {
     }
 
     // basic demo
-    var demo = function() {
+    var demo = function () {
 
         var datatable = $('.m_datatable').mDatatable({
             // datasource definition
@@ -60,7 +60,7 @@ var DatatableRemoteAjaxDemo = function() {
                         // sample GET method
                         method: 'GET',
                         url: 'http://47.106.34.103:5000/task',
-                        map: function(raw) {
+                        map: function (raw) {
                             // sample data mapping
                             //var temp = eval(raw);
                             var dataSet = raw.message.tasks;
@@ -163,8 +163,15 @@ var DatatableRemoteAjaxDemo = function() {
                             return '<span class="m-badge ' + status[2].class +
                                 ' m-badge--wide">' + status[2].title + '</span>';
                         }
-                        return '<span class="m-badge ' + status[finish].class +
-                            ' m-badge--wide">' + status[finish].title + '</span>';
+                        if (finish == 0) {
+                            return '<span class="m-badge ' + status[0].class +
+                                ' m-badge--wide">' + status[0].title + '</span>';
+                        }
+                        if (finish == 1) {
+                            return '<span class="m-badge ' + status[1].class +
+                                ' m-badge--wide">' + status[1].title + '</span>';
+                        }
+
                     },
                 }, {
                     field: 'per_finished',
@@ -177,11 +184,11 @@ var DatatableRemoteAjaxDemo = function() {
                 }],
         });
 
-        $('#m_form_status').on('change', function() {
+        $('#m_form_status').on('change', function () {
             datatable.search($(this).val().toLowerCase(), 'Status');
         });
 
-        $('#m_form_type').on('change', function() {
+        $('#m_form_type').on('change', function () {
             datatable.search($(this).val().toLowerCase(), 'Type');
         });
 
@@ -191,13 +198,13 @@ var DatatableRemoteAjaxDemo = function() {
 
     return {
         // public functions
-        init: function() {
+        init: function () {
             daterangepickerInit();
             demo();
         },
     };
 }();
 
-jQuery(document).ready(function() {
+jQuery(document).ready(function () {
     DatatableRemoteAjaxDemo.init();
 });
