@@ -342,17 +342,15 @@ class sql_conn:
         # return 0 not determined, 1 correct, -1 not correct
         return self.__get_label_sth('correct', userid, username, user_email)
 
-    def insert_label(self, user_email, json_list, save_dir=None, label_date=get_timestamp(), correct=0):
+    def insert_label(self, user_email, json_list, save_dir='/home/se2018/label/', label_date=get_timestamp(), correct=0):
         # insert label , save label json file from the same user of the same project
-        #try:
-        if True:
+        try:
             userid=self.get_user_id(user_email=user_email)
             proj_name = json_list[0]['projectName']
-            if save_dir == None:
-                save_dir = '/home/se2018/label/{}/'.format(proj_name)
+            save_dir = save_dir+'label/{}/'.format(proj_name)
             for j in json_list:
                 #save the file
-                save_path = save_dir+str(j['index'])+'_label.json'
+                save_path = save_dir+str(j['index'])+'_'+str(userid)+'_label.json'
                 with open(save_path, 'w') as outfile:
                     json.dump(j, outfile)
 
@@ -364,9 +362,10 @@ class sql_conn:
 
                 sql = "INSERT INTO text_label(`dataid`,`userid`,`labeldate`,`label_path`,`label_content`,`correct`) VALUES \
                 ({},{},{},'{}','{}',{});".format(j['dataid'], userid, label_date, save_path, label_content, correct)
+                self.__insertion(sql)
             return 1
-#         except:
-#             return -1
+        except:
+            return -1
         
     def close(self):
         self.cursor.close()

@@ -212,7 +212,7 @@
   
   - return **1** if success , **-1** fail
   
-  - default `save_dir = /home/se2018/label/<project_name>/`
+  - default `save_dir = /home/se2018/label/`, the program modify it to `/home/se2018/label/<project name>/`
   
   - default `label_date` is current time
   
