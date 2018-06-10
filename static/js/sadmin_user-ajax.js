@@ -55,11 +55,11 @@ var DatatableRemoteAjax1 = function() {
                     read: {
                         // sample GET method
                         method: 'GET',
-                        url: 'http://47.106.34.103:5000/alluser',
+                        url: 'http://47.106.34.103:5000/alladmin',
                         map: function(raw) {
                             // sample data mapping
                             //var temp = eval(raw);
-                            var dataSet = raw.message.tasks;
+                            var dataSet = raw;
                             // if (typeof raw.message !== 'undefined') {
                             //   dataSet = raw.message[tasks];
                             // }
@@ -103,7 +103,7 @@ var DatatableRemoteAjax1 = function() {
             // columns definition
             columns: [
                 {
-                    field: 'source_id',
+                    field: 'user_name',
                     title: 'Username',
                     // sortable: 'asc', // default sort
                     filterable: false, // disable or enable filtering
@@ -226,7 +226,7 @@ var DatatableRemoteAjax2 = function() {
                         map: function(raw) {
                             // sample data mapping
                             //var temp = eval(raw);
-                            var dataSet2 = raw.message.tasks;
+                            var dataSet2 = raw;
                             // if (typeof raw.message !== 'undefined') {
                             //   dataSet = raw.message[tasks];
                             // }
@@ -270,11 +270,11 @@ var DatatableRemoteAjax2 = function() {
             // columns definition
             columns: [
                 {
-                    field: 'source_id',
+                    field: 'user_name',
                     title: 'Username',
                     // sortable: 'asc', // default sort
                     filterable: false, // disable or enable filtering
-                    width: 100,
+                    width: 200,
                     // basic templating support for column rendering,
                     //template: '{{source_id}} - {{source_name}}',
                 },
@@ -288,11 +288,12 @@ var DatatableRemoteAjax2 = function() {
                 //     title: 'Uploader',
                 // },
                 {
-                    field: 'publish_date',
+                    field: 'signin_date',
                     title: 'Register Time',
                     type: 'date',
+                    width: 230,
                     template: function (row) {
-                        var date = new Date(row.publish_date * 1000);//如果date为13位不需要乘1000
+                        var date = new Date(row.signin_date * 1000);//如果date为13位不需要乘1000
                         var Y = date.getFullYear() + '-';
                         var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
                         var D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + ' ';
@@ -300,18 +301,17 @@ var DatatableRemoteAjax2 = function() {
                         var m = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':';
                         var s = (date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds());
                         return Y + M + D + h + m + s;
-
                     },
                 },{
-                    field: 'credits',
+                    field: 'user_credit',
                     title: 'Credits',
                 }
                 ,{
-                    field: 'num_finished',
-                    title: 'Task Finished',
-                },{
-                    field:'accuracy',
+                    field: 'acc',
                     title: 'Accuracy',
+                },{
+                    field:'user_email',
+                    title: 'Email',
                 }
                 // ,
                 // {
