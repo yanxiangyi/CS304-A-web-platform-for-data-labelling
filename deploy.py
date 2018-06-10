@@ -543,13 +543,19 @@ def retrieve_label():
                 if request.method == 'POST':
                     message = request.json['message']
                 print(message)
+                # print(message)
+                # print(message[0]['task'][0]['aim'].encode('utf-8'))
                 # jsons = content['message']
                 c = init_cnx()
                 # Store label jsons in database
-
+                signal = c.insert_label(user_email=session['email'], json_list=message, save_dir='/home/se2018/label/')
                 c.close()
                 session.pop('jsons', None)
-                result = {"code": 0, "message": message}
+                print(signal)
+                if signal == 1:
+                    result = {"code": 0, "message": message}
+                elif signal == -1:
+                    result = {"code": 1, "message": "Insert failed!"}
             else:
                 result = {"code": 1, "message": "Session time out! Please apply for another 10 data!"}
         else:
