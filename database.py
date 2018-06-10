@@ -211,6 +211,8 @@ class sql_conn:
         return self.__get_by_option('admin', '*',
                                     {'adminid': adminid, 'adminname': adminname, 'email_address': admin_email},
                                     head=False)
+    def get_all_admin(self):
+        return self.__exe_sql("select * from admin;")
 
     def get_admin_passwd(self, admin_email=None):
         return self.__get_by_option('admin', 'password',

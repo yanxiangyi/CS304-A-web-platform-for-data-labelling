@@ -108,6 +108,10 @@
     
    return all the information of all admins
    
+- `get_admin_nb_task(self, adminid)`
+
+   return number of tasks published by the admin
+   
 - `get_admin_passwd(self, admin_email=None)`
 
 - `get_admin_access_level(self, admin_email)`
