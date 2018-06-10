@@ -177,7 +177,7 @@ function gatherValues() {
                 var returnArray = $("input:checkbox[name=" + checkboxname + "]:checked").map(function(){return $(this).val()}).get();
                 // json_to_return.message[i].task[j].label = document.querySelector('input[name="' + checkboxname + '"]:checked').value;
                 json_to_return.message[i].task[j].label = returnArray;
-            }else if(json_to_return.message[i].task[j].mode === "open"){
+            }else if(json_to_return.message[i].task[j].mode === "open" && json_to_return.message[i].task[j].label.length > 0){
                 var selectedname = "selectedWrapper" + i + j;
                 var e = document.getElementById(selectedname);
 
@@ -215,7 +215,7 @@ function queryAgain(){
                 var returnArray = $("input:checkbox[name=" + checkboxname + "]:checked").map(function(){return $(this).val()}).get();
                 // json_to_return.message[i].task[j].label = document.querySelector('input[name="' + checkboxname + '"]:checked').value;
                 json_to_return.message[i].task[j].label = returnArray;
-            }else if(json_to_return.message[i].task[j].mode === "open"){
+            }else if(json_to_return.message[i].task[j].mode === "open" && json_to_return.message[i].task[j].label.length > 0){
                 var selectedname = "selectedWrapper" + i + j;
                 var e = document.getElementById(selectedname);
 
