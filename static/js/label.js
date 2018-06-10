@@ -189,16 +189,47 @@ function gatherValues() {
         type: 'POST',
         url: 'http://47.106.34.103:5000/retrieve',
         data: JSON.stringify (json_to_return),
-        // success: function() {
-        //     alert("Thank you!");
-        //     // window.location.href = "choose.html";
-        // },
+        success: function() {
+            alert("Thank you!");
+            window.location.href = "choose.html";
+        },
         contentType: "application/json",
         dataType: 'json'
     });
 }
+
 function queryAgain(){
-    ds_name = document.getElementById("projname").getAttribute("name");
-    fetch_address = "http://47.106.34.103:5000/choose/" + ds_name;
-    window.location.href = fetch_address;
+    json_to_return = JSON.parse(document.getElementById("jsonstring").getAttribute("name"));
+    for (let i = 0; i < json_to_return.message.length; i++){
+        for(let j = 0; j<json_to_return.message[i].task.length; j++){
+            if(json_to_return.message[i].task[j].mode === "single"){
+                var radioname = "radioWrapper" + i + j;
+                if ($("input[name=" + radioname + "]:checked").length > 0){
+                    json_to_return.message[i].task[j].label = document.querySelector('input[name="' + radioname + '"]:checked').value;
+                }
+            }else if(json_to_return.message[i].task[j].mode === "multiple"){
+                var checkboxname = "checkboxWrapper" + i + j;
+                var returnArray = $("input:checkbox[name=" + checkboxname + "]:checked").map(function(){return $(this).val()}).get();
+                // json_to_return.message[i].task[j].label = document.querySelector('input[name="' + checkboxname + '"]:checked').value;
+                json_to_return.message[i].task[j].label = returnArray;
+            }else if(json_to_return.message[i].task[j].mode === "open"){
+                var selectedname = "#selectedwrapper" + i + j;
+                json_to_return.message[i].task[j].label = $(selectedname).val();
+            }
+        }
+    }
+    // alert(JSON.stringify(json_to_return));
+    $.ajax({
+        type: 'POST',
+        url: 'http://47.106.34.103:5000/retrieve',
+        data: JSON.stringify (json_to_return),
+        success: function() {
+            ds_name = document.getElementById("projname").getAttribute("name");
+            fetch_address = "http://47.106.34.103:5000/choose/" + ds_name;
+            sleep(500);
+            window.location.href = fetch_address;
+        },
+        contentType: "application/json",
+        dataType: 'json'
+    });
 }
