@@ -89,7 +89,7 @@ class sql_conn:
             
             [user_id, user_email, user_name, password, signup_time, user_credit, nb_answer, nb_accept, _,_] = user
             acc =  nb_accept/nb_answer if nb_answer!=0 else 0
-            result.append({"user_email": user_email, "user_name": user_name,  
+            result.append({"user_email": user_email, "user_name": user_name, "signin_date":signup_time, 
                            "user_credit": user_credit, "nb_answer": nb_answer, "acc":acc})
         return result
     
