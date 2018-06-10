@@ -1,12 +1,14 @@
 import time
 import os
 import json
-
+import datetime
 
 def get_timestamp():
     return float("{0:.2f}".format(time.time()))
     # return strftime("%Y-%m-%d %H:%M:%S", gmtime())
 
+def timestamp_ealier_than(begin, days):
+    return int((begin - datetime.timedelta(days=days)).strftime("%s"))
 
 class sql_conn:
     def __init__(self, conn):
@@ -154,7 +156,7 @@ class sql_conn:
                                       {'userid': userid, 'username': username, 'email_address': user_email})
         return True if result != None else False
     
-    def get_user_credit_rank(self, user_email):
+    def get_user_credits_rank(self, user_email):
         userid = self.get_user_id(user_email=user_email)
         sql = "select i.rank from \
         (SELECT u.userid,\
@@ -168,26 +170,43 @@ class sql_conn:
         return self.__exe_sql("select distinct(td.datasource) from text_label tl \
         join text_data td on td.dataid=tl.dataid join users u  on tl.userid= u.userid where u.userid={};".format(userid))
     
+    def get_user_mainpage_pan(self, user_email):
+        try:
+            # return [(priority, count), (priority, count), ...]
+            userid = self.get_user_id(user_email=user_email)
+            sql = "select x.priority, count(*) from \
+            (select  distinct(td.datasource), s.priority from text_label tl \
+            join text_data td on tl.dataid=td.dataid join source s on s.sourceid = td.datasource \
+            where userid={}) x group by x.priority;".format(userid)
+            return self.__exe_sql(sql)
+        except:
+            return [(1,0),(2,0),(3,0)]
+    
+    def __user_label_later_number(self, ts_list, tr):
+        cnt = 0
+        for ts in ts_list:
+            if ts[0]>tr:
+                cnt += 1
+        return cnt
+    def get_user_mainpage_pan_history(self, user_email):
+        userid = self.get_user_id(user_email=user_email)
+        sql = "select labeldate from text_label where userid={} order by labeldate desc;".format(userid) 
+        ts_list = self.__exe_sql(sql)
+        days_list = [1,3,7,30]
+        result = []
+        now = datetime.datetime.now()
+        for d in days_list:
+            ts_tr = timestamp_ealier_than(now, d) #threshold
+            result.append(self.__user_label_later_number(ts_list, ts_tr))
+            
+        result.append(len(ts_list))
+        return result
+        
     # admin******************************************************************************
     def get_admin(self, adminid=None, adminname=None, admin_email=None):
         return self.__get_by_option('admin', '*',
                                     {'adminid': adminid, 'adminname': adminname, 'email_address': admin_email},
                                     head=False)
-
-#     def get_admin_id(self, adminname=None, admin_email=None):
-#         return self.__get_by_option('admin', 'adminid', {'email_address': admin_email, 'adminname': adminname})
-
-#     def get_admin_name(self, adminid=None, admin_email=None):
-#         return self.__get_by_option('admin', 'adminname', {'email_address': admin_email, 'adminid': adminid})
-
-#     def get_admin_passwd(self, adminid=None, adminname=None, admin_email=None):
-#         return self.__get_by_option('admin', 'password',
-#                                     {'adminid': adminid, 'adminname': adminname, 'email_address': admin_email})
-
-#     def get_admin_access_level(self, adminid=None, adminname=None, admin_email=None):
-#         # normal or super
-#         return self.__get_by_option('admin', 'access_level',
-#                                     {'adminid': adminid, 'adminname': adminname, 'email_address': admin_email})
 
     def insert_admin(self, email_addr, adminname, passwd, access_level=1):
         # insertion: 1 success, 0: already exist, -1: fail
@@ -313,19 +332,7 @@ class sql_conn:
 
     def insert_label(self, user_email, json_list, save_dir='/home/se2018/label/', label_date=get_timestamp(), correct=0):
         # insert label , save label json file from the same user of the same project
-        #try:
-        print('$$$$$$$$$$$$$$$$$$$$$$$$$$')
-        print(json_list[0]['task'][0]['label'])
-        for a in json_list:
-            for t in a['task']:
-                try:
-                    print(t['label'])
-                except:
-                    print('error  !!!!!!!!!!! {} mode: {}'.format(a['index'],t['mode']))
-                
-                
-        #print(json_list[0]['task'][0]['data'].encode('utf-8'))
-        if True:
+        try:
             userid=self.get_user_id(user_email=user_email)
             proj_name = json_list[0]['projectName']
             save_dir = save_dir+'{}/'.format(proj_name)
@@ -347,11 +354,15 @@ class sql_conn:
 
                 sql = "INSERT INTO text_label(`dataid`,`userid`,`labeldate`,`label_path`,`label_content`,`correct`) VALUES \
                 ({},{},{},'{}','{}',{});".format(j['dataid'], userid, label_date, save_path, label_content, correct)
-                self.__insertion(sql)
+                print(sql)
+                if(self.__insertion(sql)== -1):
+                    return 0
             return 1
-#         except:
-#             return -1
-        
+        except:
+            return -1
+    
+    
+
     def close(self):
         self.cursor.close()
         self.conn.close()

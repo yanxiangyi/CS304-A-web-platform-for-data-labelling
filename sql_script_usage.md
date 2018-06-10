@@ -84,7 +84,20 @@
 - `get_user_source(self, user_email)`
 
    Get the labeling task the user participated. Return a list of `sourceid`
+   
+- `get_user_mainpage_pan(self, user_email)`
 
+  - this method is designed for Yuxing Hu and his stupid pan diagram on mainpage
+
+  - return `[(priority, count), (priority, count), ...]`
+  
+- `get_user_mainpage_pan_history(self, user_email)`
+
+  - this method is designed to display user labeling history on mainpage 
+  
+  - return a list of user label count in today, 3 days, 7 days, 30 days, and total number, e.g. `[2, 2, 2, 3, 4]`
+  
+  
 #### 2.2 Admin Utility
 
 - `get_admin(self, adminid=None, adminname=None, admin_email=None)`
@@ -168,11 +181,13 @@
 
   - save json to file  & insert label into database
   
-  - return **1** if success , **-1** fail
+  - return **1** if success , **-1** fail, **0** insertion failure
   
   - default `save_dir = /home/se2018/label/`, the program modify it to `/home/se2018/label/<project name>/`
   
   - default `label_date` is current time
+  
+  - the json file will be wrote into file `/home/se2018/label/<project name>/<index>_<userid>_label.json`. Note that `index` is the data index in `source` which is read from `.json`.
   
   
 
