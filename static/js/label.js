@@ -226,8 +226,7 @@ function queryAgain(){
         success: function() {
             ds_name = document.getElementById("projname").getAttribute("name");
             fetch_address = "http://47.106.34.103:5000/choose/" + ds_name;
-            sleep(500);
-            window.location.href = fetch_address;
+            setTimeout("window.location.href = fetch_address;", 500)            
         },
         contentType: "application/json",
         dataType: 'json'
