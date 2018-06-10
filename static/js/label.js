@@ -151,7 +151,7 @@ jQuery(document).ready(function() {
                     var singleOption = document.createElement("option");
                     singleOption.setAttribute("id", "singleOption" + i + j + k); 
                     singleOption.setAttribute("value", jsdataTask[j].label[k]);
-                    // singleOption.setAttribute("selected", "selected");
+                    singleOption.setAttribute("selected", "selected");
                     singleOption.selected=true;
                     document.getElementById("selectedWrapper" + i + j).appendChild(singleOption);
                     document.getElementById("singleOption" + i + j + k).appendChild(document.createTextNode(jsdataTask[j].label[k]));
@@ -179,12 +179,14 @@ function gatherValues() {
                 // json_to_return.message[i].task[j].label = document.querySelector('input[name="' + checkboxname + '"]:checked').value;
                 json_to_return.message[i].task[j].label = returnArray;
             }else if(json_to_return.message[i].task[j].mode === "open"){
-                var selectedname = "#selectedwrapper" + i + j;
-                json_to_return.message[i].task[j].label = $(selectedname).val();
+                var selectedname = "selectedwrapper" + i + j;
+                var e = document.getElementById(selectedname);
+                json_to_return.message[i].task[j].label = e.options[e.selectedIndex].value;
+                // json_to_return.message[i].task[j].label = $(selectedname).val();
             }
         }
     }
-    // alert(JSON.stringify(json_to_return));
+    alert(JSON.stringify(json_to_return));
     $.ajax({
         type: 'POST',
         url: 'http://47.106.34.103:5000/retrieve',
@@ -213,8 +215,9 @@ function queryAgain(){
                 // json_to_return.message[i].task[j].label = document.querySelector('input[name="' + checkboxname + '"]:checked').value;
                 json_to_return.message[i].task[j].label = returnArray;
             }else if(json_to_return.message[i].task[j].mode === "open"){
-                var selectedname = "#selectedwrapper" + i + j;
-                json_to_return.message[i].task[j].label = $(selectedname).val();
+                var selectedname = "selectedwrapper" + i + j;
+                var e = document.getElementById(selectedname);
+                json_to_return.message[i].task[j].label = e.options[e.selectedIndex].value;
             }
         }
     }
