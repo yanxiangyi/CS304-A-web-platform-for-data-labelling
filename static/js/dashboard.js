@@ -31,11 +31,6 @@ var Dashboard = function () {
     }
 
     var daterangepickerInit = function () {
-
-        if ($('#m_dashboard_daterangepicker').length == 0) {
-            return;
-        }
-
         var picker = $('#m_dashboard_daterangepicker');
         var start = moment();
         var end = moment();
@@ -64,11 +59,6 @@ var Dashboard = function () {
             opens: 'left',
             ranges: {
                 'Today': [moment(), moment()],
-                // 'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                // 'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-                // 'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-                // 'This Month': [moment().startOf('month'), moment().endOf('month')],
-                // 'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
             }
         }, cb);
 
@@ -116,6 +106,18 @@ jQuery(document).ready(function () {
     });
     $.ajax({
         type: 'GET',
+        url: 'http://47.106.34.103:5000/pan_history',
+        success: function (json) {
+            var parsedData = json.message;
+            document.getElementById('l1').innerHTML = parsedData[0];
+            document.getElementById('l2').innerHTML = parsedData[1];
+            document.getElementById('l3').innerHTML = parsedData[2];
+            document.getElementById('l4').innerHTML = parsedData[3];
+            document.getElementById('l5').innerHTML = parsedData[4];
+        }
+    });
+    $.ajax({
+        type: 'GET',
         url: 'http://47.106.34.103:5000/recent_task',
         success: function (json) {
             var temps = new Array();
@@ -140,6 +142,5 @@ jQuery(document).ready(function () {
             }
         }
     });
-
     Dashboard.init();
 });

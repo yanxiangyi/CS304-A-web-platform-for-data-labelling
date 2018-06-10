@@ -3,7 +3,7 @@ jQuery(document).ready(function () {
         type: 'GET',
         url: 'http://47.106.34.103:5000/profile',
         success: function (json) {
-            if(json.message  == 1){
+            if(json.message  == 0){
                 $("#headerRef").append("<div class=\"m-stack__item m-topbar__nav-wrapper\">\n" +
                     "                        <ul class=\"m-topbar__nav m-nav m-nav--inline\">\n" +
                     "                            <!--Hello profile-->\n" +
@@ -81,29 +81,6 @@ jQuery(document).ready(function () {
                     "                    </a>");
 
             }
-
-            var parsedData = json.message;
-            document.getElementById('figure1').innerHTML = parsedData.num_answer;
-            document.getElementById('figure2').innerHTML = parsedData.num_val_tp;
-            document.getElementById('figure3').innerHTML = parsedData.num_acc;
-            document.getElementById('figure4').innerHTML = parsedData.user_credit;
-            document.getElementById('progress1').style.width = (parsedData.percentage_involved * 100).toFixed(2) + "%";
-            document.getElementById('show_progress1').innerHTML = parsedData.percentage_involved + "%";
-            var temp2 = "0%";
-            if (parsedData.num_val_tp != 0) {
-                temp2 = ((parsedData.num_val_tp / parsedData.num_val) * 100).toFixed(2) + "%";
-            }
-            document.getElementById('progress2').style.width = temp2;
-            document.getElementById('show_progress2').innerHTML = temp2;
-            var temp3 = "0%";
-            if (parsedData.num_acc != 0) {
-                temp3 = ((parsedData.num_acc / parsedData.num_answer) * 100).toFixed(2) + "%";
-            }
-            document.getElementById('progress3').style.width = temp3;
-            document.getElementById('show_progress3').innerHTML = temp3;
-            document.getElementById('progress4').style.width = (parsedData.rank * 100).toFixed(2) + "%";
-            document.getElementById('show_progress4').innerHTML = (parsedData.rank * 100).toFixed(2) + "%";
-
         }
     });
 });
