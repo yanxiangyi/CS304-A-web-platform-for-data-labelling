@@ -104,9 +104,37 @@ def imagelabel():
     return render_template('imagelabel.html')
 
 
-@app.route("/textlabel.html")
+@app.route("/textlabel.html", methods=['GET', 'POST'])
 @cross_origin()
 def textlabel():
+    # if "email" in session:
+    #     if session['level'] == 0:
+    #         if 'jsons' in session:
+    #             # content = request.get_json(silent=True)
+    #             # print(content)
+    #             if request.method == 'POST':
+    #                 message = request.json['message']
+    #                 print(message)
+    #                 # jsons = content['message']
+    #                 c = init_cnx()
+    #                 # Store label jsons in database
+    #
+    #                 c.close()
+    #                 session.pop('jsons', None)
+    #                 result = {"code": 0, "message": message}
+    #                 return jsonify(result)
+    #
+    #         # else:
+    #         #     result = {"code": 1, "message": "Session time out! Please apply for another 10 data!"}
+    #         #     return jsonify(result)
+    #
+    #     else:
+    #         result = {"code": 1, "message": "Please login as users!"}
+    #         return jsonify(result)
+    #
+    # else:
+    #     result = {"code": 1, "message": "Please login first!"}
+    #     return jsonify(result)
     return render_template('textlabel.html')
 
 
@@ -510,114 +538,18 @@ def retrieve_label():
     if "email" in session:
         if session['level'] == 0:
             if 'jsons' in session:
-                content = request.get_json(silent=True)
-                content = {
-  "code": 0,
-  "message": [
-    {
-      "data": "\u8c22\u4e39\u5b81\u771f\u6f02\u4eae",
-      "dataid": 34,
-      "index": 1,
-      "projectName": "xiedn_proj",
-      "task": [
-        {
-          "aim": "",
-          "choices": [
-            "Positive",
-            "Neutral",
-            "Negative"
-          ],
-          "front": "option",
-          "label": "",
-          "mode": "single"
-        }
-      ]
-    },
-    {
-      "data": "\u4eca\u5929\u5929\u6c14\u771f\u597d\u554a",
-      "dataid": 27,
-      "index": 2,
-      "projectName": "xiedn_proj",
-      "task": [
-        {
-          "aim": "",
-          "choices": [
-            "Positive",
-            "Neutral",
-            "Negative"
-          ],
-          "front": "option",
-          "label": "",
-          "mode": "single"
-        }
-      ]
-    },
-    {
-      "data": "\u8bf7\u95ee\u6559\u5b66\u697c\u5728\u54ea",
-      "dataid": 31,
-      "index": 3,
-      "projectName": "xiedn_proj",
-      "task": [
-        {
-          "aim": "",
-          "choices": [
-            "Positive",
-            "Neutral",
-            "Negative"
-          ],
-          "front": "option",
-          "label": "",
-          "mode": "single"
-        }
-      ]
-    },
-    {
-      "data": "\u8fd9\u4e2a\u83dc\u771f\u96be\u5403",
-      "dataid": 29,
-      "index": 4,
-      "projectName": "xiedn_proj",
-      "task": [
-        {
-          "aim": "",
-          "choices": [
-            "Positive",
-            "Neutral",
-            "Negative"
-          ],
-          "front": "option",
-          "label": "",
-          "mode": "single"
-        }
-      ]
-    },
-    {
-      "data": "\u6211\u5b9e\u5728\u60f3\u4e0d\u51fa\u6765\u4e86",
-      "dataid": 32,
-      "index": 5,
-      "projectName": "xiedn_proj",
-      "task": [
-        {
-          "aim": "",
-          "choices": [
-            "Positive",
-            "Neutral",
-            "Negative"
-          ],
-          "front": "option",
-          "label": "",
-          "mode": "single"
-        }
-      ]
-    }
-  ]
-}
-                jsons = content['message']
+                # content = request.get_json(silent=True)
+                # print(content)
+                if request.method == 'POST':
+                    message = request.json['message']
+                print(message)
+                # jsons = content['message']
                 c = init_cnx()
                 # Store label jsons in database
 
                 c.close()
                 session.pop('jsons', None)
-                result = {"code": 0}
+                result = {"code": 0, "message": message}
             else:
                 result = {"code": 1, "message": "Session time out! Please apply for another 10 data!"}
         else:
@@ -625,8 +557,6 @@ def retrieve_label():
     else:
         result = {"code": 1, "message": "Please login first!"}
     return jsonify(result)
-
-
 
 
 if __name__ == '__main__':
