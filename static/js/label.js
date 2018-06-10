@@ -147,13 +147,19 @@ jQuery(document).ready(function() {
                   selectedWrapper.className = "form-control m-select2";
                   document.getElementById("col_sm_12_Div" + i + j).appendChild(selectedWrapper);
 
+
+                  var sel = document.createElement("select");
+                  sel.setAttribute("id", "sel" + i + j);
+                  sel.setAttribute("name", "sel" + i + j);
+                  document.getElementById("selectedWrapper" + i + j).appendChild(sel);
+
                   for(let k = 0; k < jsdataTask[j].label.length; k++){
                     var singleOption = document.createElement("option");
                     singleOption.setAttribute("id", "singleOption" + i + j + k); 
                     singleOption.setAttribute("value", jsdataTask[j].label[k]);
                     singleOption.setAttribute("selected", "selected");
                     singleOption.selected=true;
-                    document.getElementById("selectedWrapper" + i + j).appendChild(singleOption);
+                    document.getElementById("sel" + i + j).appendChild(singleOption);
                     document.getElementById("singleOption" + i + j + k).appendChild(document.createTextNode(jsdataTask[j].label[k]));
                   }            
                 }
@@ -179,11 +185,11 @@ function gatherValues() {
                 // json_to_return.message[i].task[j].label = document.querySelector('input[name="' + checkboxname + '"]:checked').value;
                 json_to_return.message[i].task[j].label = returnArray;
             }else if(json_to_return.message[i].task[j].mode === "open"){
-                var selectedname = "selectedwrapper" + i + j;
+                var selectedname = "sel" + i + j;
                 var e = document.getElementById(selectedname);
-                if(e.options !== null){
-                    json_to_return.message[i].task[j].label = e.options[e.selectedIndex].value;
-                }
+
+                json_to_return.message[i].task[j].label = e.options[e.selectedIndex].value;
+
                 // json_to_return.message[i].task[j].label = $(selectedname).val();
             }
         }
@@ -217,11 +223,11 @@ function queryAgain(){
                 // json_to_return.message[i].task[j].label = document.querySelector('input[name="' + checkboxname + '"]:checked').value;
                 json_to_return.message[i].task[j].label = returnArray;
             }else if(json_to_return.message[i].task[j].mode === "open"){
-                var selectedname = "selectedwrapper" + i + j;
+                var selectedname = "sel" + i + j;
                 var e = document.getElementById(selectedname);
-                if(e.options !== null){
-                    json_to_return.message[i].task[j].label = e.options[e.selectedIndex].value;
-                }
+
+                json_to_return.message[i].task[j].label = e.options[e.selectedIndex].value;
+
             }
         }
     }
