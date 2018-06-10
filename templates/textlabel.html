@@ -29,6 +29,8 @@
 <!-- end::Head -->
 <!-- end::Body -->
 <body class="m-page--wide m-header--fixed m-header--fixed-mobile m-footer--push m-aside--offcanvas-default">
+<div id="jsonstring"></div>
+<div id="projname"></div>
 <!-- begin:: Page -->
 <div class="m-grid m-grid--hor m-grid--root m-page">
     <!-- begin::Header -->
@@ -193,12 +195,12 @@
 
                         </div>
                         <div class="col-lg-6 m--align-right">
-                            <button type="submit" class="btn btn-brand" id="submit_result">
+                            <button type="submit" class="btn btn-brand" id="submit_result" onclick="gatherValues();">
                                 Submit
                             </button>
                             <span class="m--margin-left-10">
 
-													<a href="#" class="m-link m--font-bold" id="five_more">
+													<a href="#" class="m-link m--font-bold" id="five_more" onclick="queryAgain();">
 														Five&nbsp;more
 													</a>
 												</span>
