@@ -208,7 +208,12 @@
   - default `label_date` is current time
   
   - the json file will be wrote into file `/home/se2018/label/<project name>/<index>_<userid>_label.json`. Note that `index` is the data index in `source` which is read from `.json`.
+
+- `load_ft_data(self, dataid)`
   
+  - load data for fault tolerance
+  
+  - return `[dataid, label_content, userid, user nb_accpet, user nb_answer]`
   
 
 
