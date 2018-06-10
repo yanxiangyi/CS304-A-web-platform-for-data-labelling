@@ -8,26 +8,34 @@ var Dashboard = function () {
             return;
         }
 
-        Morris.Donut({
-            element: 'm_chart_support_tickets',
-            data: [{
-                label: "High",
-                value: 20
-            }, {
-                label: "Mid",
-                value: 70
-            }, {
-                label: "Low",
-                value: 10
-            }],
-            labelColor: '#a7a7c2',
-            colors: [
-                mUtil.getColor('success'),
-                mUtil.getColor('info'),
-                mUtil.getColor('danger')
-            ]
-            //formatter: function (x) { return x + "%"}
+        $.ajax({
+            type: 'GET',
+            url: 'http://47.106.34.103:5000/pan',
+            success: function (json) {
+                var parsedData = json.message;
+                Morris.Donut({
+                    element: 'm_chart_support_tickets',
+                    data: [{
+                        label: "High",
+                        value: parsedData["1"]
+                    }, {
+                        label: "Mid",
+                        value: parsedData["2"]
+                    }, {
+                        label: "Low",
+                        value: parsedData["3"]
+                    }],
+                    labelColor: '#a7a7c2',
+                    colors: [
+                        mUtil.getColor('success'),
+                        mUtil.getColor('info'),
+                        mUtil.getColor('danger')
+                    ]
+                    //formatter: function (x) { return x + "%"}
+                });
+            }
         });
+
     }
 
     var daterangepickerInit = function () {
@@ -116,6 +124,7 @@ jQuery(document).ready(function () {
             document.getElementById('l5').innerHTML = parsedData[4];
         }
     });
+
     $.ajax({
         type: 'GET',
         url: 'http://47.106.34.103:5000/recent_task',
