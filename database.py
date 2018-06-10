@@ -347,7 +347,11 @@ class sql_conn:
         try:
             userid=self.get_user_id(user_email=user_email)
             proj_name = json_list[0]['projectName']
-            save_dir = save_dir+'label/{}/'.format(proj_name)
+            save_dir = save_dir+'{}/'.format(proj_name)
+            
+            if not os.path.exists(save_dir):
+                os.makedirs(save_dir)
+                
             for j in json_list:
                 #save the file
                 save_path = save_dir+str(j['index'])+'_'+str(userid)+'_label.json'

@@ -206,7 +206,7 @@
   
   - return **0** not determined; **1** correct; **-1** incorrect.
   
-- `insert_label(self, user_email, json_list, save_dir=None, label_date=get_timestamp(), correct=0`
+- `insert_label(self, user_email, json_list, save_dir='/home/se2018/label/', label_date=get_timestamp(), correct=0`
 
   - save json to file  & insert label into database
   
