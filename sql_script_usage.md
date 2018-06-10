@@ -81,6 +81,12 @@
 
    return user credits rank
    
+- `set_user_nb_answer(self, user_email, addoffset)`
+
+   - set user answer count `nb_answer` to original value `+= addoffset`
+   
+   - return : **1** success;  **-1** fail
+   
 - `get_user_source(self, user_email)`
 
    Get the labeling task the user participated. Return a list of `sourceid`
@@ -181,7 +187,7 @@
   
 - `fetch_data(self, sourcename, user_email, nb=5)`
   
-  Fetch 5 unfinished task randomly for the user. Default 5
+  Fetch 5 unfinished task for the user. Default 5
   
 #### 2.5 Label Utility
 
