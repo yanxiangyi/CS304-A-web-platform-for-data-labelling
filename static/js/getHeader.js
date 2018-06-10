@@ -3,7 +3,7 @@ jQuery(document).ready(function () {
         type: 'GET',
         url: 'http://47.106.34.103:5000/profile',
         success: function (json) {
-            if(json.message  == 0){
+            if(json.code  == 0){
                 $("#headerRef").append("<div class=\"m-stack__item m-topbar__nav-wrapper\">\n" +
                     "                        <ul class=\"m-topbar__nav m-nav m-nav--inline\">\n" +
                     "                            <!--Hello profile-->\n" +
