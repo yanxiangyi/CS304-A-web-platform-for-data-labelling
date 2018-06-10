@@ -171,6 +171,7 @@ class sql_conn:
         join text_data td on td.dataid=tl.dataid join users u  on tl.userid= u.userid where u.userid={};".format(userid))
     
     def get_user_mainpage_pan(self, user_email):
+        result = {1:0,2:0,3:0}
         try:
             # return [(priority, count), (priority, count), ...]
             userid = self.get_user_id(user_email=user_email)
@@ -178,9 +179,12 @@ class sql_conn:
             (select  distinct(td.datasource), s.priority from text_label tl \
             join text_data td on tl.dataid=td.dataid join source s on s.sourceid = td.datasource \
             where userid={}) x group by x.priority;".format(userid)
-            return self.__exe_sql(sql)
+            tup =  self.__exe_sql(sql)
+            for t in tup:
+                result[t[0]]=t[1]
+            return result
         except:
-            return [(1,0),(2,0),(3,0)]
+            return result
     
     def __user_label_later_number(self, ts_list, tr):
         cnt = 0
@@ -208,6 +212,13 @@ class sql_conn:
                                     {'adminid': adminid, 'adminname': adminname, 'email_address': admin_email},
                                     head=False)
 
+    def get_admin_passwd(self, admin_email=None):
+        return self.__get_by_option('admin', 'password',
+                                    {'email_address': admin_email})
+    
+    def get_admin_access_level(self, admin_email):
+        return self.__get_by_option('admin', 'access_level',
+                                    {'email_address': admin_email})
     def insert_admin(self, email_addr, adminname, passwd, access_level=1):
         # insertion: 1 success, 0: already exist, -1: fail
         if self.__search_admin_by_name(adminname) == None:
@@ -304,14 +315,16 @@ class sql_conn:
         userid=self.get_user_id(user_email=user_email)
         sourceid = self.get_source_id(sourcename=sourcename)
         
-        l = self.__exe_sql("select td.dataid, td.datasource, td.data_index, td.data_path from text_data td \
+        l = self.__exe_sql("select distinct(td.dataid), td.datasource, td.data_index, td.data_path from text_data td \
         left join text_label tl on tl.dataid = td.dataid \
         where td.datasource ={} and td.final_labelid is NULL and (tl.userid!={} or tl.userid is NULL)\
         limit {};".format(sourceid, userid, nb))
         
         result = []
+        #set_trace()
         for i in l:
             with open(i[-1]) as f:
+                print(i[-1])
                 data = json.load(f)
             data['dataid'] = int(i[0])
             result.append(data)
@@ -332,7 +345,8 @@ class sql_conn:
 
     def insert_label(self, user_email, json_list, save_dir='/home/se2018/label/', label_date=get_timestamp(), correct=0):
         # insert label , save label json file from the same user of the same project
-        try:
+        #try:
+        if True:
             userid=self.get_user_id(user_email=user_email)
             proj_name = json_list[0]['projectName']
             save_dir = save_dir+'{}/'.format(proj_name)
@@ -349,17 +363,19 @@ class sql_conn:
                 sourceid = self.get_source_id(sourcename=proj_name)
                 label_content = []
                 for subtask in j['task']:
+                    #set_trace()
                     label_content.append(subtask['label'])
 
-
+                label_content = str(label_content).replace("'", "`")
                 sql = "INSERT INTO text_label(`dataid`,`userid`,`labeldate`,`label_path`,`label_content`,`correct`) VALUES \
                 ({},{},{},'{}','{}',{});".format(j['dataid'], userid, label_date, save_path, label_content, correct)
+    
                 print(sql)
                 if(self.__insertion(sql)== -1):
                     return 0
             return 1
-        except:
-            return -1
+#         except:
+#             return -1
     
     
 
