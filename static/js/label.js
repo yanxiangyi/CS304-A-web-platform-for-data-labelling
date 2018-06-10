@@ -181,7 +181,9 @@ function gatherValues() {
             }else if(json_to_return.message[i].task[j].mode === "open"){
                 var selectedname = "selectedwrapper" + i + j;
                 var e = document.getElementById(selectedname);
-                json_to_return.message[i].task[j].label = e.options[e.selectedIndex].value;
+                if(e.options !== null){
+                    json_to_return.message[i].task[j].label = e.options[e.selectedIndex].value;
+                }
                 // json_to_return.message[i].task[j].label = $(selectedname).val();
             }
         }
