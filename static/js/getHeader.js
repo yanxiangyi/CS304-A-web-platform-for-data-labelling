@@ -83,9 +83,6 @@ jQuery(document).ready(function () {
             }
 
             var parsedData = json.message;
-            document.getElementById('usrname').innerHTML = parsedData.user_name;
-            document.getElementById('inner_usrname').innerHTML = parsedData.user_name;
-            document.getElementById('inner_email').innerHTML = parsedData.user_email;
             document.getElementById('figure1').innerHTML = parsedData.num_answer;
             document.getElementById('figure2').innerHTML = parsedData.num_val_tp;
             document.getElementById('figure3').innerHTML = parsedData.num_acc;

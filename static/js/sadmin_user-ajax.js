@@ -377,16 +377,6 @@ var DatatableRemoteAjax2 = function() {
 }();
 
 jQuery(document).ready(function() {
-    $.ajax({
-        type: 'GET',
-        url: 'http://47.106.34.103:5000/profile',
-        success: function (json) {
-            var parsedData = json.message;
-            document.getElementById('usrname').innerHTML = parsedData.user_name;
-            document.getElementById('inner_usrname').innerHTML = parsedData.user_name;
-            document.getElementById('inner_email').innerHTML = parsedData.user_email;
-        }
-    });
     DatatableRemoteAjax1.init();
     DatatableRemoteAjax2.init();
 });
