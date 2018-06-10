@@ -181,7 +181,7 @@
   
 - `fetch_data(self, sourcename, user_email, nb=5)`
   
-  Fetch 5 unfinished task for the user. Default 5
+  Fetch 5 unfinished task randomly for the user. Default 5
   
 #### 2.5 Label Utility
 

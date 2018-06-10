@@ -2,6 +2,7 @@ import time
 import os
 import json
 import datetime
+import random
 
 def get_timestamp():
     return float("{0:.2f}".format(time.time()))
@@ -89,7 +90,7 @@ class sql_conn:
             
             [user_id, user_email, user_name, password, signup_time, user_credit, nb_answer, nb_accept, _,_] = user
             acc =  nb_accept/nb_answer if nb_answer!=0 else 0
-            result.append({"user_email": user_email, "user_name": user_name,  
+            result.append({"user_email": user_email, "user_name": user_name, "signin_date":signup_time, 
                            "user_credit": user_credit, "nb_answer": nb_answer, "acc":acc})
         return result
     
@@ -237,7 +238,7 @@ class sql_conn:
             
             nb_source = len(c.get_admin_source(admin_email=email_address))
             result.append({"admin_email":email_address, "adminname":adminname,  
-                          "nb_source":nb_source, "nb_task":nb_task if nb_task!=None else 0})
+                          "nb_source":nb_source, "nb_task":int(nb_task if nb_task!=None else 0)})
 
         return result
         
@@ -274,6 +275,9 @@ class sql_conn:
 
     def get_source_id(self, sourcename):
         return self.__get_by_option('source', 'sourceid', {'sourcename': sourcename})
+    
+    def get_source_nb_json(self, sourceid):
+        return self.__exe_sql("select nb_json from source where sourceid={};".format(sourceid))[0][0]
 
     def insert_source(self, sourcename, finished=0, publisher='NULL', description='', publish_time=get_timestamp(),
                       priority=1):
@@ -342,17 +346,19 @@ class sql_conn:
     def fetch_data(self, sourcename, user_email, nb=5):
         userid=self.get_user_id(user_email=user_email)
         sourceid = self.get_source_id(sourcename=sourcename)
+    
         
         l = self.__exe_sql("select distinct(td.dataid), td.datasource, td.data_index, td.data_path from text_data td \
         left join text_label tl on tl.dataid = td.dataid \
         where td.datasource ={} and td.final_labelid is NULL and (tl.userid!={} or tl.userid is NULL)\
-        limit {};".format(sourceid, userid, nb))
+        ;".format(sourceid, userid))
         
+        l = random.sample(l,nb)
         result = []
         #set_trace()
         for i in l:
             with open(i[-1]) as f:
-                print(i[-1])
+                #print(i[-1])
                 data = json.load(f)
             data['dataid'] = int(i[0])
             result.append(data)
@@ -398,7 +404,7 @@ class sql_conn:
                 sql = "INSERT INTO text_label(`dataid`,`userid`,`labeldate`,`label_path`,`label_content`,`correct`) VALUES \
                 ({},{},{},'{}','{}',{});".format(j['dataid'], userid, label_date, save_path, label_content, correct)
     
-                print(sql)
+                #print(sql)
                 if(self.__insertion(sql)== -1):
                     return 0
             return 1
