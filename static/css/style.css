@@ -211,7 +211,7 @@ HEADER>DIV {
 }
 
 .sidebar__menu__item A:hover {
-    color: #f21692
+    color: #3daef4
 }
 
 .header__references {
@@ -338,7 +338,7 @@ HEADER>DIV {
     height: 56px;
     font-family: "hindbold";
     text-transform: uppercase;
-    border: 1px solid #f21692;
+    border: 1px solid #3daef4;
     color: #fff;
     -webkit-border-radius: 50px;
     border-radius: 50px;
@@ -355,7 +355,7 @@ HEADER>DIV {
 .intro__video:hover {
     text-decoration: none;
     color: #fff;
-    background-color: #f21692
+    background-color: #3daef4
 }
 
 .intro__video:active {
@@ -410,14 +410,14 @@ HEADER>DIV {
 }
 
 .main__menu__item.active A {
-    background-color: #f21692;
+    background-color: #3daef4;
     color: #fff;
     -webkit-border-radius: 50px;
     border-radius: 50px
 }
 
 .main__menu__item.active A:hover {
-    background-color: #f21692;
+    background-color: #3daef4;
     color: #fff;
     cursor: default
 }
@@ -436,7 +436,7 @@ HEADER>DIV {
 
 .main__menu__item A:hover {
     background-color: #faf9fd;
-    color: #f21692;
+    color: #3daef4;
     -webkit-border-radius: 50px;
     border-radius: 50px
 }
@@ -530,9 +530,9 @@ HEADER>DIV {
 }
 
 .theme__column_top_links A:hover {
-    background-color: #f21692;
+    background-color: #3daef4;
     color: #fff;
-    border-color: #f21692
+    border-color: #3daef4
 }
 
 .theme__column_top_links A:first-child {
@@ -542,7 +542,7 @@ HEADER>DIV {
 }
 
 .theme__column_top_links A:first-child:hover {
-    border-color: #f21692
+    border-color: #3daef4
 }
 
 .theme__column_top_links A:last-child {
@@ -573,7 +573,7 @@ HEADER>DIV {
     padding: 31px 40px;
     font-size: 20px;
     font-family: "hindregular";
-    color: #f1ebfb;
+    color: #000;
     line-height: 34px;
     background: url("../img/blockquote.png");
     border-left: none
@@ -586,12 +586,12 @@ HEADER>DIV {
     z-index: 2;
     font-size: 20px;
     font-family: "hindsemibold";
-    color: #fff
+    color: #000
 }
 
 .blockquote__author SPAN {
     font-family: "hindlight";
-    color: #fff;
+    color: #000;
     font-size: 18px
 }
 
@@ -724,17 +724,17 @@ HEADER>DIV {
     color: #fff;
     -webkit-border-radius: 50px;
     border-radius: 50px;
-    background-color: #f21692;
+    background-color: #3daef4;
     text-decoration: none;
     -webkit-box-shadow: 0 0 30px 6px rgba(62, 28, 131, 0.6);
     -o-box-shadow: 0 0 30px 6px rgba(62, 28, 131, 0.6);
-    box-shadow: 0 0 30px 6px rgba(62, 28, 131, 0.6)
+    box-shadow: 0 0 30px 6px rgba(61, 174, 244, 0.31)
 }
 
 .button:hover {
     text-decoration: none;
     color: #fff;
-    background-color: #e30482
+    background-color: #1382f2
 }
 
 .button:active {
@@ -854,14 +854,14 @@ FOOTER>IMG {
     color: #fff;
     -webkit-border-radius: 50px;
     border-radius: 50px;
-    background-color: #f21692;
+    background-color: #3daef4;
     text-decoration: none;
     border: none;
     cursor: pointer
 }
 
 .subscribe BUTTON:hover {
-    background-color: #e30482
+    background-color: #1382f2
 }
 
 .button_purple {
@@ -1372,9 +1372,9 @@ p {
     font-family: "hindbold";
     font-size: 15px;
     text-transform: uppercase;
-    color: #f21692;
+    color: #3daef4;
     background-color: transparent;
-    border: 1px solid #f21692;
+    border: 1px solid #3daef4;
     -webkit-border-radius: 50px;
     border-radius: 50px;
     cursor: pointer
@@ -1382,7 +1382,7 @@ p {
 
 .button__hole:hover {
     text-decoration: none;
-    background-color: #f21692;
+    background-color: #3daef4;
     color: #fff
 }
 
