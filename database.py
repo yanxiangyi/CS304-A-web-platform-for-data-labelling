@@ -221,7 +221,7 @@ class sql_conn:
         return self.__get_by_option('source', 'sourceid', {'sourcename': sourcename})
 
     def get_source_finished(self, sourcename=None, sourceid=None):
-        result = self.__get_by_option('source', 'nb_finished', {'sourceid': sourceid, 'sourcename': sourcename})
+        result = self.__get_by_option('source', 'finished', {'sourceid': sourceid, 'sourcename': sourcename})
         return True if result == 1 else False
 
     def get_source_publisherid(self, sourcename=None, sourceid=None):
@@ -234,13 +234,13 @@ class sql_conn:
     def get_source_priority(self, sourcename=None, sourceid=None):
         return self.__get_by_option('source', 'priority', {'sourceid': sourceid, 'sourcename': sourcename})
 
-    def insert_source(self, sourcename, nb_finished=0, publisher='NULL', description='', publish_time=get_timestamp(),
+    def insert_source(self, sourcename, finished=0, publisher='NULL', description='', publish_time=get_timestamp(),
                       priority=1):
         # insertion: 1 success, 0: already exist, -1: fail
         if self.__search_source_by_name(sourcename) == None:
 
-            sql = "INSERT INTO `se_proj`.`source` (`sourcename`,`nb_finished`,`publisher`,`description`,`publish_date`, `priority`)\
-            VALUES ('{}',{}, {},'{}',{},{});".format(sourcename, nb_finished, publisher, description, publish_time,
+            sql = "INSERT INTO `se_proj`.`source` (`sourcename`,`finished`,`publisher`,`description`,`publish_date`, `priority`)\
+            VALUES ('{}',{}, {},'{}',{},{});".format(sourcename, finished, publisher, description, publish_time,
                                                      priority)
             # print(sql)
             return self.__insertion(sql)
@@ -320,9 +320,9 @@ class sql_conn:
             result.append(data)
         return result
 
-
+    
     # label *****************************************************************************
-
+    
     # index: dataid, userid
     def __get_label_sth(self, target_col, dataid, userid=None, username=None, user_email=None):
         if userid == None:
@@ -342,7 +342,31 @@ class sql_conn:
         # return 0 not determined, 1 correct, -1 not correct
         return self.__get_label_sth('correct', userid, username, user_email)
 
-    #def insert_label(self, userid, label_path, label_date=get_timestamp(), correct=0)
+    def insert_label(self, user_email, json_list, save_dir=None, label_date=get_timestamp(), correct=0):
+        # insert label , save label json file from the same user of the same project
+        #try:
+        if True:
+            userid=self.get_user_id(user_email=user_email)
+            proj_name = json_list[0]['projectName']
+            if save_dir == None:
+                save_dir = '/home/se2018/label/{}/'.format(proj_name)
+            for j in json_list:
+                #save the file
+                save_path = save_dir+str(j['index'])+'_label.json'
+                with open(save_path, 'w') as outfile:
+                    json.dump(j, outfile)
+
+                sourceid = self.get_source_id(sourcename=proj_name)
+                label_content = []
+                for subtask in j['task']:
+                    label_content.append(subtask['label'])
+
+
+                sql = "INSERT INTO text_label(`dataid`,`userid`,`labeldate`,`label_path`,`label_content`,`correct`) VALUES \
+                ({},{},{},'{}','{}',{});".format(j['dataid'], userid, label_date, save_path, label_content, correct)
+            return 1
+#         except:
+#             return -1
         
     def close(self):
         self.cursor.close()
