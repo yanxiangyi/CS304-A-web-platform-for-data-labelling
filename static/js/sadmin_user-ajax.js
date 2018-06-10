@@ -1,6 +1,6 @@
 //== Class definition
 
-var DatatableRemoteAjax1 = function() {
+var DatatableRemoteAjax1 = function () {
     //== Private functions
 
     var daterangepickerInit = function () {
@@ -45,7 +45,7 @@ var DatatableRemoteAjax1 = function() {
     }
 
     // basic demo
-    var demo = function() {
+    var demo = function () {
 
         var datatable = $('#ajax_data1').mDatatable({
             // datasource definition
@@ -56,7 +56,7 @@ var DatatableRemoteAjax1 = function() {
                         // sample GET method
                         method: 'GET',
                         url: 'http://47.106.34.103:5000/alladmin',
-                        map: function(raw) {
+                        map: function (raw) {
                             // sample data mapping
                             //var temp = eval(raw);
                             var dataSet = raw;
@@ -103,44 +103,44 @@ var DatatableRemoteAjax1 = function() {
             // columns definition
             columns: [
                 {
-                    field: 'user_name',
-                    title: 'Username',
+                    field: 'adminname',
+                    title: 'Admins\' name',
                     // sortable: 'asc', // default sort
                     filterable: false, // disable or enable filtering
-                    width: 100,
+                    // width: 100,
                     // basic templating support for column rendering,
                     //template: '{{source_id}} - {{source_name}}',
+                }, {
+                    field: 'admin_email',
+                    title: 'Email',
+                    // width: 150,
                 },
-                // {
-                //     field: 'source_name',
-                //     title: 'Register_time',
-                //     width: 200,
-                // },
                 // {
                 //     field: 'publisher',
                 //     title: 'Uploader',
                 // },
+                // {
+                //     field: 'publish_date',
+                //     title: 'Register Time',
+                //     type: 'date',
+                //     template: function (row) {
+                //         var date = new Date(row.publish_date * 1000);//如果date为13位不需要乘1000
+                //         var Y = date.getFullYear() + '-';
+                //         var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+                //         var D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + ' ';
+                //         var h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':';
+                //         var m = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':';
+                //         var s = (date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds());
+                //         return Y + M + D + h + m + s;
+                //
+                //     },
+                // },
                 {
-                    field: 'publish_date',
-                    title: 'Register Time',
-                    type: 'date',
-                    template: function (row) {
-                        var date = new Date(row.publish_date * 1000);//如果date为13位不需要乘1000
-                        var Y = date.getFullYear() + '-';
-                        var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
-                        var D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + ' ';
-                        var h = (date.getHours() < 10 ? '0' + date.getHours() : date.getHours()) + ':';
-                        var m = (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()) + ':';
-                        var s = (date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds());
-                        return Y + M + D + h + m + s;
-
-                    },
-                },{
-                    field: 'publish number',
-                    title: 'Publish Task',
+                    field: 'nb_source',
+                    title: 'Task Count',
                 }
-                ,{
-                    field:'publish task',
+                , {
+                    field: 'nb_task',
                     title: 'Total Problem',
                 }
                 // ,
@@ -186,11 +186,11 @@ var DatatableRemoteAjax1 = function() {
             ],
         });
 
-        $('#m_form_status').on('change', function() {
+        $('#m_form_status').on('change', function () {
             datatable.search($(this).val().toLowerCase(), 'Status');
         });
 
-        $('#m_form_type').on('change', function() {
+        $('#m_form_type').on('change', function () {
             datatable.search($(this).val().toLowerCase(), 'Type');
         });
 
@@ -200,19 +200,17 @@ var DatatableRemoteAjax1 = function() {
 
     return {
         // public functions
-        init: function() {
+        init: function () {
             daterangepickerInit();
             demo();
         },
     };
 }();
 
-var DatatableRemoteAjax2 = function() {
+var DatatableRemoteAjax2 = function () {
     //== Private functions
-
-
     // basic demo
-    var demo = function() {
+    var demo = function () {
 
         var datatable = $('#ajax_data2').mDatatable({
             // datasource definition
@@ -223,7 +221,7 @@ var DatatableRemoteAjax2 = function() {
                         // sample GET method
                         method: 'GET',
                         url: 'http://47.106.34.103:5000/alluser',
-                        map: function(raw) {
+                        map: function (raw) {
                             // sample data mapping
                             //var temp = eval(raw);
                             var dataSet2 = raw;
@@ -274,7 +272,7 @@ var DatatableRemoteAjax2 = function() {
                     title: 'Username',
                     // sortable: 'asc', // default sort
                     filterable: false, // disable or enable filtering
-                    width: 200,
+                    // width: 150,
                     // basic templating support for column rendering,
                     //template: '{{source_id}} - {{source_name}}',
                 },
@@ -288,12 +286,16 @@ var DatatableRemoteAjax2 = function() {
                 //     title: 'Uploader',
                 // },
                 {
+                    field: 'user_email',
+                    title: 'Email',
+                    // width: 150,
+                },
+                {
                     field: 'signin_date',
                     title: 'Register Time',
-                    type: 'date',
-                    width: 230,
+                    // width: 150,
                     template: function (row) {
-                        var date = new Date(row.signin_date * 1000);//如果date为13位不需要乘1000
+                        var date = new Date(row.signin_date * 1000);
                         var Y = date.getFullYear() + '-';
                         var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
                         var D = (date.getDate() < 10 ? '0' + (date.getDate()) : date.getDate()) + ' ';
@@ -302,16 +304,25 @@ var DatatableRemoteAjax2 = function() {
                         var s = (date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds());
                         return Y + M + D + h + m + s;
                     },
-                },{
-                    field: 'user_credit',
-                    title: 'Credits',
+                }, {
+                    field: 'nb_answer',
+                    title: 'Finished',
+                    width: 100,
                 }
-                ,{
+                , {
                     field: 'acc',
                     title: 'Accuracy',
-                },{
-                    field:'user_email',
-                    title: 'Email',
+                    width: 100,
+                    template: function (row) {
+                        if (row.nb_answer == 0) {
+                            return "0%";
+                        }
+                        return ((row.acc / row.nb_answer) * 100).toFixed(2) + "%";
+                    },
+                }, {
+                    field: 'user_credit',
+                    title: 'Credits',
+                    width: 100,
                 }
                 // ,
                 // {
@@ -353,14 +364,14 @@ var DatatableRemoteAjax2 = function() {
                 //         return finish + '%';
                 //     },
                 // }
-                ],
+            ],
         });
 
-        $('#m_form_status2').on('change', function() {
+        $('#m_form_status2').on('change', function () {
             datatable.search($(this).val().toLowerCase(), 'Status');
         });
 
-        $('#m_form_type2').on('change', function() {
+        $('#m_form_type2').on('change', function () {
             datatable.search($(this).val().toLowerCase(), 'Type');
         });
 
@@ -370,7 +381,7 @@ var DatatableRemoteAjax2 = function() {
 
     return {
         // public functions
-        init: function() {
+        init: function () {
             demo();
         },
     };
@@ -447,7 +458,7 @@ var NewAdminReg = function () {
                                 title: "Success!",
                                 text: "You have successfully created an administrator",
                                 type: "success"
-                            }).then(function(){
+                            }).then(function () {
                                 window.location.reload();
                             })
                             ;
@@ -458,7 +469,7 @@ var NewAdminReg = function () {
                                 title: "Error!",
                                 text: json.message,
                                 type: "error"
-                            }).then(function(){
+                            }).then(function () {
                                 var signInForm = login.find('#mainForm');
                                 signInForm.clearForm();
                                 signInForm.validate().resetForm();
@@ -477,7 +488,7 @@ var NewAdminReg = function () {
     };
 }();
 
-jQuery(document).ready(function() {
+jQuery(document).ready(function () {
     NewAdminReg.init();
     DatatableRemoteAjax1.init();
     DatatableRemoteAjax2.init();
