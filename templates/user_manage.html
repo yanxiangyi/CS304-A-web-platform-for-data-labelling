@@ -304,7 +304,7 @@
                     <!--begin::Modal-->
                     <div class="modal fade" id="m_timepicker_modal" tabindex="-1" role="dialog" aria-labelledby=""
                          aria-hidden="true">
-                        <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-dialog modal-lg" role="document" id="m_login">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="">
@@ -314,49 +314,63 @@
                                         <span aria-hidden="true" class="la la-remove"></span>
                                     </button>
                                 </div>
-                                <form class="m-form m-form--fit m-form--label-align-right">
+                                <form class="m-form m-form--fit m-form--label-align-right" id = "mainForm">
                                     <div class="modal-body">
                                         <div class="form-group m-form__group row m--margin-top-20">
                                             <div class="alert m-alert m-alert--default" role="alert">
-                                                The following form allow you - the super advisor to create admin account,
-                                                and to give out those account to whomever you want.
+                                                The following form allow you - the super advisor to create admin
+                                                account, and to give out those account to whomever you want.
                                             </div>
                                         </div>
                                         <div class="form-group m-form__group row">
-                                            <label for="InputUsername">
+                                            <label for="u_name">
                                                 Username
                                             </label>
-                                            <input type="email" class="form-control m-input" id="InputUsername" aria-describedby="emailHelp" placeholder="Enter username">
+                                            <input type="text" class="form-control m-input" name="username" id="u_name"
+                                                   aria-describedby="emailHelp" placeholder="Enter username">
                                         </div>
                                         <div class="form-group m-form__group row">
-                                            <label for="InputEmail">
+                                            <label for="u_email">
                                                 Email address
                                             </label>
-                                            <input type="email" class="form-control m-input" id="InputEmail" aria-describedby="emailHelp" placeholder="Enter email">
+                                            <input type="email" class="form-control m-input" name="email" id="u_email"
+                                                   aria-describedby="emailHelp" placeholder="Enter email">
                                             <span class="m-form__help">
 													We'll never share your email with anyone else.
 												</span>
                                         </div>
                                         <div class="form-group m-form__group row">
-                                            <label for="InputPassword1">
+                                            <label for="u_password">
                                                 Password
                                             </label>
-                                            <input type="password" class="form-control m-input"
-                                                   id="InputPassword1" placeholder="Password">
+                                            <input type="password" name = "password" class="form-control m-input"
+                                                   id="u_password" placeholder="Password">
                                         </div>
-                                        <div class="form-group m-form__group row m--margin-bottom-20">
-                                            <label for="InputPassword2">
+                                        <div class="form-group m-form__group row ">
+                                            <label for="u_password2">
                                                 Confirm Password
                                             </label>
-                                            <input type="password" class="form-control m-input"
-                                                   id="InputPassword2" placeholder="Repeat your password">
+                                            <input type="password" name = "rpassword" class="form-control m-input"
+                                                   id="u_password2" placeholder="Repeat your password">
                                         </div>
+
+                                        <div class="form-group m-form__group row m--margin-bottom-20">
+                                            <label class="m-checkbox m-checkbox--solid m-checkbox--brand">
+                                                <input type="checkbox" name="agree">
+                                                I Agree the
+                                                <a href="#" class="m-link m-link--focus">
+                                                    terms and conditions
+                                                </a>.
+                                                <span></span>
+                                            </label>
+                                        </div>
+
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-brand m-btn" data-dismiss="modal">
                                             Close
                                         </button>
-                                        <button type="button" class="btn btn-secondary m-btn">
+                                        <button type="button" class="btn btn-secondary m-btn" id="submitReg">
                                             Submit
                                         </button>
                                     </div>

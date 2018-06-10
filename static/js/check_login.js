@@ -7,7 +7,6 @@ jQuery(document).ready(function () {
             document.getElementById('usrname').innerHTML = parsedData.user_name;
             document.getElementById('inner_usrname').innerHTML = parsedData.user_name;
             document.getElementById('inner_email').innerHTML = parsedData.user_email;
-
         }
     });
 })

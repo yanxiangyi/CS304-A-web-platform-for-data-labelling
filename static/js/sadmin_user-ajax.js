@@ -376,7 +376,109 @@ var DatatableRemoteAjax2 = function() {
     };
 }();
 
+var NewAdminReg = function () {
+
+    var login = $('#m_login');
+
+    var showErrorMsg = function (form, type, msg) {
+        var alert = $('<div class="m-alert m-alert--outline alert alert-' + type + ' alert-dismissible" role="alert">\
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close"></button>\
+			<span></span>\
+		</div>');
+
+        form.find('.alert').remove();
+        alert.prependTo(form);
+        alert.animateClass('fadeIn animated');
+        alert.find('span').html(msg);
+    }
+
+    var AdminRegs = function () {
+        $('#submitReg').click(function (e) {
+            e.preventDefault();
+            var btn = $(this);
+            var form = $(this).closest('form');
+
+            form.validate({
+                rules: {
+
+                    username: {
+                        required: true,
+                    },
+
+                    email: {
+                        required: true,
+                        email: true
+                    },
+
+                    password: {
+                        required: true
+                    },
+
+                    rpassword: {
+                        required: true
+                    },
+
+                    agree: {
+                        required: true
+                    }
+
+                }
+            });
+
+            if (!form.valid()) {
+                return;
+            }
+
+            btn.addClass('m-loader m-loader--right m-loader--light').attr('disabled', true);
+
+            var uMail = document.getElementById("u_email").value;
+
+            var uName = document.getElementById("u_name").value;
+
+            var uPd = document.getElementById("u_password").value;
+
+            form.ajaxSubmit({
+                type: "GET",
+                url: "http://47.106.34.103:5000/register/admin_email/" + uMail + "/adminname/" + uName + "/password/" + uPd,
+                success: function (json) {
+                    if (json.code == 0) {
+                        setTimeout(function () {
+                            swal({
+                                title: "Success!",
+                                text: "You have successfully created an administrator",
+                                type: "success"
+                            }).then(function(){
+                                window.location.reload();
+                            })
+                            ;
+                        }, 1000);
+                    } else {
+                        setTimeout(function () {
+                            swal({
+                                title: "Error!",
+                                text: json.message,
+                                type: "error"
+                            }).then(function(){
+                                var signInForm = login.find('#mainForm');
+                                signInForm.clearForm();
+                                signInForm.validate().resetForm();
+                            });
+                        }, 1000);
+                    }
+                }
+            });
+        });
+    }
+
+    return {
+        init: function () {
+            AdminRegs();
+        },
+    };
+}();
+
 jQuery(document).ready(function() {
+    NewAdminReg.init();
     DatatableRemoteAjax1.init();
     DatatableRemoteAjax2.init();
 });

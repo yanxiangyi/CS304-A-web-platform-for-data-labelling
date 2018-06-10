@@ -1,6 +1,5 @@
 //== Class Definition
 var SnippetLogin = function () {
-
     var login = $('#m_login');
 
     var showErrorMsg = function (form, type, msg) {
@@ -92,14 +91,12 @@ var SnippetLogin = function () {
             var passWord = document.getElementById("s_password").value;
 
             if (document.getElementById("checkAdmin").checked) {
-
                 form.ajaxSubmit({
                     type: "GET",
                     url: "http://47.106.34.103:5000/login_admin/email/" + eMail + "/password/" + passWord,
                     success: function (json) {
                         // similate 2s dela
                         if (json.code == 0) {
-                            // alert("Welcome, someone");
                             window.location.href = "index.html";
                         } else {
                             setTimeout(function () {
