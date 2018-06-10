@@ -205,6 +205,18 @@
 - `get_label_correct(self, dataid, userid=None, username=None, user_email=None)`
   
   - return **0** not determined; **1** correct; **-1** incorrect.
+  
+- `insert_label(self, user_email, json_list, save_dir=None, label_date=get_timestamp(), correct=0`
+
+  - save json to file  & insert label into database
+  
+  - return **1** if success , **-1** fail
+  
+  - default `save_dir = /home/se2018/label/<project_name>/`
+  
+  - default `label_date` is current time
+  
+  
 
 
 
