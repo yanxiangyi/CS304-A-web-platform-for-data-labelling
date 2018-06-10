@@ -299,7 +299,7 @@ def profile():
                 [user_id, user_email, user_name, password, signup_time, user_credit, num_answer, num_acc, num_val, num_val_tp] = c.get_user(user_email=email)
                 user_num = c.get_user_number()
                 source_involved = len(c.get_user_source(user_email=email))
-                rank = c.get_user_credit_rank(user_email=email)
+                rank = c.get_user_credits_rank(user_email=email)
                 source_number = c.get_source_number()
                 result = {"user_id": user_id, "user_email": user_email,
                           "user_name": user_name, "user_credit": user_credit,
@@ -564,6 +564,43 @@ def retrieve_label():
         result = {"code": 1, "message": "Please login first!"}
     return jsonify(result)
 
+
+@app.route('/pan')
+@cross_origin()
+def user_pan():
+    if "email" in session:
+        if session['level'] == 0:
+            c = init_cnx()
+            pan = c.get_user_mainpage_pan(user_email=session['email'])
+            c.close()
+            result = {"code": 0, "message": pan}
+        else:
+            result = {"code": 1, "message": "Please login as users!"}
+    else:
+        result = {"code": 1, "message": "Please login first!"}
+    return jsonify(result)
+
+
+@app.route('/pan_history')
+@cross_origin()
+def user_pan_history():
+    if "email" in session:
+        if session['level'] == 0:
+            c = init_cnx()
+            pan = c.get_user_mainpage_pan_history(user_email=session['email'])
+            c.close()
+            result = {"code": 0, "message": pan}
+        else:
+            result = {"code": 1, "message": "Please login as users!"}
+
+    else:
+        result = {"code": 1, "message": "Please login first!"}
+    return jsonify(result)
+
+
+@app.errorhandler(404)
+def page_not_found(foobar):
+    return render_template('404.html'), 404
 
 if __name__ == '__main__':
    app.run(host="0.0.0.0", port="5000", debug=True, threaded=True)
