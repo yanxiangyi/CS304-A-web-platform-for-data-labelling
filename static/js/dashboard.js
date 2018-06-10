@@ -86,8 +86,8 @@ jQuery(document).ready(function () {
             document.getElementById('figure3').innerHTML = parsedData.num_acc;
             document.getElementById('figure4').innerHTML = parsedData.user_credit;
             document.getElementById('progress1').style.width = (parsedData.percentage_involved * 100).toFixed(2) + "%";
-            document.getElementById('show_progress1').innerHTML = parsedData.percentage_involved + "%";
-            var temp2 = "0%"
+            document.getElementById('show_progress1').innerHTML = (parsedData.percentage_involved * 100).toFixed(2) + "%";
+            var temp2 = "0%";
             if (parsedData.num_val_tp != 0) {
                 temp2 = ((parsedData.num_val_tp / parsedData.num_val) * 100).toFixed(2) + "%";
             }
