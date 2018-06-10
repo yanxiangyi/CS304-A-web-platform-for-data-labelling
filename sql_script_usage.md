@@ -108,6 +108,10 @@
     
    return all the information of all admins
    
+- `get_admin_nb_task(self, adminid)`
+
+   return number of tasks published by the admin
+   
 - `get_admin_passwd(self, admin_email=None)`
 
 - `get_admin_access_level(self, admin_email)`
@@ -177,7 +181,7 @@
   
 - `fetch_data(self, sourcename, user_email, nb=5)`
   
-  Fetch 5 unfinished task for the user. Default 5
+  Fetch 5 unfinished task randomly for the user. Default 5
   
 #### 2.5 Label Utility
 

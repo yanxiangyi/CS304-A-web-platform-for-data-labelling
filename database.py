@@ -2,6 +2,7 @@ import time
 import os
 import json
 import datetime
+import random
 
 def get_timestamp():
     return float("{0:.2f}".format(time.time()))
@@ -83,8 +84,17 @@ class sql_conn:
 
     # user*******************************************************************************
     def get_all_user(self):
-        return self.__exe_sql("select * from users;")
-
+        user_list = self.__exe_sql("select * from users;")
+        result = []
+        for user in user_list:
+            
+            [user_id, user_email, user_name, password, signup_time, user_credit, nb_answer, nb_accept, _,_] = user
+            acc =  nb_accept/nb_answer if nb_answer!=0 else 0
+            result.append({"user_email": user_email, "user_name": user_name, "signin_date":signup_time, 
+                           "user_credit": user_credit, "nb_answer": nb_answer, "acc":acc})
+        return result
+    
+    
     def get_user(self, userid=None, username=None, user_email=None):
         return self.__get_by_option('users', '*', {'userid': userid, 'username': username, 'email_address': user_email},
                                     head=False)
@@ -206,12 +216,32 @@ class sql_conn:
         result.append(len(ts_list))
         return result
         
-    # admin******************************************************************************
+    # admin*****************************************************************************
     def get_admin(self, adminid=None, adminname=None, admin_email=None):
-        return self.__get_by_option('admin', '*',
+        return self.__get_by_option('admin', '*',  
                                     {'adminid': adminid, 'adminname': adminname, 'email_address': admin_email},
                                     head=False)
+            
+    def get_admin_nb_task(self, adminid):
+        sql = "select sum(nb_json) from se_proj.source where publisher ={};".format(adminid)
+        return self.__exe_sql(sql)[0][0]
+        
+            
+            
+    def get_all_admin(self):
+        admin_list = self.__exe_sql("select * from admin;")
+        result = []
+        for admin in admin_list:
+            [adminid,email_address, adminname, _, _] = admin
+            nb_task = self.get_admin_nb_task(adminid)
+            
+            
+            nb_source = len(self.get_admin_source(admin_email=email_address))
+            result.append({"admin_email":email_address, "adminname":adminname,  
+                          "nb_source":nb_source, "nb_task":int(nb_task if nb_task!=None else 0)})
 
+        return result
+        
     def get_admin_passwd(self, admin_email=None):
         return self.__get_by_option('admin', 'password',
                                     {'email_address': admin_email})
@@ -228,9 +258,8 @@ class sql_conn:
         else:
             return 0
         
-    def get_admin_source(self, adminid=None, adminname=None, admin_email=None):
-        if adminid==None:
-            adminid = self.__get_by_option('admin', 'adminid', {'email_address': admin_email, 'adminname': adminname})
+    def get_admin_source(self, admin_email=None):
+        adminid = self.__get_by_option('admin', 'adminid', {'email_address': admin_email})
         return self.__exe_sql("select * from source where publisher={}".format(adminid))
 
     # source*****************************************************************************
@@ -246,6 +275,9 @@ class sql_conn:
 
     def get_source_id(self, sourcename):
         return self.__get_by_option('source', 'sourceid', {'sourcename': sourcename})
+    
+    def get_source_nb_json(self, sourceid):
+        return self.__exe_sql("select nb_json from source where sourceid={};".format(sourceid))[0][0]
 
     def insert_source(self, sourcename, finished=0, publisher='NULL', description='', publish_time=get_timestamp(),
                       priority=1):
@@ -314,17 +346,19 @@ class sql_conn:
     def fetch_data(self, sourcename, user_email, nb=5):
         userid=self.get_user_id(user_email=user_email)
         sourceid = self.get_source_id(sourcename=sourcename)
+    
         
         l = self.__exe_sql("select distinct(td.dataid), td.datasource, td.data_index, td.data_path from text_data td \
         left join text_label tl on tl.dataid = td.dataid \
         where td.datasource ={} and td.final_labelid is NULL and (tl.userid!={} or tl.userid is NULL)\
-        limit {};".format(sourceid, userid, nb))
+        ;".format(sourceid, userid))
         
+        l = random.sample(l,nb)
         result = []
         #set_trace()
         for i in l:
             with open(i[-1]) as f:
-                print(i[-1])
+                #print(i[-1])
                 data = json.load(f)
             data['dataid'] = int(i[0])
             result.append(data)
@@ -370,7 +404,7 @@ class sql_conn:
                 sql = "INSERT INTO text_label(`dataid`,`userid`,`labeldate`,`label_path`,`label_content`,`correct`) VALUES \
                 ({},{},{},'{}','{}',{});".format(j['dataid'], userid, label_date, save_path, label_content, correct)
     
-                print(sql)
+                #print(sql)
                 if(self.__insertion(sql)== -1):
                     return 0
             return 1
