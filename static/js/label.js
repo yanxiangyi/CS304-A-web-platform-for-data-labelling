@@ -184,15 +184,15 @@ function gatherValues() {
             }
         }
     }
-    alert(JSON.stringify(json_to_return));
+    // alert(JSON.stringify(json_to_return));
     $.ajax({
         type: 'POST',
         url: 'http://47.106.34.103:5000/retrieve',
         data: JSON.stringify (json_to_return),
-        success: function() {
-            alert("Thank you!");
-            // window.location.href = "choose.html";
-        },
+        // success: function() {
+        //     alert("Thank you!");
+        //     // window.location.href = "choose.html";
+        // },
         contentType: "application/json",
         dataType: 'json'
     });
