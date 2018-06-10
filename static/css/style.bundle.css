@@ -172,7 +172,7 @@ sup {
   top: -.5em; }
 
 a {
-  color: #5867dd;
+  color: #66CCFF;
   text-decoration: none;
   background-color: transparent;
   -webkit-text-decoration-skip: objects; }
@@ -12288,7 +12288,7 @@ code {
       padding: 1rem 2.5rem;
       font-size: 1.2rem; }
   .btn.m-btn--label-brand {
-    color: #716aca; }
+    color: #66CCFF; }
   .btn.m-btn--label-metal {
     color: #c4c5d6; }
   .btn.m-btn--label-light {
@@ -16349,10 +16349,10 @@ code {
       filter: alpha(opacity=30) ; }
 
 .m-card-user.m-card-user--skin-dark .m-card-user__details .m-card-user__name {
-  color: #d9dae3; }
+  color: #4E6073; }
 
 .m-card-user.m-card-user--skin-dark .m-card-user__details .m-card-user__email {
-  color: #aeafc2; }
+  color: #4E6073; }
   .m-card-user.m-card-user--skin-dark .m-card-user__details .m-card-user__email:hover {
     color: #cbccd8; }
     .m-card-user.m-card-user--skin-dark .m-card-user__details .m-card-user__email:hover:after {
@@ -31010,7 +31010,7 @@ select.m-select2 {
       .m-topbar .m-topbar__nav.m-nav > .m-nav__item.m-topbar__quick-actions.m-topbar__quick-actions--img.m-dropdown--arrow .m-dropdown__arrow {
         color: #6f47d0; }
       .m-topbar .m-topbar__nav.m-nav > .m-nav__item.m-topbar__user-profile.m-topbar__user-profile--img.m-dropdown--arrow .m-dropdown__arrow {
-        color: #7948e1; }
+        color: #3FBAEF; }
 
 @media (min-width: 993px) and (max-width: 1200px) {
   .m-topbar {
