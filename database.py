@@ -3,6 +3,7 @@ import os
 import json
 import datetime
 import random
+#from fault_tolerance import fault_tolerance_algo
 
 def get_timestamp():
     return float("{0:.2f}".format(time.time()))
@@ -391,7 +392,7 @@ class sql_conn:
         sourceid = self.get_source_id(sourcename=sourcename)
 
         sql = "select dataid,datasource, data_index, data_path from text_data \
-        where datasource={} and dataid not in \
+        where datasource={} and final_labelid is NULL and dataid not in \
         (select td.dataid from text_data td \
         join text_label tl on td.dataid=tl.dataid \
         where tl.userid={} and td.datasource={});".format(sourceid, userid, sourceid)
@@ -485,6 +486,11 @@ class sql_conn:
         #set_trace()
         ft_data = self.load_ft_data(dataid)
         correct_labelid = fault_tolerance_algo(ft_data)
+        #save ft loh
+        log = {'data':ft_data, 'result':correct_labelid}
+        with open('/home/se2018/Log/'+str(get_timestamp())+'.json', 'w') as file:
+                file.write(json.dumps(log))
+        
         print("correct answer: {}".format(correct_labelid))
         if correct_labelid!=None:
             #set correct=1 in table text_label
@@ -544,13 +550,12 @@ class sql_conn:
         self.cursor.close()
         self.conn.close()
         
-        
-        
-def fault_tolerance_algo(ans,threshold=0.3,init_acc=0.5,nb_bel=10):
-    total = 0.0001
+
+def fault_tolerance_algo(ans,threshold=0.6,init_acc=0.5,nb_bel=50):
+    total = 0
     answers = []
     accset = []
-    if len(ans)>1:
+    if len(ans)>1 :
         # print('length: ')
         # print(len(ans))
         for i in ans:
@@ -562,16 +567,18 @@ def fault_tolerance_algo(ans,threshold=0.3,init_acc=0.5,nb_bel=10):
                     total += init_acc
                 else:
                     answers.append(i[1])
-                    accset.append(i[3]/i[4])
-                    total += i[3]/i[4]
+                    accset.append(float(i[3])/float(i[4]))
+                    total += float(i[3])/float(i[4])
             else:
                 if i[4] <nb_bel:
                     accset[answers.index(i[1])] += init_acc
                     total += init_acc
                 else:
-                    accset[answers.index(i[1])] += i[3]/i[4]
-                    total += i[3]/i[4]
-        if max(accset)/total >= threshold:
+                    accset[answers.index(i[1])] += float(i[3])/float(i[4])
+                    total += float(i[3])/float(i[4])
+        if total == 0:
+            return None
+        elif (max(accset) / total) >= threshold:
             coranswer = answers[accset.index(max(accset))]
             answerset = []
             for an in ans:
