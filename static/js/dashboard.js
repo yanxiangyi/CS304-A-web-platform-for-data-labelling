@@ -135,7 +135,11 @@ jQuery(document).ready(function () {
             temps[2] = "brand";
             temps[3] = "success";
             temps[4] = "danger";
-            for (let i = 0; i < json.message.task_num; i++) {
+            var tol_num = json.message.task_num;
+            if (tol_num > 5) {
+                tol_num = 5;
+            }
+            for (let i = 0; i < tol_num; i++) {
                 $("#broadcast").append(" <div class=\"m-timeline-3__item m-timeline-3__item--" + temps[i] + "\">\n" +
                     "<span class=\"m-timeline-3__item-time\">\n" +
                     json.message.tasks[i].publish_date +
