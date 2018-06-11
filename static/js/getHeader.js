@@ -3,7 +3,7 @@ jQuery(document).ready(function () {
         type: 'GET',
         url: 'http://47.106.34.103:5000/profile',
         success: function (json) {
-            alert(json.code);
+            // alert(json.code);
             if (json.code == 0) {
                 // if (1 == 1) {
                 var aa = json.message.user_name;
