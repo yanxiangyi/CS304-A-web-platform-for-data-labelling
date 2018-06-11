@@ -117,7 +117,6 @@ var SnippetLogin = function () {
                     type: "GET",
                     url: "http://47.106.34.103:5000/login/email/" + eMail + "/password/" + passWord,
                     success: function (json) {
-                        // similate 2s dela
                         if (json.code == 0) {
                             // alert("Welcome, someone");
                             window.location.href = "index.html";

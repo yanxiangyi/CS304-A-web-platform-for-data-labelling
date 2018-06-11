@@ -3,7 +3,11 @@ jQuery(document).ready(function () {
         type: 'GET',
         url: 'http://47.106.34.103:5000/profile',
         success: function (json) {
-            if(json.message  == 0){
+            alert(json.code);
+            if (json.code == 0) {
+                // if (1 == 1) {
+                var aa = json.message.user_name;
+                var bb = json.message.user_email;
                 $("#headerRef").append("<div class=\"m-stack__item m-topbar__nav-wrapper\">\n" +
                     "                        <ul class=\"m-topbar__nav m-nav m-nav--inline\">\n" +
                     "                            <!--Hello profile-->\n" +
@@ -21,8 +25,7 @@ jQuery(document).ready(function () {
                     "                                    <span class=\"m-topbar__welcome\">\n" +
                     "\t\t\t\t\t\t\t\t\t\t\t\t\t\tHello,&nbsp;\n" +
                     "\t\t\t\t\t\t\t\t\t\t\t\t\t</span>\n" +
-                    "                                    <span class=\"m-topbar__username\" id = \"usrname\">\n" +
-                    "\t\t\t\t\t\t\t\t\t\t\t\t\t</span>\n" +
+                    "                                    <span class=\"m-topbar__username\" id = \"usrname\">\n" + aa + "</span>\n" +
                     "                                </a>\n" +
                     "\n" +
                     "                                <!--Opened profile-->\n" +
@@ -37,11 +40,9 @@ jQuery(document).ready(function () {
                     "                                                         class=\"m--img-rounded m--marginless\" alt=\"\"/>\n" +
                     "                                                </div>\n" +
                     "                                                <div class=\"m-card-user__details\">\n" +
-                    "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<span class=\"m-card-user__name m--font-weight-500\" id=\"inner_usrname\">\n" +
-                    "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t</span>\n" +
+                    "\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t<span class=\"m-card-user__name m--font-weight-500\" id=\"inner_usrname\">\n"+aa+"</span>\n" +
                     "                                                    <a href=\"\"\n" +
-                    "                                                       class=\"m-card-user__email m--font-weight-300 m-link\" id=\"inner_email\">\n" +
-                    "                                                    </a>\n" +
+                    "                                                       class=\"m-card-user__email m--font-weight-300 m-link\" id=\"inner_email\">\n" + bb + " </a>\n" +
                     "                                                </div>\n" +
                     "                                            </div>\n" +
                     "                                        </div>\n" +
@@ -72,7 +73,7 @@ jQuery(document).ready(function () {
                     "                    <a href=\"./\" class=\"header__references_purchase\" target=\"_blank\">\n" +
                     "                        Main Page\n" +
                     "                    </a>");
-            }else{
+            } else {
                 $("#headerRef").append("<a href=\"./register.html\" class=\"header__references_support\" target=\"_blank\">\n" +
                     "                        Signup\n" +
                     "                    </a>\n" +

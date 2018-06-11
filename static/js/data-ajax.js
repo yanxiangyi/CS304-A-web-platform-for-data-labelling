@@ -115,8 +115,14 @@ var DatatableRemoteAjaxDemo = function () {
                             return '<span class="m-badge ' + status[2].class +
                                 ' m-badge--wide">' + status[2].title + '</span>';
                         }
-                        return '<span class="m-badge ' + status[finish].class +
-                            ' m-badge--wide">' + status[finish].title + '</span>';
+                        if (finish == 0) {
+                            return '<span class="m-badge ' + status[0].class +
+                                ' m-badge--wide">' + status[0].title + '</span>';
+                        }
+                        if (finish == 1) {
+                            return '<span class="m-badge ' + status[1].class +
+                                ' m-badge--wide">' + status[1].title + '</span>';
+                        }
                     },
                 }, {
                     field: 'per_finished',
