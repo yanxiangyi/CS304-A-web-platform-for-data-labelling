@@ -47,6 +47,10 @@
 - `get_user_nb_accept(self, userid=None, username=None, user_email=None)`
   
    return number of accepted answer of the user
+
+- `set_user_nb_accept(self, userid, addoffset=1)`
+
+  set user's `nb_accept` to `nb_accept+addoffset` , default `addoffset=1`
    
 - `get_user_nb_answer(self, userid=None, username=None, user_email=None)`
 
@@ -179,11 +183,6 @@
 - `get_textdataid(self, data_index, sourceid=None, sourcename=None)`
 
   need both `data_index` and source information to retrieve `dataid`.
-
-- `update_final_labelid(self, data_index, labelid, sourceid=None, sourcename=None)`
-
-  - need either `sourceid` or `sourcename`
-  - return **1** success; **0** source of label not found; **-1** fail
   
 - `fetch_data(self, sourcename, user_email, nb=5)`
   
@@ -196,18 +195,27 @@
 - `get_label_correct(self, dataid, user_email=None)`
   
   - return **0** not determined; **1** correct; **-1** incorrect.
+
+- `set_label_correct(self, labelid, value=1)`
+
+  - set a label to correct, return **1** if success **-1**,**0** if fail
   
 - `insert_label(self, user_email, json_list, save_dir='/home/se2018/label/', label_date=get_timestamp(), correct=0`
 
-  - save json to file  & insert label into database
+  - save json to file  & insert label into database & fault tolerance process & update database **users** <nb_accept>, <nb_answer>; **text_label** <correct>; **text_data** <final_labelid>; **source** <nb_finished>
   
-  - return **1** if success , **-1** fail, **0** insertion failure
+  - return **1** if success , others fail
   
   - default `save_dir = /home/se2018/label/`, the program modify it to `/home/se2018/label/<project name>/`
   
   - default `label_date` is current time
   
   - the json file will be wrote into file `/home/se2018/label/<project name>/<index>_<userid>_label.json`. Note that `index` is the data index in `source` which is read from `.json`.
+
+- `fault_tol_process(self, dataid, sourceid)`
+
+  - run fault tolerance process
+  - return **1** if success, **0** if none is detected correct, return others if error
 
 - `load_ft_data(self, dataid)`
   
