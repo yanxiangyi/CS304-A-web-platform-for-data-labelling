@@ -159,11 +159,11 @@ class sql_conn:
 
 
     def insert_user(self, username, user_email, passwd, signin_time=get_timestamp(), credits=0, nb_accept=0,
-                    nb_answer=0, nb_examined=0):
+                    nb_answer=0):
         # insertion: 1 success, 0: already exist, -1: fail
         if self.__search_user_by_name(username) == None:
-            sql = "INSERT INTO `se_proj`.`users` (`username`,`email_address`,`password`,`signin_date`,`credits`,`nb_accept`,`nb_answer`,`nb_examined`) VALUES ('{}','{}','{}','{}','{}',{},{},{});" \
-                .format(username, user_email, passwd, signin_time, credits, nb_accept, nb_answer, nb_examined)
+            sql = "INSERT INTO `se_proj`.`users` (`username`,`email_address`,`password`,`signin_date`,`credits`) VALUES ('{}','{}','{}','{}','{}');" \
+                .format(username, user_email, passwd, signin_time, credits)
             return self.__insertion(sql)
         else:
             return 0
@@ -293,10 +293,10 @@ class sql_conn:
         # insertion: 1 success, 0: already exist, -1: fail
         if self.__search_source_by_name(sourcename) == None:
 
-            sql = "INSERT INTO `se_proj`.`source` (`sourcename`,`finished`,`publisher`,`description`,`publish_date`, `priority`)\
+            sql = "INSERT INTO `se_proj`.`source` (`sourcename`,`nb_finished`,`publisher`,`description`,`publish_date`, `priority`)\
             VALUES ('{}',{}, {},'{}',{},{});".format(sourcename, finished, publisher, description, publish_time,
                                                      priority)
-            # print(sql)
+            print(sql)
             return self.__insertion(sql)
         else:
             return 0
@@ -355,14 +355,19 @@ class sql_conn:
     def fetch_data(self, sourcename, user_email, nb=5):
         userid=self.get_user_id(user_email=user_email)
         sourceid = self.get_source_id(sourcename=sourcename)
-    
+
+        sql = "select dataid,datasource, data_index, data_path from text_data \
+        where datasource=15 and dataid not in \
+        (select td.dataid from text_data td \
+        join text_label tl on td.dataid=tl.dataid \
+        where tl.userid={} and td.datasource={});".format(userid, sourceid)
+        print(sql)
         
-        l = self.__exe_sql("select distinct(td.dataid), td.datasource, td.data_index, td.data_path from text_data td \
-        left join text_label tl on tl.dataid = td.dataid \
-        where td.datasource ={} and td.final_labelid is NULL and (tl.userid!={} or tl.userid is NULL)\
-        ;".format(sourceid, userid))
         
-        l = random.sample(l,nb)
+        l = self.__exe_sql(sql)
+        
+        if len(l)>nb:
+            l = random.sample(l,nb)
         result = []
         #set_trace()
         for i in l:

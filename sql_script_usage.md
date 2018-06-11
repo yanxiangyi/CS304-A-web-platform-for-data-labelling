@@ -213,7 +213,7 @@
   
   - load data for fault tolerance
   
-  - return `[dataid, label_content, userid, user nb_accpet, user nb_answer]`
+  - return `[labelid, label_content, userid, user nb_accpet, user nb_answer]`
   
 - `get_recapcha(self)`
 
