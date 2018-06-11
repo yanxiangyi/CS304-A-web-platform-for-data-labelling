@@ -183,8 +183,8 @@ var DatatableRemoteAjaxDemo = function () {
                     },
                 }, {
                     field: 'Actions',
-                    width: 50,
-                    title: 'Label',
+                    width: 75,
+                    title: 'Download',
                     sortable: false,
                     overflow: 'visible',
                     template: function (row) {
