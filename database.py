@@ -180,9 +180,9 @@ class sql_conn:
         else:
             return 0
         
-    def set_user_nb_answer(self, user_email, addoffset=1):
+    def set_user_nb_answer(self, userid, addoffset=1):
         # return : **1** success; **0** fail; **-1** fail
-        return self.__set_col_addup('users', 'nb_answer', 'email_address', user_email, addoffset)
+        return self.__set_col_addup('users', 'nb_answer', 'userid', userid, addoffset)
     
     def set_user_nb_accept(self, userid, addoffset=1):
         return self.__set_col_addup('users', 'nb_answer', 'userid', userid, 1)
@@ -348,6 +348,7 @@ class sql_conn:
 
     def update_source_nb_finished(self, sourceid):
         sql = "update source set nb_finished= (select count(*) from text_data where datasource={} and final_labelid is not NULL) where sourceid={};".format(sourceid, sourceid)
+        print(sql)
         return self.__insertion(sql)
     
     # data *****************************************************************************
@@ -433,7 +434,8 @@ class sql_conn:
     
     def insert_label(self, user_email, json_list, save_dir='/home/se2018/label/', label_date=get_timestamp(), correct=0):
         # insert label , save label json file from the same user of the same project
-        try:
+        #try:
+        if True:
             if(json_list == []):
                 return 1
             #set_trace()
@@ -442,7 +444,7 @@ class sql_conn:
             save_dir = save_dir+'{}/'.format(proj_name)
             
             #set_trace()
-            self.set_user_nb_answer(user_email, addoffset = len(json_list))
+            self.set_user_nb_answer(userid, addoffset = len(json_list))
             
             if not os.path.exists(save_dir):
                 os.makedirs(save_dir)
@@ -473,8 +475,8 @@ class sql_conn:
                     return re
                 
             return 1
-        except:
-            return -1
+#         except:
+#             return -1
         
         
     def fault_tol_process(self, dataid, sourceid):
@@ -483,22 +485,33 @@ class sql_conn:
         #set_trace()
         ft_data = self.load_ft_data(dataid)
         correct_labelid = fault_tolerance_algo(ft_data)
-        print(correct_labelid)
-        
+        print("correct answer: {}".format(correct_labelid))
         if correct_labelid!=None:
             #set correct=1 in table text_label
-            if (-1 == self.set_label_correct(tuple(correct_labelid), value=1)):
+            if len(correct_labelid)==1:
+                correct_labelid = correct_labelid[0]
+                final_labelid = correct_labelid
+            else:
+                correct_labelid = tuple(correct_labelid)
+                final_labelid = correct_labelid[0]
+            if (-1 == self.set_label_correct(correct_labelid, value=1)):
                 return 2 # set fail
 
             #add up user's nb_accept
-            sql = "update users set nb_accept = nb_accept+1 where userid in \
-            (select userid from text_label where labelid in {});".format(tuple(correct_labelid))
+            if type(correct_labelid) is int:
+                sql = "update users set nb_accept = nb_accept+1 , credits=credits+1 where userid in \
+                (select userid from text_label where labelid = {});".format(correct_labelid)
+            elif type(correct_labelid) is tuple:
+                sql = "update users set nb_accept = nb_accept+1 , credits=credits+1 where userid in \
+                (select userid from text_label where labelid in {});".format(correct_labelid)
             print(sql)
             if(-1 == self.__insertion(sql)):
                 return 3 # set fail
+            
 
             #modify text_data to add final_labelid
-            if 1!=self.__set_col('text_data','final_labelid', 'dataid', dataid, correct_labelid[0]):
+        
+            if 1!=self.__set_col('text_data','final_labelid', 'dataid', dataid, final_labelid):
                 return 4
             
             #set number of finished
@@ -534,7 +547,7 @@ class sql_conn:
         
         
 def fault_tolerance_algo(ans,threshold=0.3,init_acc=0.5,nb_bel=10):
-    total = 0
+    total = 0.0001
     answers = []
     accset = []
     if len(ans)>1:
