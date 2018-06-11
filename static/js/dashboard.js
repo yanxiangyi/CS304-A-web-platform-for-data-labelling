@@ -132,7 +132,7 @@ jQuery(document).ready(function () {
             var temps = new Array();
             temps[0] = "info";
             temps[1] = "warning";
-            temps[2] = "brand";
+            temps[2] = "primary";
             temps[3] = "success";
             temps[4] = "danger";
             var tol_num = json.message.task_num;
