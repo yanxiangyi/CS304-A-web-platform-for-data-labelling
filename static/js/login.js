@@ -191,12 +191,6 @@ var SnippetLogin = function () {
                 return;
             }
 
-            if(uName.match(/[\x01-\xFF]*/)==false){
-                btn.removeClass('m-loader m-loader--right m-loader--light').attr('disabled', false);
-                var signUpForm = login.find('.m-login__signin form');
-                showErrorMsg(signUpForm, 'danger', "Different input passwords.");
-            }
-
             form.ajaxSubmit({
                 type: "GET",
                 url: "http://47.106.34.103:5000/register/email/" + uMail + "/username/" + uName + "/password/" + uPd,
