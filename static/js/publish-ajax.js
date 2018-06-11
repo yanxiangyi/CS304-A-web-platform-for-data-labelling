@@ -181,6 +181,20 @@ var DatatableRemoteAjaxDemo = function () {
                         finish = (finish * 100).toFixed(2);
                         return finish + '%';
                     },
+                }, {
+                    field: 'Actions',
+                    width: 50,
+                    title: 'Label',
+                    sortable: false,
+                    overflow: 'visible',
+                    template: function (row) {
+                        if (row.per_finished != 1){
+                            return '<div>\
+						<a href="/choose/'+row.source_name+'" class="m-portlet__nav-link btn m-btn m-btn--hover-info\
+						 m-btn--icon m-btn--icon-only m-btn--pill" title="Edit details"><i class="flaticon-download"></i>\
+						</a></div>';
+                        }
+                    },
                 }],
         });
 
