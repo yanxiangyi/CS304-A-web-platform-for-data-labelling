@@ -1,4 +1,5 @@
-from flask import Flask, jsonify, render_template, session, redirect, url_for, escape, request, send_from_directory
+# -*- coding: utf-8 -*-
+from flask import Flask, jsonify, render_template, session, redirect, url_for, escape, request, send_from_directory, Markup, send_file
 from flask_cors import CORS, cross_origin
 from mysql.connector import connection
 from database import *
@@ -18,11 +19,6 @@ app.secret_key = 'any random string'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 app.secret_key = 'any random string'
 CORS(app)
-# cnx = connection.MySQLConnection(user='root',
-#                                  password='se2018',
-#                                  host='127.0.0.1',
-#                                  database='se_proj')
-# c = sql_conn(cnx)
 
 
 def init_cnx():
@@ -89,52 +85,23 @@ def mainpage():
 def choose():
     if "email" not in session:
         return render_template('please_login_first.html')
-        return jsonify(result)
     else:
         if session['level'] != 0:
             return render_template('please_login_as_user.html')
-            return jsonify(result)
         else:
             return render_template('choose.html')
-
-
-@app.route("/imagelabel.html")
-@cross_origin()
-def imagelabel():
-    return render_template('imagelabel.html')
 
 
 @app.route("/textlabel.html", methods=['GET', 'POST'])
 @cross_origin()
 def textlabel():
-    # if "email" in session:
-    #     if session['level'] == 0:
-    #         if 'jsons' in session:
-    #             # content = request.get_json(silent=True)
-    #             # print(content)
-    #             if request.method == 'POST':
-    #                 message = request.json['message']
-    #                 print(message)
-    #                 # jsons = content['message']
-    #                 c = init_cnx()
-    #                 # Store label jsons in database
-    #
-    #                 c.close()
-    #                 session.pop('jsons', None)
-    #                 result = {"code": 0, "message": message}
-    #                 return jsonify(result)
-    #
-    #         # else:
-    #         #     result = {"code": 1, "message": "Session time out! Please apply for another 10 data!"}
-    #         #     return jsonify(result)
-    #
-    #     else:
-    #         return render_template('please_login_as_user.html')
-    #         return jsonify(result)
-    #
-    # else:
-    #     return render_template('please_login_first.html')
-    #     return jsonify(result)
+    if 'sourcename' in session:
+        email = session['email']
+        c = init_cnx()
+        jsons = c.fetch_data(sourcename=session['sourcename'], user_email=email, nb=5)
+        c.close()
+        if len(jsons) == 0:
+            return jsonify({"code":1})
     return render_template('textlabel.html')
 
 
@@ -254,7 +221,7 @@ def upload_file():
                     file.save(save_path)
                     # Unzip file to the 'EXTRACT_FOLDER/projectName_timeStamp'
                     zip_ref = zipfile.ZipFile(save_path, 'r')
-                    final_path = os.path.join(EXTRACT_FOLDER, filename.split(".zip")[0] + "_" + datetime.datetime.today().strftime('%Y-%m-%d'))
+                    final_path = os.path.join(EXTRACT_FOLDER, filename.split(".zip")[0] + "_" + datetime.datetime.today().strftime('%Y-%m-%d_%H:%M:%S'))
                     if not os.path.exists(final_path):
                         print(final_path)
                         os.makedirs(final_path)
@@ -272,15 +239,15 @@ def upload_file():
                                 meta = json.load(f)
                                 sourcename = meta['projectName']
                                 description = meta['description']
+                                # fault_level = meta['fault_level']
                             f.close()
                             os.remove(os.path.join(final_path, filename))
-                    # root_path = os.path.join(EXTRACT_FOLDER,
-                    # sourcename + "_" + datetime.datetime.today().strftime('%Y-%m-%d'))
-                    # os.renames(final_path, root_path)
-                    root_path = final_path
+                    root_path = os.path.join(EXTRACT_FOLDER,
+                    sourcename + "_" + datetime.datetime.today().strftime('%Y-%m-%d_%H:%M:%S'))
+                    shutil.move(final_path, root_path)
                     admin_email = session['email']
                     c = init_cnx()
-                    admin_id = c.get_admin_id(admin_email=admin_email)
+                    admin_id = c.get_adminid(email_addr=admin_email)
                     c.close()
                     result = {"code": 0}
                     c = init_cnx()
@@ -288,13 +255,19 @@ def upload_file():
                     c.close()
                     if insert == -1:
                         result = {"code": 1, "message": "Task insertion failed!"}
+                        return jsonify(result)
                     else:
                         c = init_cnx()
                         load = c.load_data(root_path=root_path, sourcename=sourcename)
                         c.close()
                         if load == 0:
                             result = {"code": 1, "message": "Data insertion failed!"}
-                    return jsonify(result)
+                            return jsonify(result)
+                        else:
+                            if session['level'] == 1:
+                                return render_template('indexA1.html')
+                            elif session['level'] == 2:
+                                return render_template('indexAX.html')
     return render_template('publish.html')
 
 
@@ -305,7 +278,6 @@ def profile():
         email = session['email']
         if session['email'] != email:
             return render_template('please_login_first.html')
-            return jsonify(result)
         if session['level'] == 0:
             c = init_cnx()
             if c.user_exist(user_email=email):
@@ -349,7 +321,10 @@ def recent_task():
     c.close()
     tasks = []
     for source in all_source:
-        [source_id, source_name, finished, publisher, publish_date, description, priority, num_json] = source
+        [source_id, source_name, finished, publisher_id, publish_date, description, priority, num_json] = source
+        c = init_cnx()
+        publisher = c.get_admin(adminid=publisher_id)[2]
+        c.close()
         date = datetime.datetime.fromtimestamp(publish_date)
         task = {"publisher": publisher,
                 "publish_date": str(date.month) + "." + str(date.day),
@@ -359,7 +334,7 @@ def recent_task():
                 "description": description,
                 "priority": priority,
                 "number": num_json,
-                "per_finished": float(finished) / float(num_json)
+                "per_finished": float(finished) / (float(num_json))
         }
         tasks.append(task)
     result = {"code": 0,
@@ -368,11 +343,6 @@ def recent_task():
                   "tasks": tasks
               }
               }
-    # else:
-    #     result = {"code": 1,
-    #               "message": "Please login first!"
-    #               }
-
     return jsonify(result)
 
 
@@ -389,7 +359,10 @@ def task():
             c.close()
             tasks = []
             for source in all_source:
-                [source_id, source_name, finished, publisher, publish_date, description, priority, num_json] = source
+                [source_id, source_name, finished, publisher_id, publish_date, description, priority, num_json] = source
+                c = init_cnx()
+                publisher = c.get_admin(adminid=publisher_id)[2]
+                c.close()
                 task = {"publisher": publisher,
                         "publish_date": publish_date,
                         "source_name": source_name,
@@ -398,7 +371,7 @@ def task():
                         "description": description,
                         "priority": priority,
                         "number": num_json,
-                        "per_finished": float(finished) / float(num_json)
+                        "per_finished": float(finished) / (float(num_json))
                 }
                 tasks.append(task)
             result = {"code": 0,
@@ -415,9 +388,10 @@ def task():
             tasks = []
             admin_email = session['email']
             for source in all_source:
-                [source_id, source_name, finished, publisher, publish_date, description, priority, num_json] = source
+                [source_id, source_name, finished, publisher_id, publish_date, description, priority, num_json] = source
                 c = init_cnx()
-                if publisher == c.get_admin_id(admin_email=admin_email):
+                publisher = c.get_admin(adminid=publisher_id)[2]
+                if publisher_id == c.get_adminid(email_addr=admin_email):
                     c.close()
                     task = {"publisher": publisher,
                             "publish_date": publish_date,
@@ -427,7 +401,7 @@ def task():
                             "description": description,
                             "priority": priority,
                             "number": num_json,
-                            "per_finished": float(finished) / float(num_json)
+                            "per_finished": float(finished) / (float(num_json))
                             }
                     tasks.append(task)
             source_number = len(tasks)
@@ -445,7 +419,11 @@ def task():
             c.close()
             tasks = []
             for source in all_source:
-                [source_id, source_name, finished, publisher, publish_date, description, priority, num_json] = source
+                [source_id, source_name, finished, publisher_id, publish_date, description, priority, num_json] = source
+                c = init_cnx()
+                publisher = c.get_admin(adminid=publisher_id)[2]
+                c.close()
+
                 task = {"publisher": publisher,
                         "publish_date": publish_date,
                         "source_name": source_name,
@@ -454,7 +432,7 @@ def task():
                         "description": description,
                         "priority": priority,
                         "number": num_json,
-                        "per_finished": float(finished) / float(num_json)
+                        "per_finished": float(finished) / (float(num_json))
                 }
                 tasks.append(task)
             result = {"code": 0,
@@ -465,45 +443,8 @@ def task():
                       }
     else:
         return render_template('please_login_first.html')
-
-    #     [user_id, user_email, user_name, password, signup_time, user_credit, num_total, num_acc, num_examined] = c.get_source_number()
-    #     result = {"user_id": user_id, "user_email": user_email,
-    #               "user_name": user_name, "user_credit": user_credit,
-    #               "num_acc": num_acc, "num_total": num_total,
-    #               "signup_time": signup_time, "num_examined": num_examined}
-    #     result = {"code": 0, "message": result}
-    # else:
-    #     result = {"code": 1, "message": "User doesn\'t exist!"}
     return jsonify(result)
 
-#
-# @app.route('/task1')
-# @cross_origin()
-# def task1():
-#     c = init_cnx()
-#     source_number = c.get_source_number()
-#     all_source = c.get_all_source()
-#     c.close()
-#     tasks = []
-#     for source in all_source:
-#         [source_id, source_name, finished, publisher, publish_date, description, priority, num_json] = source
-#         task = {"publisher": publisher,
-#                 "publish_date": publish_date,
-#                 "source_name": source_name,
-#                 "num_finished": finished,
-#                 "source_id": source_id,
-#                 "description": description,
-#                 "priority": priority,
-#                 "number": num_json
-#                 }
-#         tasks.append(task)
-#     result = {"code": 0,
-#               "message": {
-#                   "task_num": source_number,
-#                   "tasks": tasks
-#               }
-#               }
-#     return jsonify(result)
 
 @app.route('/choose/<sourcename>')
 @cross_origin()
@@ -523,18 +464,14 @@ def choose_source(sourcename):
 def send_data():
     if "email" in session:
         if session['level'] == 0:
-            if 'jsons' not in session:
-                if 'sourcename' in session:
-                    email = session['email']
-                    c = init_cnx()
-                    jsons = c.fetch_data(sourcename=session['sourcename'], user_email=email, nb=5)
-                    c.close()
-                    session['jsons'] = jsons
-                else:
-                    result = {"code": 1, "message": "Please choose a task first!"}
-                    return jsonify(result)
+            if 'sourcename' in session:
+                email = session['email']
+                c = init_cnx()
+                jsons = c.fetch_data(sourcename=session['sourcename'], user_email=email, nb=5)
+                c.close()
             else:
-                jsons = session['jsons']
+                result = {"code": 1, "message": "Please choose a task first!"}
+                return jsonify(result)
             result = {"code": 0, "message": jsons}
             return jsonify(result)
         else:
@@ -548,26 +485,23 @@ def send_data():
 def retrieve_label():
     if "email" in session:
         if session['level'] == 0:
-            if 'jsons' in session:
-                if request.method == 'POST':
-                    message = request.json['message']
+            if request.method == 'POST':
+                message = request.json['message']
                 c = init_cnx()
                 # Store label jsons in database
                 signal = c.insert_label(user_email=session['email'], json_list=message, save_dir='/home/se2018/label/')
                 c.close()
-                session.pop('jsons', None)
                 print(signal)
                 if signal == 1:
                     result = {"code": 0, "message": message}
+                    return jsonify(result)
                 elif signal == -1:
                     result = {"code": 1, "message": "Insert failed!"}
-            else:
-                result = {"code": 1, "message": "Session time out! Please apply for another 10 data!"}
+                    return jsonify(result)
         else:
             return render_template('please_login_as_user.html')
     else:
         return render_template('please_login_first.html')
-    return jsonify(result)
 
 
 @app.route('/pan')
@@ -603,45 +537,77 @@ def user_pan_history():
         return render_template('please_login_first.html')
 
 
-
 @app.route('/alluser')
 @cross_origin()
 def all_user():
-    c = init_cnx()
-    pan = c.get_all_user()
-    c.close()
-    return jsonify(pan)
+    if "email" in session:
+        if session['level'] == 2:
+            c = init_cnx()
+            pan = c.get_all_user()
+            c.close()
+            return jsonify(pan)
+        else:
+            return render_template('please_login_as_admin.html')
+    else:
+        return render_template('please_login_first.html')
 
 
 @app.route('/alladmin')
 @cross_origin()
 def all_admin():
-    c = init_cnx()
-    pan = c.get_all_admin()
-    print(pan)
-    c.close()
-    return jsonify(pan)
-
-
-@app.route('/test')
-@cross_origin()
-def test():
     if "email" in session:
-        if session['level'] == 0:
+        if session['level'] == 2:
             c = init_cnx()
-            pan = "get in"
+            pan = c.get_all_admin()
             c.close()
-            result = {"code": 0, "message": pan}
-            return jsonify(result)
+            return jsonify(pan)
         else:
-            return render_template('please_login_as_user.html')
+            return render_template('please_login_as_admin.html')
     else:
         return render_template('please_login_first.html')
+
+
+@app.route('/user_manage.html')
+@cross_origin()
+def user_manage():
+    if "email" in session:
+        if session['level'] == 2:
+            return render_template('user_manage.html')
+        else:
+            return render_template('please_login_as_admin.html')
+    else:
+        return render_template('please_login_first.html')
+
+
+@app.route('/recapcha')
+@cross_origin()
+def recapcha():
+    c = init_cnx()
+    result = c.get_recapcha()
+    c.close()
+    return jsonify(result)
+
+
+@app.route("/download/<path>")
+def DownloadLogFile (path):
+    path = "/home/se2018/CS304-A-web-platform-for-data-labelling/upload/" + path
+    return send_file(path, as_attachment=True)
+
+
+@app.route("/indexA1.html")
+def a1():
+    return redirect(url_for('index'))
+
+
+@app.route("/indexAX.html")
+def ax():
+    return redirect(url_for('index'))
 
 
 @app.errorhandler(404)
 def page_not_found(foobar):
     return render_template('404.html'), 404
 
+
 if __name__ == '__main__':
-   app.run(host="0.0.0.0", port="5000", debug=True, threaded=True)
+    app.run(host="0.0.0.0", port="5000", debug=True, threaded=True)
