@@ -117,7 +117,6 @@ var SnippetLogin = function () {
                     type: "GET",
                     url: "http://47.106.34.103:5000/login/email/" + eMail + "/password/" + passWord,
                     success: function (json) {
-                        // similate 2s dela
                         if (json.code == 0) {
                             // alert("Welcome, someone");
                             window.location.href = "index.html";
@@ -190,6 +189,12 @@ var SnippetLogin = function () {
                 // signUpForm.validate().resetForm();
                 showErrorMsg(signUpForm, 'danger', "Different input passwords.");
                 return;
+            }
+
+            if(uName.match(/[\x01-\xFF]*/)==false){
+                btn.removeClass('m-loader m-loader--right m-loader--light').attr('disabled', false);
+                var signUpForm = login.find('.m-login__signin form');
+                showErrorMsg(signUpForm, 'danger', "Different input passwords.");
             }
 
             form.ajaxSubmit({
