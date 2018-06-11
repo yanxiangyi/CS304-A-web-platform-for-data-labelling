@@ -81,7 +81,45 @@ class sql_conn:
             return self.cursor.fetchone()[0]
         except:
             return None
+    def __set_col_addup(self, tablename, target_col, cond_col, cond, addoffset):
+        # cond can be either value or tuple
+        try:
+            sql = "update {} set {}={}+{} where {} ".format(tablename, target_col, target_col, addoffset,cond_col)
+            
+            if type(cond) is int:
+                sql += "={};".format(cond)
+            elif type(cond) is str:
+                sql += "='{}';".format(cond)
+            elif type(cond) is tuple:
+                sql += "in {};".format(cond)
+            print(sql)
+            return self.__insertion(sql) #return -1 if execution fail
+        except:
+            return 0
+        
+    def __set_col(self, tablename, target_col, cond_col, cond, value):
+        # cond can be either value or tuple
+        try:
+            sql = "update {} set {}={} where {} ".format(tablename, target_col, value, cond_col)
+            if type(cond) is int:
+                sql += "={};".format(cond)
+            elif type(cond) is str:
+                sql += "='{}';".format(cond)
+            elif type(cond) is tuple:
+                sql += "in {};".format(cond)
+            print(sql)
+            return self.__insertion(sql) #return -1 if execution fail
+        except:
+            return 0
 
+    def get_by_cond_tuple(self, tablename, target_col, cond_col, tup):
+        try:
+            sql = "select {} from {} where {} in {};".format(target_col, tablename, cond_col, tup)
+            print(sql)
+            self.cursor.execute(sql)
+            return self.cursor.fetchall()
+        except:
+            return None
     # user*******************************************************************************
     def get_all_user(self):
         user_list = self.__exe_sql("select * from users;")
@@ -142,12 +180,12 @@ class sql_conn:
         else:
             return 0
         
-    def set_user_nb_answer(self, user_email, addoffset):
-        # return : **1** success; **0** already exist; **-1** fail
-        nb_answer = self.get_user_nb_answer(user_email = user_email)
-        sql = "UPDATE `se_proj`.`users` SET `nb_answer`={} WHERE `email_address`='{}';".format(nb_answer+addoffset, user_email)
-        #print(sql)
-        return self.__insertion(sql)
+    def set_user_nb_answer(self, user_email, addoffset=1):
+        # return : **1** success; **0** fail; **-1** fail
+        return self.__set_col_addup('users', 'nb_answer', 'email_address', user_email, addoffset)
+    
+    def set_user_nb_accept(self, userid, addoffset=1):
+        return self.__set_col_addup('users', 'nb_answer', 'userid', userid, 1)
 
     def get_user_accept_rate(self, userid=None, username=None, user_email=None):
         total = self.get_user_nb_answer(userid, username, user_email)
@@ -293,7 +331,7 @@ class sql_conn:
         # insertion: 1 success, 0: already exist, -1: fail
         if self.__search_source_by_name(sourcename) == None:
 
-            sql = "INSERT INTO `se_proj`.`source` (`sourcename`,`nb_finished`,`publisher`,`description`,`publish_date`, `priority`)\
+            sql = "INSERT INTO `se_proj`.`source` (`sourcename`,`nb_finished`,`publisher`,`description`,`publish_date`, `priority`) \
             VALUES ('{}',{}, {},'{}',{},{});".format(sourcename, finished, publisher, description, publish_time,
                                                      priority)
             print(sql)
@@ -308,6 +346,10 @@ class sql_conn:
         # priority should be 1 2 or 3
         return self.__exe_sql("select * from se_proj.source where priority ={};".format(priority))
 
+    def update_source_nb_finished(self, sourceid):
+        sql = "update source set nb_finished= (select count(*) from text_data where datasource={} and final_labelid is not NULL) where sourceid={};".format(sourceid, sourceid)
+        return self.__insertion(sql)
+    
     # data *****************************************************************************
     def __insert_textdata(self, sourceid, data_index, data_path, final_labelid='NULL'):
         if self.__search_source_by_id(sourceid) != None:
@@ -319,10 +361,12 @@ class sql_conn:
 
     def load_data(self, root_path, sourceid=None, sourcename=None):
         # load data(json file) from root folder into database
+        # return 0 fail, -1 set nb_json fail
         sourceid = self.__get_by_option('source', 'sourceid', {'sourceid': sourceid, 'sourcename': sourcename})
         try:
             _, _, files = next(os.walk(root_path))
-            self.__exe_sql("UPDATE `se_proj`.`source` SET `nb_json`= {}  WHERE `sourceid`={};".format(len(files), sourceid))
+            if(1 != self.__set_col('source', 'nb_json', 'sourceid', sourceid, len(files))):
+                return -1
             for f in files:
                 with open(os.path.join(root_path, f)) as js:
                     data_index = json.load(js)['index']
@@ -340,27 +384,16 @@ class sql_conn:
 
     def get_textdataid(self, data_index, sourceid=None, sourcename=None):
         return self.__get_textdata_sth('dataid', data_index, sourceid, sourcename)
-
-
-    def update_final_labelid(self, data_index, labelid, sourceid=None, sourcename=None):
-        # 1:sucess -1:fail  0:souce or data not exist
-        sourceid = self.__get_by_option('source', 'sourceid', {'sourceid': sourceid, 'sourcename': sourcename})
-        dataid = self.get_textdataid(data_index, sourceid=sourceid)
-        if sourceid != None and dataid != None:
-            sql = "UPDATE `se_proj`.`text_data` SET `final_labelid`={} WHERE `dataid`={};".format(labelid, dataid)
-            return self.__insertion(sql)
-        else:
-            return 0
     
     def fetch_data(self, sourcename, user_email, nb=5):
         userid=self.get_user_id(user_email=user_email)
         sourceid = self.get_source_id(sourcename=sourcename)
 
         sql = "select dataid,datasource, data_index, data_path from text_data \
-        where datasource=15 and dataid not in \
+        where datasource={} and dataid not in \
         (select td.dataid from text_data td \
         join text_label tl on td.dataid=tl.dataid \
-        where tl.userid={} and td.datasource={});".format(userid, sourceid)
+        where tl.userid={} and td.datasource={});".format(sourceid, userid, sourceid)
         print(sql)
         
         
@@ -390,15 +423,25 @@ class sql_conn:
     def get_label_correct(self, dataid, userid=None, username=None, user_email=None):
         # return 0 not determined, 1 correct, -1 not correct
         return self.__get_label_sth('correct', userid, username, user_email)
-
+    
+    def set_label_correct(self, labelid, value=1):
+        #set correct to the value
+        # labelid can be either int or int tuple
+        # return 1 if success
+        return self.__set_col('text_label','correct', 'labelid', labelid, value)
+    
+    
     def insert_label(self, user_email, json_list, save_dir='/home/se2018/label/', label_date=get_timestamp(), correct=0):
         # insert label , save label json file from the same user of the same project
         try:
+            if(json_list == []):
+                return 1
+            #set_trace()
             userid=self.get_user_id(user_email=user_email)
             proj_name = json_list[0]['projectName']
             save_dir = save_dir+'{}/'.format(proj_name)
             
-            
+            #set_trace()
             self.set_user_nb_answer(user_email, addoffset = len(json_list))
             
             if not os.path.exists(save_dir):
@@ -423,10 +466,49 @@ class sql_conn:
                 #print(sql)
                 if(self.__insertion(sql)== -1):
                     return 0
+                
+                # fault tolerance
+                re = self.fault_tol_process(j['dataid'],sourceid) 
+                if re not in [0,1]:
+                    return re
+                
             return 1
         except:
             return -1
-    
+        
+        
+    def fault_tol_process(self, dataid, sourceid):
+        #return -1 if error, 0 if none is detected correct
+        #return 1 if success
+        #set_trace()
+        ft_data = self.load_ft_data(dataid)
+        correct_labelid = fault_tolerance_algo(ft_data)
+        print(correct_labelid)
+        
+        if correct_labelid!=None:
+            #set correct=1 in table text_label
+            if (-1 == self.set_label_correct(tuple(correct_labelid), value=1)):
+                return 2 # set fail
+
+            #add up user's nb_accept
+            sql = "update users set nb_accept = nb_accept+1 where userid in \
+            (select userid from text_label where labelid in {});".format(tuple(correct_labelid))
+            print(sql)
+            if(-1 == self.__insertion(sql)):
+                return 3 # set fail
+
+            #modify text_data to add final_labelid
+            if 1!=self.__set_col('text_data','final_labelid', 'dataid', dataid, correct_labelid[0]):
+                return 4
+            
+            #set number of finished
+            if -1 == self.update_source_nb_finished(sourceid=sourceid):
+                return 5
+            
+            return 1
+        else:
+            return 0
+        
     def load_ft_data(self, dataid):
         # load data for fault tolerance
         # return [dataid, label_content, userid, user nb_accpet, user nb_answer ]
@@ -448,3 +530,42 @@ class sql_conn:
     def close(self):
         self.cursor.close()
         self.conn.close()
+        
+        
+        
+def fault_tolerance_algo(ans,threshold=0.3,init_acc=0.5,nb_bel=10):
+    total = 0
+    answers = []
+    accset = []
+    if len(ans)>1:
+        # print('length: ')
+        # print(len(ans))
+        for i in ans:
+            if i[1] not in answers :
+                # print(i[1])
+                if i[4] < nb_bel:
+                    answers.append(i[1])
+                    accset.append(init_acc)
+                    total += init_acc
+                else:
+                    answers.append(i[1])
+                    accset.append(i[3]/i[4])
+                    total += i[3]/i[4]
+            else:
+                if i[4] <nb_bel:
+                    accset[answers.index(i[1])] += init_acc
+                    total += init_acc
+                else:
+                    accset[answers.index(i[1])] += i[3]/i[4]
+                    total += i[3]/i[4]
+        if max(accset)/total >= threshold:
+            coranswer = answers[accset.index(max(accset))]
+            answerset = []
+            for an in ans:
+                if an[1] == coranswer:
+                    answerset.append(an[0])
+            # print(total)
+            # print(k/total)
+            return answerset
+    else :
+        return None
