@@ -226,9 +226,10 @@
 - `download_label(self, sourcename, zip_path, root_path = '~/tmp')`
 
   - download accepted label file within a `.zip` file
-  - `zip_path` path of the zip file
+  - `zip_path` path of the zip file without `.zip` at the end
   - `root_path` : a temp directory path. The directory will be removed after the method
   - return the zip file path if success, `''` if fail
+  - e.g. input: `zip_path='dest_dir/test'`, output: `'dest_dir/test.zip'`
   
 - `get_recapcha(self)`
 

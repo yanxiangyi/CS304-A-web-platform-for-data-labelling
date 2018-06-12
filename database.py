@@ -559,7 +559,7 @@ class sql_conn:
             #delete tmp dir
             rmtree(root_path)
             
-            return zip_path
+            return zip_path+'.zip'
         except:
             return ''
         
