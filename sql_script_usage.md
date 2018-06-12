@@ -222,6 +222,13 @@
   - load data for fault tolerance
   
   - return `[labelid, label_content, userid, user nb_accpet, user nb_answer]`
+
+- `download_label(self, sourcename, zip_path, root_path = '~/tmp')`
+
+  - download accepted label file within a `.zip` file
+  - `zip_path` path of the zip file
+  - `root_path` : a temp directory path. The directory will be removed after the method
+  - return the zip file path if success, `''` if fail
   
 - `get_recapcha(self)`
 

@@ -3,7 +3,8 @@ import os
 import json
 import datetime
 import random
-#from fault_tolerance import fault_tolerance_algo
+from shutil import copyfile,make_archive, rmtree
+
 
 def get_timestamp():
     return float("{0:.2f}".format(time.time()))
@@ -67,7 +68,7 @@ class sql_conn:
         except:
             return None
 
-    def __get_by_mul_cond(self, tablename, target_col, col_val_dict):
+    def __get_by_mul_cond(self, tablename, target_col, col_val_dict, fetchone=False):
         # search by multiple conditions
         try:
             sql = "select {} from {} where ".format(target_col, tablename)
@@ -79,7 +80,10 @@ class sql_conn:
             sql += ";"
             # print(sql)
             self.cursor.execute(sql)
-            return self.cursor.fetchone()[0]
+            if fetchone:
+                return self.cursor.fetchone()[0]
+            else:
+                return self.cursor.fetchall()
         except:
             return None
     def __set_col_addup(self, tablename, target_col, cond_col, cond, addoffset):
@@ -535,6 +539,36 @@ class sql_conn:
         FROM text_label tl join users u on u.userid=tl.userid where dataid={} ".format(dataid)
         return self.__exe_sql(sql)
     
+    def download_label(self, sourcename, zip_path, root_path = '~/tmp'):
+        try:
+            sourceid = self.get_source_id(sourcename=sourcename)
+            # get path
+            #data_path = self.__get_by_mul_cond('text_data','data_path',{'datasource':sourceid}, fetchone=False)
+            label_path = self.__get_finallabel_path(sourceid)
+
+            if not os.path.exists(root_path):
+                os.makedirs(root_path)
+            #set_trace()
+
+            for p in label_path:
+                file_name = p[0].split('/')[-1]
+                copyfile(p[0], os.path.join(root_path, file_name))
+
+            # make zip
+            make_archive(zip_path, 'zip', root_path)
+            #delete tmp dir
+            rmtree(root_path)
+            
+            return zip_path
+        except:
+            return ''
+        
+
+    
+    def __get_finallabel_path(self, sourceid):
+        sql = "select tl.label_path from text_data td join text_label tl on td.final_labelid = tl.labelid where td.datasource={};".format(sourceid)
+        return self.__exe_sql(sql)
+    
     def get_recapcha(self):
         try:
             sql = "select label_path from text_label where correct =1;"
@@ -550,42 +584,5 @@ class sql_conn:
         self.cursor.close()
         self.conn.close()
         
-
-def fault_tolerance_algo(ans,threshold=0.6,init_acc=0.5,nb_bel=50):
-    total = 0
-    answers = []
-    accset = []
-    if len(ans)>1 :
-        # print('length: ')
-        # print(len(ans))
-        for i in ans:
-            if i[1] not in answers :
-                # print(i[1])
-                if i[4] < nb_bel:
-                    answers.append(i[1])
-                    accset.append(init_acc)
-                    total += init_acc
-                else:
-                    answers.append(i[1])
-                    accset.append(float(i[3])/float(i[4]))
-                    total += float(i[3])/float(i[4])
-            else:
-                if i[4] <nb_bel:
-                    accset[answers.index(i[1])] += init_acc
-                    total += init_acc
-                else:
-                    accset[answers.index(i[1])] += float(i[3])/float(i[4])
-                    total += float(i[3])/float(i[4])
-        if total == 0:
-            return None
-        elif (max(accset) / total) >= threshold:
-            coranswer = answers[accset.index(max(accset))]
-            answerset = []
-            for an in ans:
-                if an[1] == coranswer:
-                    answerset.append(an[0])
-            # print(total)
-            # print(k/total)
-            return answerset
-    else :
-        return None
+        
+    
