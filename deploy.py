@@ -101,7 +101,7 @@ def textlabel():
         jsons = c.fetch_data(sourcename=session['sourcename'], user_email=email, nb=5)
         c.close()
         if len(jsons) == 0:
-            return jsonify({"code":1})
+            return redirect(url_for('choose'))
     return render_template('textlabel.html')
 
 
@@ -239,7 +239,7 @@ def upload_file():
                                 meta = json.load(f)
                                 sourcename = meta['projectName']
                                 description = meta['description']
-                                # fault_level = meta['fault_level']
+                                fault_level = meta['fault_level']
                             f.close()
                             os.remove(os.path.join(final_path, filename))
                     root_path = os.path.join(EXTRACT_FOLDER,
@@ -251,7 +251,7 @@ def upload_file():
                     c.close()
                     result = {"code": 0}
                     c = init_cnx()
-                    insert = c.insert_source(sourcename=sourcename, publisher=admin_id, description=description, publish_time=get_timestamp(), priority=1)
+                    insert = c.insert_source(sourcename=sourcename, publisher=admin_id, description=description, publish_time=get_timestamp(), priority=1, ft_degree=fault_level)
                     c.close()
                     if insert == -1:
                         result = {"code": 1, "message": "Task insertion failed!"}
@@ -315,13 +315,14 @@ def profile():
 @cross_origin()
 def recent_task():
     # if "email" in session:
+
     c = init_cnx()
     source_number = c.get_source_number()
     all_source = c.get_recent_source(limit=5)
     c.close()
     tasks = []
     for source in all_source:
-        [source_id, source_name, finished, publisher_id, publish_date, description, priority, num_json] = source
+        [source_id, source_name, finished, publisher_id, publish_date, description, priority, num_json, fault_level] = source
         c = init_cnx()
         publisher = c.get_admin(adminid=publisher_id)[2]
         c.close()
@@ -334,7 +335,8 @@ def recent_task():
                 "description": description,
                 "priority": priority,
                 "number": num_json,
-                "per_finished": float(finished) / (float(num_json))
+                "per_finished": float(finished) / (float(num_json)),
+                "fault_level": fault_level
         }
         tasks.append(task)
     result = {"code": 0,
@@ -359,7 +361,7 @@ def task():
             c.close()
             tasks = []
             for source in all_source:
-                [source_id, source_name, finished, publisher_id, publish_date, description, priority, num_json] = source
+                [source_id, source_name, finished, publisher_id, publish_date, description, priority, num_json, fault_level] = source
                 c = init_cnx()
                 publisher = c.get_admin(adminid=publisher_id)[2]
                 c.close()
@@ -371,7 +373,9 @@ def task():
                         "description": description,
                         "priority": priority,
                         "number": num_json,
-                        "per_finished": float(finished) / (float(num_json))
+                        "per_finished": float(finished) / (float(num_json)),
+                        "fault_level": fault_level
+
                 }
                 tasks.append(task)
             result = {"code": 0,
@@ -388,11 +392,10 @@ def task():
             tasks = []
             admin_email = session['email']
             for source in all_source:
-                [source_id, source_name, finished, publisher_id, publish_date, description, priority, num_json] = source
+                [source_id, source_name, finished, publisher_id, publish_date, description, priority, num_json, fault_level] = source
                 c = init_cnx()
                 publisher = c.get_admin(adminid=publisher_id)[2]
                 if publisher_id == c.get_adminid(email_addr=admin_email):
-                    c.close()
                     task = {"publisher": publisher,
                             "publish_date": publish_date,
                             "source_name": source_name,
@@ -401,9 +404,11 @@ def task():
                             "description": description,
                             "priority": priority,
                             "number": num_json,
-                            "per_finished": float(finished) / (float(num_json))
+                            "per_finished": float(finished) / (float(num_json)),
+                            "fault_level": fault_level
                             }
                     tasks.append(task)
+                c.close()
             source_number = len(tasks)
             result = {"code": 0,
                       "message": {
@@ -419,11 +424,10 @@ def task():
             c.close()
             tasks = []
             for source in all_source:
-                [source_id, source_name, finished, publisher_id, publish_date, description, priority, num_json] = source
+                [source_id, source_name, finished, publisher_id, publish_date, description, priority, num_json, fault_level] = source
                 c = init_cnx()
                 publisher = c.get_admin(adminid=publisher_id)[2]
                 c.close()
-
                 task = {"publisher": publisher,
                         "publish_date": publish_date,
                         "source_name": source_name,
@@ -589,9 +593,12 @@ def recapcha():
 
 
 @app.route("/download/<path>")
-def DownloadLogFile (path):
-    path = "/home/se2018/CS304-A-web-platform-for-data-labelling/upload/" + path
-    return send_file(path, as_attachment=True)
+def download_file(path):
+    path = path.split('.zip')[0]
+    c = init_cnx()
+    file = c.download_label(sourcename=path, zip_path='/home/se2018/'+path)
+    c.close()
+    return send_file(file, as_attachment=True)
 
 
 @app.route("/indexA1.html")

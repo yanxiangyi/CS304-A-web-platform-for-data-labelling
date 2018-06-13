@@ -30,9 +30,12 @@ Firstly, you need your `meta.json` to describe your data set.
 ```json
 {
     "projectName": "test",
-    "description": "This is a test for se2018."
+    "description": "This is a test for se2018.",
+    "fault_level": 2
 }
 ```
+
+You can choose 3 values for fault tolerance `fault_level`, which are `0` for turn off, `1` for low level and `2` for high level.
 
 ### Unlabeled Data: `1.json`
 
