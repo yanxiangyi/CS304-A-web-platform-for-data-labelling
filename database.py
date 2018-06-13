@@ -18,7 +18,8 @@ class sql_conn:
     def __init__(self, conn):
         self.conn = conn
         self.cursor = conn.cursor()
-        self.ft_params = {'init_acc':0.5, 'nb_bel_ratio':1e-3, 'threshold':{'low':0.51, 'high':0.8}}
+        self.ft_params = {'init_acc':0.5, 'nb_bel_ratio':1e-3, 'threshold':{'off':0,'low':0.51, 'high':0.8}}
+        self.__ft_degree_dict = {0:'off',1:'low',2:'high'}
 
     def __search_user_by_name(self, username):
         self.cursor.execute("select * from users where username='{}';".format(username))
@@ -499,7 +500,7 @@ class sql_conn:
         
         ft_data = self.load_ft_data(dataid)
         nb_json = self.get_source_nb_json(sourceid= sourceid)
-        correct_labelid = fault_tolerance.ft_algo(ft_data,nb_json, ft_degree, self.ft_params)
+        correct_labelid = fault_tolerance.ft_algo(ft_data,nb_json,self.ft_params['threshold'][self.__ft_degree_dict[ft_degree]], self.ft_params['init_acc'], self.ft_params['nb_bel_ratio'])
         #save ft log
         log = {'data':ft_data, 'result':correct_labelid}
         with open('/home/se2018/Log/'+str(get_timestamp())+'.json', 'w') as file:
