@@ -205,6 +205,8 @@ The table is used to store all data (questions to be answered) from each source
 
    - return the fault tolerance degree of the source
 
+   
+
 #### 3.4 Data Utility
 
 **Combination of `data_source` and `data_index` should be UNIQUE**
@@ -213,15 +215,18 @@ The table is used to store all data (questions to be answered) from each source
 
   - load all the raw data file (in `.json` format) from folder path into database
   - return **1** success; **0** fail; **-1** insertion fail
-  
+
 - `get_textdataid(self, data_index, sourceid=None, sourcename=None)`
 
   need both `data_index` and source information to retrieve `dataid`.
-  
+
 - `fetch_data(self, sourcename, user_email, nb=5)`
-  
+
   Fetch 5 unfinished task for the user. Default 5
-  
+
+- `get_data_final_label(self, dataid)`
+
+  - get the final label content of some data
 #### 3.5 Label Utility
 
 **Combination of `dataid` and `userid` should be UNIQUE**

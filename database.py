@@ -6,6 +6,18 @@ import random
 from shutil import copyfile,make_archive, rmtree
 import fault_tolerance
 
+'''
+clear database
+
+update text_data set final_labelid = NULL where  dataid>0;
+update users set nb_answer =0 where userid>0;
+update users set nb_accept =0 where userid>0;
+update users set credits =0 where userid>0;
+DELETE FROM text_label where labelid>0;
+update source set nb_finished = 0 where sourceid>0;
+
+'''
+
 
 def get_timestamp():
     return float("{0:.2f}".format(time.time()))
@@ -93,7 +105,6 @@ class sql_conn:
         # cond can be either value or tuple
         try:
             sql = "update {} set {}={}+{} where {} ".format(tablename, target_col, target_col, addoffset,cond_col)
-            
             if type(cond) is int:
                 sql += "={};".format(cond)
             elif type(cond) is str:
@@ -365,6 +376,12 @@ class sql_conn:
         print(sql)
         return self.__insertion(sql)
     
+    def get_data_final_label(self, dataid):
+        # get the label_content of the data's final_labelid referenced to 
+        sql = "select tl.label_content from text_data td join text_label tl \
+        on td.final_labelid = tl.labelid where td.dataid={};".format(dataid)
+        return self.__exe_sql(sql)
+    
     # data *****************************************************************************
     def __insert_textdata(self, sourceid, data_index, data_path, final_labelid='NULL'):
         if self.__search_source_by_id(sourceid) != None:
@@ -448,15 +465,19 @@ class sql_conn:
     
     def insert_label(self, user_email, json_list, save_dir='/home/se2018/label/', label_date=get_timestamp(), correct=0):
         # insert label , save label json file from the same user of the same project
-        try:
+#         try:
+        if 1:
             if(json_list == []):
                 return 1
             #set_trace()
             userid=self.get_user_id(user_email=user_email)
+            if(userid == None):
+                print("user not found")
+                return -1
             proj_name = json_list[0]['projectName']
             save_dir = save_dir+'{}/'.format(proj_name)
             
-            #set_trace()
+            
             self.set_user_nb_answer(userid, addoffset = len(json_list))
             
             if not os.path.exists(save_dir):
@@ -476,22 +497,48 @@ class sql_conn:
                     #set_trace()
                     label_content.append(subtask['label'])
 
+                    
+                
                 label_content = str(label_content).replace("'", "`")
+                ft_flag = self._pre_ft_processing(j['dataid'], label_content)
+                print("ft_flag : {}".format(ft_flag))
+                
+                correct = max(0, ft_flag)# ft_flag=0->correct=0; ft_flag=1->correct=1; ft_flag=-1->correct=0;
+                
                 sql = "INSERT INTO text_label(`dataid`,`userid`,`labeldate`,`label_path`,`label_content`,`correct`) VALUES \
                 ({},{},{},'{}','{}',{});".format(j['dataid'], userid, label_date, save_path, label_content, correct)
-    
+                
+                
+                if ft_flag == 1:
+                    # set user nb_accept and credits
+                    sql = "update users set nb_accept = nb_accept+1 , credits=credits+1 where userid = ;".format(userid)
+                    
                 #print(sql)
                 if(self.__insertion(sql)== -1):
                     return 0
                 
                 # fault tolerance
-                re = self.fault_tol_process(j['dataid'],sourceid, ft_degree) 
-                if re not in [0,1]:
-                    return re
-                
+                if ft_flag == -1:
+                    ft_degree = self.get_source_ftdgree(sourceid= sourceid)
+                    print("goto ft process, sourceid = {}, ft_degree = {}".format(sourceid, ft_degree))
+                    re = self.fault_tol_process(j['dataid'],sourceid, ft_degree) 
+                    if re not in [0,1]:
+                        return re
+                    
             return 1
-        except:
+#         except:
+#             return -1
+        
+
+    def _pre_ft_processing(self, dataid, user_ans):
+        # return 0 if incorrect, 1 if correct, -1 if not final yet, go for fault tolerance process
+        final_label = self.get_data_final_label(dataid= dataid)
+        if(final_label == []):
+            # no final label, continue ft process
             return -1
+        else:
+            # the question is finaled, compare the user answer with the fianl answer 
+            return int(user_ans == final_label[0][0])
         
         
     def fault_tol_process(self, dataid, sourceid, ft_degree):
