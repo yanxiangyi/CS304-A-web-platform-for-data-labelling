@@ -4,7 +4,7 @@ import json
 import datetime
 import random
 from shutil import copyfile,make_archive, rmtree
-from fault_tolerance import fault_tolerance_algo
+import fault_tolerance
 
 
 def get_timestamp():
@@ -18,6 +18,7 @@ class sql_conn:
     def __init__(self, conn):
         self.conn = conn
         self.cursor = conn.cursor()
+        self.ft_params = {'init_acc':0.5, 'nb_bel_ratio':1e-3, 'threshold':{'low':0.51, 'high':0.8}}
 
     def __search_user_by_name(self, username):
         self.cursor.execute("select * from users where username='{}';".format(username))
@@ -333,17 +334,23 @@ class sql_conn:
         return self.__exe_sql("select nb_json from source where sourceid={};".format(sourceid))[0][0]
 
     def insert_source(self, sourcename, finished=0, publisher='NULL', description='', publish_time=get_timestamp(),
-                      priority=1):
+                      priority=1, ft_degree=0):
         # insertion: 1 success, 0: already exist, -1: fail
         if self.__search_source_by_name(sourcename) == None:
-
-            sql = "INSERT INTO `se_proj`.`source` (`sourcename`,`nb_finished`,`publisher`,`description`,`publish_date`, `priority`) \
-            VALUES ('{}',{}, {},'{}',{},{});".format(sourcename, finished, publisher, description, publish_time,
-                                                     priority)
+            if ft_degree not in [0,1,2]:  #illegal 
+                ft_degree = 0  #default 0
+            
+            sql = "INSERT INTO `se_proj`.`source` (`sourcename`,`nb_finished`,`publisher`,`description`,`publish_date`, `priority`, `fault_tolerance_degree`) \
+            VALUES ('{}',{}, {},'{}',{},{},{});".format(sourcename, finished, publisher, description, publish_time,
+                                                     priority, ft_degree)
             print(sql)
             return self.__insertion(sql)
         else:
             return 0
+        
+    def get_source_ftdgree(self, sourcename=None, sourceid=None):
+        return self.__get_by_option('source', 'fault_tolerance_degree', {'sourcename':sourcename, 'sourceid':sourceid})
+        
         
     def get_recent_source(self, limit=5):
         return self.__exe_sql("select * from source order by publish_date desc limit {};".format(limit))
@@ -440,8 +447,7 @@ class sql_conn:
     
     def insert_label(self, user_email, json_list, save_dir='/home/se2018/label/', label_date=get_timestamp(), correct=0):
         # insert label , save label json file from the same user of the same project
-        #try:
-        if True:
+        try:
             if(json_list == []):
                 return 1
             #set_trace()
@@ -462,6 +468,8 @@ class sql_conn:
                     json.dump(j, outfile)
 
                 sourceid = self.get_source_id(sourcename=proj_name)
+                ftdegree = self.get_source_ftdgree(sourceid=sourceid)
+                
                 label_content = []
                 for subtask in j['task']:
                     #set_trace()
@@ -476,22 +484,23 @@ class sql_conn:
                     return 0
                 
                 # fault tolerance
-                re = self.fault_tol_process(j['dataid'],sourceid) 
+                re = self.fault_tol_process(j['dataid'],sourceid, ft_degree) 
                 if re not in [0,1]:
                     return re
                 
             return 1
-#         except:
-#             return -1
+        except:
+            return -1
         
         
-    def fault_tol_process(self, dataid, sourceid):
+    def fault_tol_process(self, dataid, sourceid, ft_degree):
         #return -1 if error, 0 if none is detected correct
         #return 1 if success
-        #set_trace()
+        
         ft_data = self.load_ft_data(dataid)
-        correct_labelid = fault_tolerance_algo(ft_data)
-        #save ft loh
+        nb_json = self.get_source_nb_json(sourceid= sourceid)
+        correct_labelid = fault_tolerance.ft_algo(ft_data,nb_json, ft_degree, self.ft_params)
+        #save ft log
         log = {'data':ft_data, 'result':correct_labelid}
         with open('/home/se2018/Log/'+str(get_timestamp())+'.json', 'w') as file:
                 file.write(json.dumps(log))
