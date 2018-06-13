@@ -163,7 +163,7 @@ var DatatableRemoteAjaxDemo = function () {
                             1: {'title': 'Low', 'state': 'warning'},
                             2: {'title': 'High', 'state': 'danger'},
                         };
-                        return '<span class="m--font-bold m--font-' + status[row.priority].state + '">' + status[row.priority].title + '</span>';
+                        return '<span class="m--font-bold m--font-' + status[row.fault_level].state + '">' + status[row.fault_level].title + '</span>';
                     },
                 }, {
                     field: 'num_finished',
