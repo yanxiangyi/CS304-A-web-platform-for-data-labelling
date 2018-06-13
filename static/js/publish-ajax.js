@@ -112,12 +112,14 @@ var DatatableRemoteAjaxDemo = function () {
                     // sortable: 'asc', // default sort
                     filterable: false, // disable or enable filtering
                     width: 100,
+                    textAlign: 'center',
                     // basic templating support for column rendering,
                     //template: '{{source_id}} - {{source_name}}',
                 }, {
                     field: 'source_name',
                     title: 'Data Name',
                     width: 200,
+                    textAlign: 'center',
                 }, {
                     field: 'publisher',
                     title: 'Uploader',
@@ -125,6 +127,7 @@ var DatatableRemoteAjaxDemo = function () {
                     field: 'publish_date',
                     title: 'Upload Time',
                     type: 'date',
+                    textAlign: 'center',
                     template: function (row) {
                         var date = new Date(row.publish_date * 1000);//如果date为13位不需要乘1000
                         var Y = date.getFullYear() + '-';
@@ -139,18 +142,33 @@ var DatatableRemoteAjaxDemo = function () {
                 }, {
                     field: 'priority',
                     title: 'Priority',
+                    textAlign: 'center',
                     // callback function support for column rendering
                     template: function (row) {
                         var status = {
-                            1: {'title': 'III.Low', 'state': 'success'},
-                            2: {'title': 'II.Normal', 'state': 'warning'},
-                            3: {'title': 'I.High', 'state': 'danger'},
+                            1: {'state': 'success'},
+                            2: {'state': 'warning'},
+                            3: {'state': 'danger'},
                         };
-                        return '<span class="m-badge m-badge--' + status[row.priority].state + ' m-badge--dot"></span>&nbsp;<span class="m--font-bold m--font-' + status[row.priority].state + '">' + status[row.priority].title + '</span>';
+                        return '<span class="m-badge m-badge--' + status[row.priority].state + ' badge--dot"></span>';
+                    },
+                }, {
+                    field: 'fault_level',
+                    title: 'Fault level',
+                    textAlign: 'center',
+                    // callback function support for column rendering
+                    template: function (row) {
+                        var status = {
+                            0: {'title': 'None', 'state': 'success'},
+                            1: {'title': 'Low', 'state': 'warning'},
+                            2: {'title': 'High', 'state': 'danger'},
+                        };
+                        return '<span class="m--font-bold m--font-' + status[row.priority].state + '">' + status[row.priority].title + '</span>';
                     },
                 }, {
                     field: 'num_finished',
                     title: 'Status',
+                    textAlign: 'center',
                     // callback function support for column rendering
                     template: function (row) {
                         var status = {
@@ -176,6 +194,7 @@ var DatatableRemoteAjaxDemo = function () {
                 }, {
                     field: 'per_finished',
                     title: 'Percentage',
+                    textAlign: 'center',
                     template: function (row) {
                         var finish = row.per_finished;
                         finish = (finish * 100).toFixed(2);
@@ -187,6 +206,7 @@ var DatatableRemoteAjaxDemo = function () {
                     title: 'Download',
                     sortable: false,
                     overflow: 'visible',
+                    textAlign: 'center',
                     template: function (row) {
                         return '<div>\
 						<a href="/download/' + row.source_name + '.zip" class="m-portlet__nav-link btn m-btn m-btn--hover-info\
@@ -196,13 +216,25 @@ var DatatableRemoteAjaxDemo = function () {
                 }],
         });
 
+        var query = datatable.getDataSourceQuery();
+
         $('#m_form_status').on('change', function () {
-            datatable.search($(this).val().toLowerCase(), 'Status');
-        });
+            // shortcode to datatable.getDataSourceParam('query');
+            var query = datatable.getDataSourceQuery();
+            query.priority = $(this).val().toLowerCase();
+            // shortcode to datatable.setDataSourceParam('query', query);
+            datatable.setDataSourceQuery(query);
+            datatable.load();
+        }).val(typeof query.priority !== 'undefined' ? query.priority : '');
 
         $('#m_form_type').on('change', function () {
-            datatable.search($(this).val().toLowerCase(), 'Type');
-        });
+            // shortcode to datatable.getDataSourceParam('query');
+            var query = datatable.getDataSourceQuery();
+            query.fault_level = $(this).val().toLowerCase();
+            // shortcode to datatable.setDataSourceParam('query', query);
+            datatable.setDataSourceQuery(query);
+            datatable.load();
+        }).val(typeof query.fault_level !== 'undefined' ? query.fault_level : '');
 
         $('#m_form_status, #m_form_type').selectpicker();
 
