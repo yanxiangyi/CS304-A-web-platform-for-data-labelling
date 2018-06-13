@@ -4,6 +4,7 @@ import json
 import datetime
 import random
 from shutil import copyfile,make_archive, rmtree
+from fault_tolerance import fault_tolerance_algo
 
 
 def get_timestamp():

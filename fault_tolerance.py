@@ -1,4 +1,4 @@
-def fault_tolerance(ans,threshold=0.3,init_acc=0.5,nb_bel=10):
+def fault_tolerance_algo(ans,threshold=0.3,init_acc=0.5,nb_bel=10):
     total = 0
     answers = []
     accset = []
