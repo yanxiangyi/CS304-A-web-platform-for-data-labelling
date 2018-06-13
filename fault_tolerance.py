@@ -1,6 +1,5 @@
-#ft_params = {'init_acc':0.5, 'nb_bel':1e-3, 'threshold':{'low':0.51, 'high':0.8}}
-
 def ft_algo(ans,nb_json, threshold,init_acc,nb_bel_ratio):
+    print("threshold:{}  init_acc:{}, nb_bel_ratio{}".format(threshold, init_acc, nb_bel_ratio))
 
     if threshold ==0 :  #fault tolerance off
         answerset = []
@@ -33,7 +32,7 @@ def ft_algo(ans,nb_json, threshold,init_acc,nb_bel_ratio):
                 else:
                     accset[answers.index(i[1])] += i[3]/i[4]
                     total += i[3]/i[4]
-        if max(accset)/total >= threshold:
+        if (max(accset)/total) if total !=0 else 0 >= threshold:
             coranswer = answers[accset.index(max(accset))]
             answerset = []
             for an in ans:
