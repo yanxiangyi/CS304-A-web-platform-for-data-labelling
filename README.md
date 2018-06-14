@@ -25,3 +25,5 @@ We currently have three web pages:
 [Image Label](http://47.106.34.103:5000/imagelabel.html)
 [Publish](http://47.106.34.103:5000/publish.html)
 [Text Label](http://47.106.34.103:5000/textlabel.html)
+
+

@@ -30,7 +30,7 @@ class sql_conn:
     def __init__(self, conn):
         self.conn = conn
         self.cursor = conn.cursor()
-        self.ft_params = {'init_acc':0.5, 'nb_bel_ratio':1e-3, 'threshold':{'off':0,'low':0.51, 'high':0.8}}
+        self.ft_params = {'init_acc':0.5, 'nb_bel_ratio':1, 'threshold':{'off':0,'low':0.51, 'high':0.8}}
         self.__ft_degree_dict = {0:'off',1:'low',2:'high'}
 
     def __search_user_by_name(self, username):

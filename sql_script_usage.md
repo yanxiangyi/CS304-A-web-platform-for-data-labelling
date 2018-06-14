@@ -14,6 +14,14 @@
 
 ### 2. Database Instructions
 
+
+**Clean All Labeling Information**
+`cd CS304-A-web-platform-for-data-labelling`
+`mysql -u root -p`
+Input password
+`\. clean_db.sql`
+
+
 **ER Diagram of database**
 
 ![](./db_er.png)

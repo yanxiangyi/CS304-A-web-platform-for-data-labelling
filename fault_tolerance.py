@@ -10,7 +10,8 @@ def ft_algo(ans,nb_json, threshold,init_acc,nb_bel_ratio):
     total = 0
     answers = []
     accset = []
-    nb_bel = nb_bel_ratio*nb_json
+    nb_bel = 100*nb_bel_ratio*nb_json
+    print("lenth of ans: {} number_belief: {}".format(len(ans),nb_bel))
     if len(ans)>1:
         # print('length: ')
         # print(len(ans))
@@ -21,18 +22,25 @@ def ft_algo(ans,nb_json, threshold,init_acc,nb_bel_ratio):
                     answers.append(i[1])
                     accset.append(init_acc)
                     total += init_acc
+                    print("new answer detect||use init belief, total = {}".format(total))
                 else:
                     answers.append(i[1])
-                    accset.append(i[3]/i[4])
-                    total += i[3]/i[4]
+                    accset.append(float(i[3])/float(i[4]))
+                    total += float(i[3])/float(i[4])
+                    print("new answer detect||use user belief, total = {}".format(total))
             else:
                 if i[4] <nb_bel:
                     accset[answers.index(i[1])] += init_acc
                     total += init_acc
+                    print("hit old answer || use init belief, total = {}".format(total))
                 else:
-                    accset[answers.index(i[1])] += i[3]/i[4]
-                    total += i[3]/i[4]
-        if (max(accset)/total) if total !=0 else 0 >= threshold:
+                    accset[answers.index(i[1])] += float(i[3])/float(i[4])
+                    total += float(i[3])/float(i[4])
+                    print("hit old answer || use user belief, total = {}".format(total))
+        if total ==0:
+            return None
+        if (float(max(accset))/float(total)) >= threshold:
+            print("find answer ")
             coranswer = answers[accset.index(max(accset))]
             answerset = []
             for an in ans:
