@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <title>
+        reCAPCHA Test
+    </title>
+    <script src="../static/js/jquery.min.js"></script>
+    <script type="text/javascript">
+        jQuery(document).ready(function() {
+            $.ajax({
+                type: 'GET',
+                url: 'http://47.106.34.103:5000/recapcha',
+                success: function (json){
+                    document.getElementById("recapcha_data").appendChild(document.createTextNode(json.data));
+                    for(let i = 0; i < json.task.length; i++){
+                        if(json.task[i].mode === "single"){
+                            document.getElementById("recapcha_data").setAttribute("name", json.task[i].label);
+                            for(let k = 0; k < json.task[i].choices.length; k++){
+                                var q = document.createElement("input");
+                                q.setAttribute("type", "radio");
+                                q.setAttribute("name", "choice");
+                                q.setAttribute("value", json.task[i].choices[k]);
+                                q.setAttribute("id", k);
+                                document.getElementById("recapcha").appendChild(q); 
+                                var l = document.createElement("label");
+                                document.getElementById("recapcha").appendChild(l);
+                                l.appendChild(document.createTextNode(json.task[i].choices[k]));
+                                l.setAttribute("for", k);
+                            }                
+                        }    
+                    }
+                }
+            });
+        });
+    </script>
+    <script type="text/javascript">
+        function checkResult() {
+                alert(document.querySelector('input[name="choice"]:checked').value === document.getElementById("recapcha_data").getAttribute("name") ? "Success" : "Fail");
+        }
+    </script>
+</head>
+<body>
+    <div id="recapcha_data"></div>
+    <form id="recapcha"></form>
+    <button onclick="checkResult()">Click me</button>
+</body>
+</html>

@@ -3,6 +3,21 @@ import os
 import json
 import datetime
 import random
+from shutil import copyfile,make_archive, rmtree
+import fault_tolerance
+
+'''
+clear database
+
+update text_data set final_labelid = NULL where  dataid>0;
+update users set nb_answer =0 where userid>0;
+update users set nb_accept =0 where userid>0;
+update users set credits =0 where userid>0;
+DELETE FROM text_label where labelid>0;
+update source set nb_finished = 0 where sourceid>0;
+
+'''
+
 
 def get_timestamp():
     return float("{0:.2f}".format(time.time()))
@@ -15,6 +30,8 @@ class sql_conn:
     def __init__(self, conn):
         self.conn = conn
         self.cursor = conn.cursor()
+        self.ft_params = {'init_acc':0.5, 'nb_bel_ratio':1e-3, 'threshold':{'off':0,'low':0.51, 'high':0.8}}
+        self.__ft_degree_dict = {0:'off',1:'low',2:'high'}
 
     def __search_user_by_name(self, username):
         self.cursor.execute("select * from users where username='{}';".format(username))
@@ -66,7 +83,7 @@ class sql_conn:
         except:
             return None
 
-    def __get_by_mul_cond(self, tablename, target_col, col_val_dict):
+    def __get_by_mul_cond(self, tablename, target_col, col_val_dict, fetchone=False):
         # search by multiple conditions
         try:
             sql = "select {} from {} where ".format(target_col, tablename)
@@ -78,10 +95,50 @@ class sql_conn:
             sql += ";"
             # print(sql)
             self.cursor.execute(sql)
-            return self.cursor.fetchone()[0]
+            if fetchone:
+                return self.cursor.fetchone()[0]
+            else:
+                return self.cursor.fetchall()
         except:
             return None
+    def __set_col_addup(self, tablename, target_col, cond_col, cond, addoffset):
+        # cond can be either value or tuple
+        try:
+            sql = "update {} set {}={}+{} where {} ".format(tablename, target_col, target_col, addoffset,cond_col)
+            if type(cond) is int:
+                sql += "={};".format(cond)
+            elif type(cond) is str:
+                sql += "='{}';".format(cond)
+            elif type(cond) is tuple:
+                sql += "in {};".format(cond)
+            print(sql)
+            return self.__insertion(sql) #return -1 if execution fail
+        except:
+            return 0
+        
+    def __set_col(self, tablename, target_col, cond_col, cond, value):
+        # cond can be either value or tuple
+        try:
+            sql = "update {} set {}={} where {} ".format(tablename, target_col, value, cond_col)
+            if type(cond) is int:
+                sql += "={};".format(cond)
+            elif type(cond) is str:
+                sql += "='{}';".format(cond)
+            elif type(cond) is tuple:
+                sql += "in {};".format(cond)
+            print(sql)
+            return self.__insertion(sql) #return -1 if execution fail
+        except:
+            return 0
 
+    def get_by_cond_tuple(self, tablename, target_col, cond_col, tup):
+        try:
+            sql = "select {} from {} where {} in {};".format(target_col, tablename, cond_col, tup)
+            print(sql)
+            self.cursor.execute(sql)
+            return self.cursor.fetchall()
+        except:
+            return None
     # user*******************************************************************************
     def get_all_user(self):
         user_list = self.__exe_sql("select * from users;")
@@ -142,12 +199,12 @@ class sql_conn:
         else:
             return 0
         
-    def set_user_nb_answer(self, user_email, addoffset):
-        # return : **1** success; **0** already exist; **-1** fail
-        nb_answer = self.get_user_nb_answer(user_email = user_email)
-        sql = "UPDATE `se_proj`.`users` SET `nb_answer`={} WHERE `email_address`='{}';".format(nb_answer+addoffset, user_email)
-        #print(sql)
-        return self.__insertion(sql)
+    def set_user_nb_answer(self, userid, addoffset=1):
+        # return : **1** success; **0** fail; **-1** fail
+        return self.__set_col_addup('users', 'nb_answer', 'userid', userid, addoffset)
+    
+    def set_user_nb_accept(self, userid, addoffset=1):
+        return self.__set_col_addup('users', 'nb_answer', 'userid', userid, 1)
 
     def get_user_accept_rate(self, userid=None, username=None, user_email=None):
         total = self.get_user_nb_answer(userid, username, user_email)
@@ -289,17 +346,23 @@ class sql_conn:
         return self.__exe_sql("select nb_json from source where sourceid={};".format(sourceid))[0][0]
 
     def insert_source(self, sourcename, finished=0, publisher='NULL', description='', publish_time=get_timestamp(),
-                      priority=1):
+                      priority=1, ft_degree=0):
         # insertion: 1 success, 0: already exist, -1: fail
         if self.__search_source_by_name(sourcename) == None:
-
-            sql = "INSERT INTO `se_proj`.`source` (`sourcename`,`nb_finished`,`publisher`,`description`,`publish_date`, `priority`)\
-            VALUES ('{}',{}, {},'{}',{},{});".format(sourcename, finished, publisher, description, publish_time,
-                                                     priority)
+            if ft_degree not in [0,1,2]:  #illegal 
+                ft_degree = 0  #default 0
+            
+            sql = "INSERT INTO `se_proj`.`source` (`sourcename`,`nb_finished`,`publisher`,`description`,`publish_date`, `priority`, `fault_tolerance_degree`) \
+            VALUES ('{}',{}, {},'{}',{},{},{});".format(sourcename, finished, publisher, description, publish_time,
+                                                     priority, ft_degree)
             print(sql)
             return self.__insertion(sql)
         else:
             return 0
+        
+    def get_source_ftdgree(self, sourcename=None, sourceid=None):
+        return self.__get_by_option('source', 'fault_tolerance_degree', {'sourcename':sourcename, 'sourceid':sourceid})
+        
         
     def get_recent_source(self, limit=5):
         return self.__exe_sql("select * from source order by publish_date desc limit {};".format(limit))
@@ -308,6 +371,17 @@ class sql_conn:
         # priority should be 1 2 or 3
         return self.__exe_sql("select * from se_proj.source where priority ={};".format(priority))
 
+    def update_source_nb_finished(self, sourceid):
+        sql = "update source set nb_finished= (select count(*) from text_data where datasource={} and final_labelid is not NULL) where sourceid={};".format(sourceid, sourceid)
+        print(sql)
+        return self.__insertion(sql)
+    
+    def get_data_final_label(self, dataid):
+        # get the label_content of the data's final_labelid referenced to 
+        sql = "select tl.label_content from text_data td join text_label tl \
+        on td.final_labelid = tl.labelid where td.dataid={};".format(dataid)
+        return self.__exe_sql(sql)
+    
     # data *****************************************************************************
     def __insert_textdata(self, sourceid, data_index, data_path, final_labelid='NULL'):
         if self.__search_source_by_id(sourceid) != None:
@@ -319,10 +393,12 @@ class sql_conn:
 
     def load_data(self, root_path, sourceid=None, sourcename=None):
         # load data(json file) from root folder into database
+        # return 0 fail, -1 set nb_json fail
         sourceid = self.__get_by_option('source', 'sourceid', {'sourceid': sourceid, 'sourcename': sourcename})
         try:
             _, _, files = next(os.walk(root_path))
-            self.__exe_sql("UPDATE `se_proj`.`source` SET `nb_json`= {}  WHERE `sourceid`={};".format(len(files), sourceid))
+            if(1 != self.__set_col('source', 'nb_json', 'sourceid', sourceid, len(files))):
+                return -1
             for f in files:
                 with open(os.path.join(root_path, f)) as js:
                     data_index = json.load(js)['index']
@@ -340,27 +416,16 @@ class sql_conn:
 
     def get_textdataid(self, data_index, sourceid=None, sourcename=None):
         return self.__get_textdata_sth('dataid', data_index, sourceid, sourcename)
-
-
-    def update_final_labelid(self, data_index, labelid, sourceid=None, sourcename=None):
-        # 1:sucess -1:fail  0:souce or data not exist
-        sourceid = self.__get_by_option('source', 'sourceid', {'sourceid': sourceid, 'sourcename': sourcename})
-        dataid = self.get_textdataid(data_index, sourceid=sourceid)
-        if sourceid != None and dataid != None:
-            sql = "UPDATE `se_proj`.`text_data` SET `final_labelid`={} WHERE `dataid`={};".format(labelid, dataid)
-            return self.__insertion(sql)
-        else:
-            return 0
     
     def fetch_data(self, sourcename, user_email, nb=5):
         userid=self.get_user_id(user_email=user_email)
         sourceid = self.get_source_id(sourcename=sourcename)
 
         sql = "select dataid,datasource, data_index, data_path from text_data \
-        where datasource=15 and dataid not in \
+        where datasource={} and final_labelid is NULL and dataid not in \
         (select td.dataid from text_data td \
         join text_label tl on td.dataid=tl.dataid \
-        where tl.userid={} and td.datasource={});".format(userid, sourceid)
+        where tl.userid={} and td.datasource={});".format(sourceid, userid, sourceid)
         print(sql)
         
         
@@ -390,16 +455,30 @@ class sql_conn:
     def get_label_correct(self, dataid, userid=None, username=None, user_email=None):
         # return 0 not determined, 1 correct, -1 not correct
         return self.__get_label_sth('correct', userid, username, user_email)
-
+    
+    def set_label_correct(self, labelid, value=1):
+        #set correct to the value
+        # labelid can be either int or int tuple
+        # return 1 if success
+        return self.__set_col('text_label','correct', 'labelid', labelid, value)
+    
+    
     def insert_label(self, user_email, json_list, save_dir='/home/se2018/label/', label_date=get_timestamp(), correct=0):
         # insert label , save label json file from the same user of the same project
-        try:
+#         try:
+        if 1:
+            if(json_list == []):
+                return 1
+            #set_trace()
             userid=self.get_user_id(user_email=user_email)
+            if(userid == None):
+                print("user not found")
+                return -1
             proj_name = json_list[0]['projectName']
             save_dir = save_dir+'{}/'.format(proj_name)
             
             
-            self.set_user_nb_answer(user_email, addoffset = len(json_list))
+            self.set_user_nb_answer(userid, addoffset = len(json_list))
             
             if not os.path.exists(save_dir):
                 os.makedirs(save_dir)
@@ -411,27 +490,141 @@ class sql_conn:
                     json.dump(j, outfile)
 
                 sourceid = self.get_source_id(sourcename=proj_name)
+                ftdegree = self.get_source_ftdgree(sourceid=sourceid)
+                
                 label_content = []
                 for subtask in j['task']:
                     #set_trace()
                     label_content.append(subtask['label'])
 
+                    
+                
                 label_content = str(label_content).replace("'", "`")
+                ft_flag = self._pre_ft_processing(j['dataid'], label_content)
+                print("ft_flag : {}".format(ft_flag))
+                
+                correct = max(0, ft_flag)# ft_flag=0->correct=0; ft_flag=1->correct=1; ft_flag=-1->correct=0;
+                
                 sql = "INSERT INTO text_label(`dataid`,`userid`,`labeldate`,`label_path`,`label_content`,`correct`) VALUES \
                 ({},{},{},'{}','{}',{});".format(j['dataid'], userid, label_date, save_path, label_content, correct)
-    
+                
+                
+                if ft_flag == 1:
+                    # set user nb_accept and credits
+                    sql = "update users set nb_accept = nb_accept+1 , credits=credits+1 where userid = ;".format(userid)
+                    
                 #print(sql)
                 if(self.__insertion(sql)== -1):
                     return 0
+                
+                # fault tolerance
+                if ft_flag == -1:
+                    ft_degree = self.get_source_ftdgree(sourceid= sourceid)
+                    print("goto ft process, sourceid = {}, ft_degree = {}".format(sourceid, ft_degree))
+                    re = self.fault_tol_process(j['dataid'],sourceid, ft_degree) 
+                    if re not in [0,1]:
+                        return re
+                    
             return 1
-        except:
+#         except:
+#             return -1
+        
+
+    def _pre_ft_processing(self, dataid, user_ans):
+        # return 0 if incorrect, 1 if correct, -1 if not final yet, go for fault tolerance process
+        final_label = self.get_data_final_label(dataid= dataid)
+        if(final_label == []):
+            # no final label, continue ft process
             return -1
-    
+        else:
+            # the question is finaled, compare the user answer with the fianl answer 
+            return int(user_ans == final_label[0][0])
+        
+        
+    def fault_tol_process(self, dataid, sourceid, ft_degree):
+        #return -1 if error, 0 if none is detected correct
+        #return 1 if success
+        
+        ft_data = self.load_ft_data(dataid)
+        nb_json = self.get_source_nb_json(sourceid= sourceid)
+        correct_labelid = fault_tolerance.ft_algo(ft_data,nb_json,self.ft_params['threshold'][self.__ft_degree_dict[ft_degree]], self.ft_params['init_acc'], self.ft_params['nb_bel_ratio'])
+        #save ft log
+        log = {'data':ft_data, 'result':correct_labelid}
+        with open('/home/se2018/Log/'+str(get_timestamp())+'.json', 'w') as file:
+                file.write(json.dumps(log))
+        
+        print("correct answer: {}".format(correct_labelid))
+        if correct_labelid!=None:
+            #set correct=1 in table text_label
+            if len(correct_labelid)==1:
+                correct_labelid = correct_labelid[0]
+                final_labelid = correct_labelid
+            else:
+                correct_labelid = tuple(correct_labelid)
+                final_labelid = correct_labelid[0]
+            if (-1 == self.set_label_correct(correct_labelid, value=1)):
+                return 2 # set fail
+
+            #add up user's nb_accept
+            if type(correct_labelid) is int:
+                sql = "update users set nb_accept = nb_accept+1 , credits=credits+1 where userid in \
+                (select userid from text_label where labelid = {});".format(correct_labelid)
+            elif type(correct_labelid) is tuple:
+                sql = "update users set nb_accept = nb_accept+1 , credits=credits+1 where userid in \
+                (select userid from text_label where labelid in {});".format(correct_labelid)
+            print(sql)
+            if(-1 == self.__insertion(sql)):
+                return 3 # set fail
+            
+
+            #modify text_data to add final_labelid
+        
+            if 1!=self.__set_col('text_data','final_labelid', 'dataid', dataid, final_labelid):
+                return 4
+            
+            #set number of finished
+            if -1 == self.update_source_nb_finished(sourceid=sourceid):
+                return 5
+            
+            return 1
+        else:
+            return 0
+        
     def load_ft_data(self, dataid):
         # load data for fault tolerance
         # return [dataid, label_content, userid, user nb_accpet, user nb_answer ]
         sql = "SELECT tl.labelid, tl.label_content, tl.userid, u.nb_accept, u.nb_answer \
         FROM text_label tl join users u on u.userid=tl.userid where dataid={} ".format(dataid)
+        return self.__exe_sql(sql)
+    
+    def download_label(self, sourcename, zip_path, root_path = '~/tmp'):
+        try:
+            sourceid = self.get_source_id(sourcename=sourcename)
+            # get path
+            #data_path = self.__get_by_mul_cond('text_data','data_path',{'datasource':sourceid}, fetchone=False)
+            label_path = self.__get_finallabel_path(sourceid)
+
+            if not os.path.exists(root_path):
+                os.makedirs(root_path)
+            #set_trace()
+
+            for p in label_path:
+                file_name = p[0].split('/')[-1]
+                copyfile(p[0], os.path.join(root_path, file_name))
+
+            # make zip
+            make_archive(zip_path, 'zip', root_path)
+            #delete tmp dir
+            rmtree(root_path)
+            
+            return zip_path+'.zip'
+        except:
+            return ''
+        
+
+    
+    def __get_finallabel_path(self, sourceid):
+        sql = "select tl.label_path from text_data td join text_label tl on td.final_labelid = tl.labelid where td.datasource={};".format(sourceid)
         return self.__exe_sql(sql)
     
     def get_recapcha(self):
@@ -448,3 +641,6 @@ class sql_conn:
     def close(self):
         self.cursor.close()
         self.conn.close()
+        
+        
+    
