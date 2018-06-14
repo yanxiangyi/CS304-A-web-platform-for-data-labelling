@@ -161,6 +161,14 @@ The table is used to store all data (questions to be answered) from each source
   - this method is designed to display user labeling history on mainpage 
   
   - return a list of user label count in today, 3 days, 7 days, 30 days, and total number, e.g. `[2, 2, 2, 3, 4]`
+
+- `update_user_accpet_credits(self, userid)`
+  
+  Update user's `nb_accept` and `credits` by checking the labeling history. We simply set `nb_accept = credits`.
+
+- `update_user_nb_answer(self, userid)`
+
+  Update user's `nb_answer` by recounting the labeling history.
   
   
 #### 3.2 Admin Utility
