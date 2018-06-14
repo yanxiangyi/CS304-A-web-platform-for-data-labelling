@@ -588,7 +588,7 @@ class sql_conn:
                 sql = "select userid from text_label where labelid = {}".format(correct_labelid)
             elif type(correct_labelid) is tuple:
                 sql = "select userid from text_label where labelid in {};".format(correct_labelid)
-            userid_list = eeself.__exe_sql(sql)
+            userid_list = self.__exe_sql(sql)
             print("*****************************************")
             print(userid_list)
             for userid in userid_list:
