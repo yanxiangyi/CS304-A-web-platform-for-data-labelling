@@ -15,11 +15,14 @@
 ### 2. Database Instructions
 
 
-**Clean all the labeling information**
-`cd CS304-A-web-platform-for-data-labelling`
-`mysql -u root -p`
-input your password
-`mysql > source clean_db.sql`
+**Clean all the labeling information**  
+`cd CS304-A-web-platform-for-data-labelling`  
+
+`mysql -u root -p`  
+
+input your password  
+
+`mysql > source clean_db.sql`  
 
 
 
